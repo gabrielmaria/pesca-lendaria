@@ -55,6 +55,12 @@ Tudo ajustável no objeto `CONFIG` no topo do `<script>`:
 - **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` (ícones) + `efeitoTexto()`.
 - **Cores:** variáveis CSS em `:root`.
 
+## Reiniciar para testar
+
+- No separador **Upgrades** existe o botão **↺ Apagar progresso** (pede confirmação).
+- Ou abre o jogo com **`?reset`** no endereço (ex.: `index.html?reset`) — apaga a progressão e limpa o parâmetro do URL.
+- Manualmente: DevTools → Application → Local Storage → apagar a chave `pescaLendaria.v2`.
+
 ## Anúncios
 
 `#ad-banner` (320×100) e `verAnuncio()` estão marcados com `LIGAR SDK REAL MAIS TARDE`.

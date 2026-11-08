@@ -363,6 +363,14 @@ h1{
 .pip.on{background:var(--green-l);}
 .card .buy{width:100%;margin-top:10px;}
 
+.dev-actions{display:flex;gap:8px;margin-top:4px;}
+.btn.small{padding:8px 10px;font-size:11px;}
+.nota-dev{
+  margin:7px 0 0;text-align:center;font-size:10px;line-height:1.4;
+  color:var(--cream2);text-shadow:1px 1px 0 var(--wood-dd);
+}
+.nota-dev b{color:var(--gold-l);}
+
 /* ---------- Livro de pesca ---------- */
 .book-top{
   display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;
@@ -635,6 +643,10 @@ h1{
     <section class="panel" id="panel-upgrades">
       <div class="hint">Compras rápidas — não gastam tempo de pesca.</div>
       <div id="upgradesList"></div>
+      <div class="dev-actions">
+        <button class="btn ghost small" id="btnReset">↺ Apagar progresso</button>
+      </div>
+      <p class="nota-dev">Para testar do zero: abre o jogo com <b>?reset</b> no endereço.</p>
     </section>
 
     <!-- ======================= LIVRO DE PESCA ======================= -->
@@ -1332,6 +1344,20 @@ function guardar() {
     localStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify(state));
   } catch (e) { /* silencioso: o jogo continua em memória */ }
 }
+
+/* Reinício rápido para testes: index.html?reset (ou #reset) apaga a progressão.
+   Assim é possível experimentar o jogo do zero sem mexer nas ferramentas do browser. */
+try {
+  const ALVO_RESET = /[?&#]reset/.test(window.location.search + window.location.hash);
+  if (ALVO_RESET) {
+    localStorage.removeItem(CONFIG.SAVE_KEY);
+    // limpa o parâmetro do URL para um refresh normal não apagar outra vez
+    try {
+      const limpo = window.location.pathname + window.location.hash.replace(/reset/g, '');
+      history.replaceState(null, '', limpo || window.location.pathname);
+    } catch (e2) {}
+  }
+} catch (e) { /* sem window.location (ex.: testes) — ignora */ }
 
 let state = carregar();
 
@@ -2281,6 +2307,13 @@ function iniciar() {
 
   /* --- Offline --- */
   $('btnRecolher').addEventListener('click', recolherOffline);
+
+  /* Apagar progresso (útil para experimentar o equilíbrio) */
+  $('btnReset').addEventListener('click', function () {
+    if (!confirm('Apagar todo o progresso (moedas, upgrades, livro e streak) e recomeçar?')) return;
+    try { localStorage.removeItem(CONFIG.SAVE_KEY); } catch (e) {}
+    location.reload();
+  });
 
   /* --- Page Visibility API: pausar o relógio e sincronizar ao voltar --- */
   document.addEventListener('visibilitychange', () => {
