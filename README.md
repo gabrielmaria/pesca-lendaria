@@ -1,60 +1,67 @@
-# 🎣 Pesca Lendária
+# 🎣 Pesca Lendária — Pixel Edition
 
 Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos por dia**.
 
-O jogo é um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, sem bibliotecas externas e sem imagens externas (só emojis e CSS). Os dados são guardados em `localStorage`.
+Um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas.
+O visual é pixel art inspirado em jogos de fazenda: madeira, papel, mar e **sprites desenhados pixel a pixel em `<canvas>`** pelo próprio código (peixes, barco, cana, ícones e sol).
 
 ## Como jogar
 
-Abre o `index.html` num browser (duplo clique ou serve a pasta):
-
 ```bash
-# opção simples, sem dependências
 python3 -m http.server 8080
-# depois abre http://localhost:8080
+# abre http://localhost:8080
 ```
 
 - **LANÇAR** → espera curta → **MORDE!** → toca na zona verde.
-- Perfeito dá +50% de valor; falhar deixa o peixe escapar.
-- 30 espécies para colecionar no **Livro de Pesca**.
+- **Perfeito** dá +50% e sobe o **combo** (até ×2,2); falhar zera o combo.
+- A barra de timing **acelera** à medida que o combo sobe — mais risco, mais recompensa.
+- Cada peixe tem **peso aleatório** (0,85× a 1,35× no valor).
+- **Missão do dia** (determinística): apanhar peixes, raros+ ou acertos perfeitos, com prémio em moedas.
+- 30 espécies para colecionar no **Livro de Pesca**, com selo por raridade completa.
 - 5 upgrades (Cana, Isco, Barco, Pescador Contratado, Geleira), 10 níveis cada.
-- Pescadores contratados rendem moedas mesmo offline (até 24 h).
-- Um evento do dia igual para todos os jogadores, gerado por hash da data.
-- O dia reinicia à meia-noite local; o tempo só desconta com o separador visível.
+- Pescadores rendem moedas mesmo offline (até 24 h).
+- Evento do dia igual para todos, gerado por hash da data; efeitos visuais na cena (chuva, nevoeiro, lua…).
+- O dia reinicia à meia-noite local; o tempo só desconta com o separador visível (Page Visibility API).
 
-## Estrutura
+## Equilíbrio (foi rebalanceado)
 
-| Zona do ficheiro | Conteúdo |
+A progressão foi simulada: com jogo diário completo, **maxar os 5 upgrades leva ~3 semanas** (mediana de 22 dias numa simulação de 15 partidas). Sem sorte grande, a primeira sessão dá apenas alguns níveis.
+
+Ideias-chave do novo equilíbrio:
+
+- Os **valores base dos peixes são planos por raridade** (8 a 44). Quem escala o valor é o multiplicador de raridade (1× a 1000×) — antes os dois escalavam ao mesmo tempo e qualquer lendário comprava tudo.
+- Custos a crescer **×2 por nível** (antes ×1,5), com base 300–1000.
+- **Isco** agora tem multiplicadores por escalão (Incomum+ até Mítico), em vez de um bónus fraco.
+- **Pescador** com rendimento quadrático suave e cap offline de 24 h.
+
+Tudo ajustável no objeto `CONFIG` no topo do `<script>`:
+
+| Quero… | Variável |
 |---|---|
-| `<style>` | Tema escuro azul-marinho com acentos neon, animações CSS e suporte a `prefers-reduced-motion` |
-| `CONFIG` | Todos os números de equilíbrio (tempos, custos, probabilidades, multiplicadores) |
-| `RARIDADES` | Pesos, multiplicadores e cores das 6 raridades |
-| `PEIXES` | As 30 espécies editáveis |
-| `EVENTOS` | Os 8 eventos diários e respetivos efeitos |
-| `UPGRADES_DADOS` | Nomes, ícones e descrições dos 5 upgrades |
-| Restante JS | Estado, persistência, ciclo de pesca, render e integração |
+| Tempo diário | `DIA_SEGUNDOS` |
+| Ritmo do ciclo | `ESPERA_MIN_MS`, `ESPERA_MAX_MS`, `BARRA_MS` |
+| Dificuldade do timing | `ZONA_BASE`, `JANELA_PERFEITA` |
+| Força do combo | `COMBO_MAX`, `COMBO_PASSO`, `BARRA_ACELERA_COMBO` |
+| Economia | `CUSTO_BASE`, `CRESCIMENTO` |
+| Upgrades | `BARCO_VALOR_NIVEL`, `GELEIRA_VALOR_NIVEL`, `ISCO_*` |
+| Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
+| Missões | `MISSAO` |
+| Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
 
-## Ajustar o equilíbrio
+## Trocar o tema
 
-Tudo o que é número está no objeto `CONFIG`, no topo do `<script>`:
-
-- `DIA_SEGUNDOS` — tempo de pesca diário
-- `ESPERA_MIN_MS` / `ESPERA_MAX_MS` / `BARRA_MS` — ritmo do ciclo
-- `ZONA_BASE` / `JANELA_PERFEITA` — dificuldade do timing
-- `CUSTO_BASE` / `CRESCIMENTO` — economia dos upgrades
-- `BARCO_VALOR_NIVEL` / `GELEIRA_VALOR_NIVEL` / `ISCO_SHIFT_NIVEL` — força dos upgrades
-- `PESCADOR_MOEDAS_MIN` — rendimento passivo
-- `PRIMEIRO_DIA_RARIDADE` / `PRIMEIRO_UPGRADE_GRATIS` — primeira experiência
-- `ANUNCIO_SEGUNDOS` / `ANUNCIO_MAX_DIA` — anúncio recompensado (simulado)
-- `OFFLINE_CAP_HORAS` — limite do rendimento offline
+- **Peixes:** array `PEIXES` (`id, nome, emoji, r, base`). O emoji decide o sprite: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Eventos:** array `EVENTOS` com efeitos em `fx` (`espera`, `valor`, `grande`, `raro`, `naoComum`, `mitico`, `iscoGratis`).
+- **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` (ícones) + `efeitoTexto()`.
+- **Cores:** variáveis CSS em `:root`.
 
 ## Anúncios
 
-O bloco `#ad-banner` (320×100) e a função `verAnuncio()` estão marcados com comentários
-`LIGAR SDK REAL MAIS TARDE`, prontos para ligar a um SDK de anúncios recompensados.
+`#ad-banner` (320×100) e `verAnuncio()` estão marcados com `LIGAR SDK REAL MAIS TARDE`.
 
 ## Publicar (GitHub Pages)
 
-1. Cria um repositório no GitHub e adiciona o remoto.
-2. `git push -u origin main`
-3. Em **Settings → Pages**, escolhe a branch `main` e a pasta `/ (root)`.
+1. `git push`
+2. **Settings → Pages** → branch `main`, pasta `/ (root)`.
+
+> Nota: o save mudou de chave (`pescaLendaria.v2`) porque o equilíbrio foi refeito — quem já tinha tudo no máximo recomeça com a nova economia.
