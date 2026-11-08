@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04101f">
+<title>Pesca Lendária</title>
+<style>
+/* ==========================================================================
+   PESCA LENDÁRIA — Estilos (tema escuro azul-marinho + neon)
+   ========================================================================== */
+:root{
+  --bg:#04101f;
+  --panel:#0a2140;
+  --panel2:#0e2a52;
+  --aqua:#2ee6d6;
+  --gold:#ffcf4d;
+  --purple:#a97bff;
+  --pink:#ff4d6d;
+  --text:#e8f3ff;
+  --muted:#8ba7c7;
+  --ok:#3ddc84;
+  --r0:#9fb3c8; /* Comum */
+  --r1:#3ddc84; /* Incomum */
+  --r2:#4db8ff; /* Raro */
+  --r3:#b06bff; /* Épico */
+  --r4:#ffc93c; /* Lendário */
+  --r5:#ff4d6d; /* Mítico */
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1200px 500px at 50% -10%, #0d3b66 0%, transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, #1b1147 0%, transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.35;
+  min-height:100vh;
+  overscroll-behavior-y:none;
+}
+#app{max-width:520px;margin:0 auto;padding:10px 10px 48px;}
+
+/* ---------- Botões ---------- */
+button{font-family:inherit;cursor:pointer;border:none;color:inherit;}
+.btn{
+  background:linear-gradient(180deg,#123a66,#0d2a4d);
+  border:1px solid rgba(46,230,214,.35);
+  color:var(--text);
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:700;
+  transition:transform .08s ease, filter .15s ease, opacity .15s;
+}
+.btn:active{transform:scale(.96);filter:brightness(1.25);}
+.btn.off,.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4);}
+.btn.gold{background:linear-gradient(180deg,#6b4d0b,#4a3608);border-color:rgba(255,207,77,.6);}
+.btn.ghost{background:transparent;border-color:rgba(139,167,199,.4);}
+.btn.ad{background:linear-gradient(180deg,#3a1a66,#26104a);border-color:rgba(169,123,255,.6);}
+.pulse{animation:pulse .5s ease;}
+
+/* ---------- Cabeçalho / HUD ---------- */
+header{margin-bottom:10px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+h1{font-size:17px;letter-spacing:.5px;margin:0;color:var(--aqua);text-shadow:0 0 12px rgba(46,230,214,.5);}
+.icon-btn{
+  background:rgba(14,42,82,.7);border:1px solid rgba(46,230,214,.3);
+  border-radius:12px;width:38px;height:38px;font-size:17px;
+  transition:transform .08s ease;
+}
+.icon-btn:active{transform:scale(.9);}
+.hud{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:8px;}
+#timer{
+  font-size:44px;font-weight:800;letter-spacing:2px;line-height:1;
+  font-variant-numeric:tabular-nums;
+  color:var(--aqua);text-shadow:0 0 18px rgba(46,230,214,.45);
+}
+#timer.low{color:var(--pink);text-shadow:0 0 18px rgba(255,77,109,.55);animation:blink 1s steps(2) infinite;}
+.coins{
+  font-size:19px;font-weight:800;color:var(--gold);
+  background:rgba(255,207,77,.1);border:1px solid rgba(255,207,77,.35);
+  padding:7px 12px;border-radius:999px;white-space:nowrap;
+}
+.timebar{
+  height:14px;background:rgba(4,16,31,.9);border:1px solid rgba(46,230,214,.25);
+  border-radius:999px;overflow:hidden;margin-top:8px;
+}
+#timeFill{
+  height:100%;width:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--aqua),#1e9eff 60%,var(--purple));
+  transition:width .3s linear;
+}
+.seal{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  font-size:13px;font-weight:700;color:#dff9ff;
+  background:rgba(169,123,255,.15);border:1px solid rgba(169,123,255,.45);
+  padding:5px 11px;border-radius:999px;
+}
+
+/* ---------- Separadores ---------- */
+.tabs{display:flex;gap:6px;margin:12px 0 10px;}
+.tab{
+  flex:1;padding:11px 6px;border-radius:14px;font-size:14px;font-weight:700;
+  background:rgba(10,33,64,.85);border:1px solid rgba(139,167,199,.25);color:var(--muted);
+  transition:transform .08s ease;
+}
+.tab:active{transform:scale(.96);}
+.tab.active{
+  color:#04101f;background:linear-gradient(180deg,var(--aqua),#19b9c9);
+  border-color:transparent;box-shadow:0 6px 18px rgba(46,230,214,.3);
+}
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .25s ease;}
+.muted{color:var(--muted);font-size:13px;}
+
+/* ---------- Cartão de evento ---------- */
+.event-card{
+  display:flex;align-items:center;gap:10px;position:relative;
+  background:linear-gradient(120deg,rgba(169,123,255,.25),rgba(46,230,214,.14));
+  border:1px solid rgba(169,123,255,.5);border-radius:16px;
+  padding:12px 40px 12px 12px;margin-bottom:10px;
+  animation:slideDown .3s ease;
+}
+.event-card.hidden{display:none;}
+.ev-emoji{font-size:30px;filter:drop-shadow(0 0 8px rgba(255,255,255,.4));}
+.ev-title{font-weight:800;font-size:15px;}
+.ev-desc{font-size:13px;color:#cfe6ff;}
+.ev-close{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  background:rgba(4,16,31,.6);border:1px solid rgba(255,255,255,.25);
+  width:28px;height:28px;border-radius:50%;font-size:13px;
+}
+
+/* ---------- Mar / pesca ---------- */
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:2px 0 8px;}
+.sea{
+  position:relative;overflow:hidden;
+  min-height:230px;border-radius:20px;padding:14px;
+  background:
+    linear-gradient(180deg,#0b2f57 0%,#07203d 55%,#041527 100%);
+  border:1px solid rgba(46,230,214,.25);
+  box-shadow:inset 0 -30px 60px rgba(0,0,0,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  text-align:center;user-select:none;
+}
+.sea::after{ /* ondas */
+  content:"";position:absolute;left:-50%;right:-50%;bottom:-18px;height:70px;
+  background:radial-gradient(circle at 50% 0, rgba(46,230,214,.22), transparent 60%);
+  animation:wave 6s ease-in-out infinite;
+}
+.rod{font-size:46px;transform-origin:70% 70%;z-index:1;}
+.rod.casting{animation:swing .6s ease-in-out 2;}
+.status{font-size:17px;font-weight:700;color:#dff9ff;z-index:1;min-height:24px;}
+.dots span{animation:dotBlink 1.2s infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+.bite{color:var(--gold);animation:shake .3s infinite;text-shadow:0 0 14px rgba(255,207,77,.7);}
+
+/* Barra de timing */
+.timing{
+  position:relative;width:100%;height:42px;border-radius:12px;z-index:2;
+  background:rgba(4,16,31,.85);border:1px solid rgba(46,230,214,.4);
+  overflow:hidden;box-shadow:0 0 22px rgba(46,230,214,.25);
+}
+.timing.hidden{display:none;}
+#greenZone{
+  position:absolute;top:0;bottom:0;border-radius:10px;
+  background:linear-gradient(180deg,rgba(61,220,132,.85),rgba(30,140,90,.75));
+  box-shadow:0 0 16px rgba(61,220,132,.7);
+}
+#marker{
+  position:absolute;top:-2px;bottom:-2px;width:4px;left:0;
+  background:#fff;border-radius:4px;box-shadow:0 0 12px #fff;
+}
+
+/* Captura */
+.catch{
+  position:absolute;inset:0;z-index:4;border-radius:20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:rgba(4,14,28,.9);backdrop-filter:blur(3px);
+  animation:fadeIn .2s ease;
+}
+.catch.hidden{display:none;}
+.catch-fish{font-size:64px;line-height:1;animation:jump .6s ease;}
+.catch-name{font-size:18px;font-weight:800;}
+.catch-rar{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+.catch-val{font-size:22px;font-weight:800;color:var(--gold);}
+.catch-flag{font-size:12px;font-weight:800;color:var(--ok);letter-spacing:1px;}
+.catch-perf{font-size:14px;font-weight:800;color:var(--purple);}
+.catch-fail{font-size:44px;}
+.part{position:absolute;font-size:16px;animation:partFly .9s ease-out forwards;pointer-events:none;}
+.coin-fly{position:fixed;z-index:99;font-size:20px;transition:transform .6s cubic-bezier(.4,0,.9,.6),opacity .6s;pointer-events:none;}
+
+/* Botão principal */
+.big-btn{
+  display:block;width:100%;margin-top:10px;padding:18px;
+  font-size:22px;font-weight:900;letter-spacing:2px;border-radius:18px;
+  background:linear-gradient(180deg,var(--aqua),#12a3b8);
+  color:#04202b;border:none;
+  box-shadow:0 8px 0 #0a6e7d, 0 12px 24px rgba(46,230,214,.35);
+  transition:transform .07s ease, box-shadow .07s ease, filter .15s;
+}
+.big-btn:active{transform:translateY(5px);box-shadow:0 3px 0 #0a6e7d,0 6px 14px rgba(46,230,214,.3);}
+.big-btn:disabled{filter:grayscale(.6) brightness(.7);box-shadow:0 4px 0 #0a3d46;}
+.big-btn.hot{background:linear-gradient(180deg,var(--gold),#e08b1e);color:#2b1a00;animation:pulse .45s infinite;}
+
+/* ---------- Upgrades ---------- */
+.card{
+  background:linear-gradient(160deg,var(--panel),#081a33);
+  border:1px solid rgba(46,230,214,.22);
+  border-radius:18px;padding:13px;margin-bottom:10px;
+}
+.up-head{display:flex;align-items:center;gap:10px;}
+.up-ico{font-size:30px;}
+.up-name{font-weight:800;font-size:16px;}
+.lvl{font-size:12px;color:var(--muted);font-weight:700;}
+.up-desc{font-size:13px;color:#bcd6f2;margin:7px 0 4px;}
+.up-eff{font-size:13px;margin-top:3px;}
+.up-eff b{color:var(--aqua);}
+.up-eff.muted{color:var(--muted);}
+.up-eff.muted b{color:var(--purple);}
+.card .buy{width:100%;margin-top:10px;}
+
+/* ---------- Livro de pesca ---------- */
+.book-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px;font-weight:700;}
+.seals{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.seal-badge{
+  font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;
+  background:rgba(61,220,132,.14);border:1px solid rgba(61,220,132,.5);color:#b9ffd8;
+}
+.seal-badge.miss{opacity:.35;filter:grayscale(1);}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.fish-cell{
+  background:rgba(10,33,64,.9);border:1px solid rgba(139,167,199,.22);
+  border-radius:14px;padding:9px 6px;text-align:center;min-height:96px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px;
+}
+.fish-cell.new{animation:popIn .4s ease;}
+.fc-emoji{font-size:30px;line-height:1;}
+.fc-name{font-size:11px;font-weight:700;line-height:1.15;}
+.fc-rar{font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;}
+.fc-val{font-size:11px;font-weight:800;color:var(--gold);}
+.fish-cell.unknown{opacity:.55;background:rgba(6,20,38,.9);}
+.fish-cell.unknown .fc-emoji{color:var(--muted);font-weight:900;font-size:26px;}
+.fish-cell.unknown .fc-name{color:var(--muted);}
+
+/* ---------- Modais ---------- */
+.modal{
+  position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  background:rgba(2,8,18,.82);backdrop-filter:blur(4px);padding:14px;
+  animation:fadeIn .2s ease;
+}
+.modal.hidden{display:none;}
+.modal-card{
+  width:100%;max-width:420px;max-height:92vh;overflow:auto;
+  background:linear-gradient(160deg,#0b2242,#071a33);
+  border:1px solid rgba(46,230,214,.35);border-radius:22px;
+  padding:18px 16px;text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.6);
+}
+.modal-card h2{margin:0 0 4px;font-size:22px;color:var(--aqua);}
+.modal-card p{font-size:14px;color:#cfe6ff;margin:6px 0;}
+.fim-grid{display:flex;gap:8px;margin:12px 0;}
+.fim-grid div{
+  flex:1;background:rgba(4,16,31,.7);border:1px solid rgba(46,230,214,.25);
+  border-radius:14px;padding:10px 4px;
+}
+.fim-grid b{display:block;font-size:20px;color:var(--gold);}
+.fim-grid span{font-size:11px;color:var(--muted);}
+.fim-best{
+  background:rgba(4,16,31,.7);border:1px solid rgba(255,207,77,.3);
+  border-radius:14px;padding:10px;margin-bottom:10px;font-size:14px;
+}
+.fim-best .big{font-size:34px;}
+.streak{
+  font-size:14px;font-weight:800;margin-bottom:12px;
+  background:rgba(255,140,40,.12);border:1px solid rgba(255,140,40,.4);
+  border-radius:14px;padding:9px;
+}
+.streak b{color:#ffb066;}
+.nextday{font-size:14px;color:#cfe6ff;margin:12px 0 6px;font-weight:700;}
+.nextday span{color:var(--aqua);font-variant-numeric:tabular-nums;}
+.modal-card .btn{width:100%;margin-top:8px;}
+
+/* Espaço reservado para anúncio (320x100) */
+#ad-banner{
+  width:320px;height:100px;max-width:100%;margin:12px auto 4px;
+  background:rgba(4,16,31,.85);border:1px dashed rgba(139,167,199,.5);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;
+}
+
+/* ---------- Toast + flash ---------- */
+#toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+  background:rgba(10,33,64,.96);border:1px solid var(--aqua);color:var(--text);
+  padding:11px 18px;border-radius:999px;font-size:14px;font-weight:700;
+  opacity:0;pointer-events:none;transition:all .25s ease;z-index:80;max-width:90vw;text-align:center;
+}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#flashLayer{
+  position:fixed;inset:0;pointer-events:none;opacity:0;z-index:60;
+}
+#flashLayer.on{animation:flashAnim .55s ease-out;}
+
+/* ---------- Animações ---------- */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:none;}}
+@keyframes wave{0%,100%{transform:translateX(0);}50%{transform:translateX(30px);}}
+@keyframes swing{0%,100%{transform:rotate(0deg);}30%{transform:rotate(-22deg);}70%{transform:rotate(14deg);}}
+@keyframes dotBlink{0%,100%{opacity:.2;}50%{opacity:1;}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+@keyframes jump{0%{transform:translateY(40px) scale(.4);opacity:0;}60%{transform:translateY(-14px) scale(1.1);opacity:1;}100%{transform:translateY(0) scale(1);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+@keyframes blink{50%{opacity:.45;}}
+@keyframes popIn{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes partFly{0%{transform:translate(0,0) scale(.5);opacity:1;}100%{transform:translate(var(--dx,0px),-70px) scale(1.3);opacity:0;}}
+@keyframes flashAnim{0%{opacity:0;}20%{opacity:.75;}100%{opacity:0;}}
+
+/* Respeita utilizadores sensíveis a movimento */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ======================= CABEÇALHO / HUD ======================= -->
+  <header>
+    <div class="topbar">
+      <h1>🎣 PESCA LENDÁRIA</h1>
+      <button class="icon-btn" id="btnSom" title="Som">🔊</button>
+    </div>
+
+    <!-- Contador grande do tempo de pesca restante -->
+    <div class="hud">
+      <div id="timer">03:00</div>
+      <div class="coins">💰 <span id="coinVal">0</span></div>
+    </div>
+
+    <!-- Barra de progresso do tempo do dia -->
+    <div class="timebar"><div id="timeFill"></div></div>
+
+    <!-- Selo permanente com o evento do dia -->
+    <div class="seal" id="eventSeal">🎲 A calcular evento…</div>
+  </header>
+
+  <!-- ======================= SEPARADORES ======================= -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="pesca">🎣 Pesca</button>
+    <button class="tab" data-tab="upgrades">⬆️ Upgrades</button>
+    <button class="tab" data-tab="livro">📖 Livro</button>
+  </nav>
+
+  <main>
+    <!-- ======================= PESCA ======================= -->
+    <section class="panel active" id="panel-pesca">
+
+      <!-- Cartão do evento (2 segundos, com botão para fechar) -->
+      <div class="event-card hidden" id="eventCard">
+        <div class="ev-emoji" id="evEmoji">🎲</div>
+        <div>
+          <div class="ev-title" id="evTitle">Evento</div>
+          <div class="ev-desc" id="evDesc"></div>
+        </div>
+        <button class="ev-close" id="evClose" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="hint">Tens 3 minutos por dia. Pesca!</div>
+
+      <!-- Mar: linha, estado e barra de timing -->
+      <div class="sea" id="sea">
+        <div class="rod" id="rod">🎣</div>
+        <div class="status" id="status">Pronto a pescar…</div>
+
+        <div class="timing hidden" id="timingBar">
+          <div id="greenZone"></div>
+          <div id="marker"></div>
+        </div>
+
+        <!-- Resultado da captura -->
+        <div class="catch hidden" id="catchBox"></div>
+      </div>
+
+      <button class="big-btn" id="castBtn">LANÇAR</button>
+    </section>
+
+    <!-- ======================= UPGRADES ======================= -->
+    <section class="panel" id="panel-upgrades">
+      <div class="hint">Compras rápidas — não gastam o teu tempo de pesca.</div>
+      <div id="upgradesList"></div>
+    </section>
+
+    <!-- ======================= LIVRO DE PESCA ======================= -->
+    <section class="panel" id="panel-livro">
+      <div class="book-top">
+        <span id="bookCount">0/30 descobertas</span>
+        <span class="muted" id="bookHint">As não descobertas são ?</span>
+      </div>
+      <div class="seals" id="bookSeals"></div>
+      <div class="grid" id="bookGrid"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ======================= MODAL: RENDIMENTO OFFLINE ======================= -->
+<div class="modal hidden" id="offlineModal">
+  <div class="modal-card">
+    <h2>💼 Equipa a trabalhar</h2>
+    <p>Enquanto estiveste fora, os teus pescadores ganharam <b id="offlineVal" style="color:var(--gold)">0</b> moedas.</p>
+    <button class="btn gold" id="btnRecolher">Recolher</button>
+  </div>
+</div>
+
+<!-- ======================= MODAL: FIM DO DIA ======================= -->
+<div class="modal hidden" id="fimModal">
+  <div class="modal-card">
+    <h2>🌅 Fim do Dia</h2>
+    <p>O negócio continua a render. Volta amanhã!</p>
+
+    <div class="fim-grid">
+      <div><b id="fimMoedas">0</b><span>moedas hoje</span></div>
+      <div><b id="fimPeixes">0</b><span>peixes apanhados</span></div>
+    </div>
+
+    <div class="fim-best" id="fimMelhor"></div>
+
+    <div class="streak">🔥 Streak: <b id="fimStreak">0</b> dias · Melhor: <b id="fimBestStreak">0</b></div>
+
+    <button class="btn gold" id="btnPartilhar">📤 Partilhar</button>
+
+    <div class="nextday">Próximo dia em <span id="nextDay">00:00:00</span></div>
+
+    <!-- ======== ESPAÇO RESERVADO PARA ANÚNCIO (320x100) ========
+         LIGAR SDK REAL MAIS TARDE:
+         substituir o conteúdo deste div pelo código do AdSense
+         (ex.: <ins class="adsbygoogle" ...></ins> + push) ou pelo
+         interstitial/bridge de um SDK de rede de anúncios. -->
+    <div id="ad-banner">Anúncio</div>
+
+    <!-- ======== ANÚNCIO RECOMPENSADO (simulado) ========
+         LIGAR SDK REAL MAIS TARDE:
+         chamar rewardedAd.show() e só executar concederTempo()
+         se o utilizador chegar ao fim do anúncio. -->
+    <button class="btn ad" id="btnAnuncio">📺 Ver anúncio: +60 segundos de pesca</button>
+
+    <button class="btn ghost" id="btnFecharFim">Fechar</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="flashLayer"></div>
+
+<script>
+"use strict";
+/* ==========================================================================
+   PESCA LENDÁRIA — tycoon de pesca com 180 segundos por dia
+   JavaScript vanilla, sem bibliotecas. Tudo guardado em localStorage.
+   ========================================================================== */
+
+/* ==========================================================================
+   1) CONFIG — TODOS OS NÚMEROS DE EQUILÍBRIO (ajusta aqui)
+   ========================================================================== */
+const CONFIG = {
+  /* --- Tempo de jogo --- */
+  DIA_SEGUNDOS: 180,          // tempo de pesca por dia
+  ANUNCIO_SEGUNDOS: 60,       // segundos ganhos por anúncio
+  ANUNCIO_MAX_DIA: 2,         // anúncios máximos por dia
+  OFFLINE_CAP_HORAS: 24,      // cap do rendimento offline
+
+  /* --- Ciclo de pesca --- */
+  ESPERA_MIN_MS: 1500,        // espera mínima após lançar
+  ESPERA_MAX_MS: 3000,        // espera máxima após lançar
+  ESPERA_REDUCAO_NIVEL: 0.08, // -8% de espera por nível de Cana
+  ESPERA_MIN_MS_ABS: 500,     // tecto inferior da espera
+  ZONA_BASE: 0.18,            // largura inicial da zona verde (fração da barra)
+  ZONA_GANHO_NIVEL: 0.025,    // +2,5% de zona verde por nível de Cana
+  BARRA_MS: 1300,             // duração da varredura da barra de timing
+  JANELA_PERFEITA: 0.4,       // fração central da zona que conta como "Perfeito"
+  MOSTRA_CAPTURA_MS: 1500,    // tempo de ecrã do peixe apanhado
+  BONUS_PERFEITO: 1.5,        // +50% no valor por acerto perfeito
+
+  /* --- Upgrades --- */
+  UPGRADE_MAX: 10,
+  CUSTO_BASE:  { rod:50, bait:75, boat:120, fisher:150, freezer:200 },
+  CRESCIMENTO: { rod:1.5, bait:1.5, boat:1.6, fisher:1.55, freezer:1.5 },
+  BARCO_VALOR_NIVEL: 0.20,    // +20% no valor de tudo por nível de Barco
+  GELEIRA_VALOR_NIVEL: 0.25,  // +25% no valor de Raro+ por nível de Geleira
+  ISCO_SHIFT_NIVEL: 0.08,     // +8% nas probabilidades de raridades altas por nível
+  PESCADOR_MOEDAS_MIN: 12,    // moedas/min por nível de Pescador Contratado
+
+  /* --- Primeira experiência --- */
+  PRIMEIRO_DIA_RARIDADE: 1.8, // multiplicador extra de raridades altas no 1º dia
+  PRIMEIRO_UPGRADE_GRATIS: 'rod', // upgrade grátis no 1º dia
+
+  /* --- Persistência --- */
+  SAVE_KEY: 'pescaLendaria.v1',
+  SAVE_INTERVAL: 5000,        // guarda automática periódica
+  TICK_MS: 100                // cadência do loop principal
+};
+
+/* ==========================================================================
+   2) DADOS DE CONTEÚDO (troca o tema alterando só estes arrays)
+   ========================================================================== */
+
+/* --- Raridades: peso em %, multiplicador de valor e cor --- */
+const RARIDADES = [
+  { id:'comum',    nome:'Comum',    peso:60,   mult:1,    cor:'var(--r0)', emoji:'⚪' },
+  { id:'incomum',  nome:'Incomum',  peso:25,   mult:3,    cor:'var(--r1)', emoji:'🟢' },
+  { id:'raro',     nome:'Raro',     peso:10,   mult:10,   cor:'var(--r2)', emoji:'🔵' },
+  { id:'epico',    nome:'Épico',    peso:4,    mult:40,   cor:'var(--r3)', emoji:'🟣' },
+  { id:'lendario', nome:'Lendário', peso:0.9,  mult:200,  cor:'var(--r4)', emoji:'🟡' },
+  { id:'mitico',   nome:'Mítico',   peso:0.1,  mult:1000, cor:'var(--r5)', emoji:'🔴' }
+];
+
+/* --- 30 espécies: 8 comuns, 7 incomuns, 6 raras, 4 épicas, 3 lendárias, 2 míticas --- */
+const PEIXES = [
+  /* Comuns */
+  { id:'sardinha_sem_nocao',   nome:'Sardinha Sem Noção',           emoji:'🐟', r:0, base:10 },
+  { id:'carapau_perdido',      nome:'Carapau Perdido',              emoji:'🐠', r:0, base:12 },
+  { id:'golo_apressado',       nome:'Golo Apressado',               emoji:'🐟', r:0, base:14 },
+  { id:'tainha_fria',          nome:'Tainha Quase Fria',            emoji:'🐟', r:0, base:16 },
+  { id:'sargo_improvisado',    nome:'Sargo Improvisado',            emoji:'🐠', r:0, base:18 },
+  { id:'anchova_reservada',    nome:'Anchova Reservada',            emoji:'🐟', r:0, base:20 },
+  { id:'baiacu_inflado',       nome:'Baiacu Inflado',               emoji:'🐡', r:0, base:22 },
+  { id:'peixe_voador_parque',  nome:'Peixe Voador de Parque',       emoji:'🐟', r:0, base:25 },
+  /* Incomuns */
+  { id:'caranguejo_dedicado',  nome:'Caranguejo Dedicado',          emoji:'🦀', r:1, base:45 },
+  { id:'polvo_reformado',      nome:'Polvo Reformado',              emoji:'🐙', r:1, base:52 },
+  { id:'atum_segunda_mao',     nome:'Atum de Segunda Mão',          emoji:'🐟', r:1, base:58 },
+  { id:'lula_simpatica',       nome:'Lula Simpática',               emoji:'🦑', r:1, base:63 },
+  { id:'xarroco_malhumorado',  nome:'Xarroco Mal-Humorado',         emoji:'🐟', r:1, base:68 },
+  { id:'mero_de_elevador',     nome:'Mero de Elevador',             emoji:'🐟', r:1, base:75 },
+  { id:'robalo_influencer',    nome:'Robalo Influencer',            emoji:'🐟', r:1, base:82 },
+  /* Raras */
+  { id:'dourada_encartada',    nome:'Dourada Encartada',            emoji:'🐟', r:2, base:240 },
+  { id:'congro_filosofico',    nome:'Congro Filosófico',            emoji:'🐟', r:2, base:275 },
+  { id:'lula_sigma',           nome:'Lula Sigma',                   emoji:'🦑', r:2, base:310 },
+  { id:'espadarte_contabilista',nome:'Espadarte Contabilista',      emoji:'🐟', r:2, base:350 },
+  { id:'barracuda_assertiva',  nome:'Barracuda Assertiva',          emoji:'🐟', r:2, base:390 },
+  { id:'kraken_iniciante',     nome:'Kraken Iniciante',             emoji:'🐙', r:2, base:430 },
+  /* Épicas */
+  { id:'tubarao_estimacao',    nome:'Tubarão de Estimação',         emoji:'🦈', r:3, base:1500 },
+  { id:'baiacu_nuclear',       nome:'Baiacu Nuclear',               emoji:'☢️🐡', r:3, base:1700 },
+  { id:'baleia_fiscal',        nome:'Baleia Fiscal',                emoji:'🐋', r:3, base:2000 },
+  { id:'kraken_de_feira',      nome:'Kraken de Feira',              emoji:'🐙', r:3, base:2400 },
+  /* Lendárias */
+  { id:'baleia_outro_mundo',   nome:'Baleia do Outro Mundo',        emoji:'🐳', r:4, base:9000 },
+  { id:'tubarao_ouro',         nome:'Tubarão de Ouro',              emoji:'🦈', r:4, base:12000 },
+  { id:'polvo_reencarnado',    nome:'Polvo Reencarnado',            emoji:'🐙', r:4, base:15000 },
+  /* Míticas */
+  { id:'cetus',                nome:'Cetus, o Come-Mundos',         emoji:'🐋', r:5, base:60000 },
+  { id:'dragao_marinho',       nome:'Dragão-Marinho Ancestral',     emoji:'🐉', r:5, base:90000 }
+];
+
+/* --- Upgrades --- */
+const UPGRADES_DADOS = [
+  { id:'rod',     nome:'Cana',                 emoji:'🎣', desc:'Reduz a espera e alarga a zona verde do timing.' },
+  { id:'bait',    nome:'Isco',                 emoji:'🪱', desc:'Aumenta a probabilidade das raridades altas.' },
+  { id:'boat',    nome:'Barco',                emoji:'⛵', desc:'Multiplica o valor de todos os peixes.' },
+  { id:'fisher',  nome:'Pescador Contratado',  emoji:'🧑‍🌾', desc:'Gera moedas por minuto, mesmo com o jogo fechado.' },
+  { id:'freezer', nome:'Geleira',              emoji:'🧊', desc:'Aumenta o valor de venda dos peixes raros ou superiores.' }
+];
+
+/* --- Eventos do dia (8) — efeitos aplicados ao calcular cada lance --- */
+const EVENTOS = [
+  { id:'chuva',   emoji:'☔', nome:'Dia de Chuva',       desc:'+30% de peixes raros ou superiores.',   fx:{ raro:1.3 } },
+  { id:'nevoeiro',emoji:'🌫️', nome:'Nevoeiro',           desc:'Espera +50%, mas valor +40%.',           fx:{ espera:1.5, valor:1.4 } },
+  { id:'lua',     emoji:'🌕', nome:'Lua Cheia',          desc:'O peixe mítico aparece 5x mais.',        fx:{ mitico:5 } },
+  { id:'tubaroes',emoji:'🦈', nome:'Dia de Tubarões',    desc:'Peixes grandes valem o dobro.',          fx:{ grande:2 } },
+  { id:'calmo',   emoji:'😴', nome:'Dia Calmo',          desc:'Sem efeitos negativos, mas +1 isco grátis.', fx:{ iscoGratis:1 } },
+  { id:'mare',    emoji:'💨', nome:'Maré Favorável',     desc:'Espera -40%: pesca muito mais rápida.',  fx:{ espera:0.6 } },
+  { id:'dourado', emoji:'💰', nome:'Dia Dourado',        desc:'+30% de valor em todas as capturas.',    fx:{ valor:1.3 } },
+  { id:'polvos',  emoji:'🐙', nome:'Invasão de Polvos',  desc:'Incomuns e superiores aparecem +50%.',   fx:{ naoComum:1.5 } }
+];
+/* ==========================================================================
+   3) UTILITÁRIOS
+   ========================================================================== */
+const $ = (id) => document.getElementById(id);
+
+/** Formata moedas com K, M, B, T — função única para todo o jogo. */
+function fmt(n) {
+  n = Math.floor(Number(n) || 0);
+  const neg = n < 0;
+  if (neg) n = -n;
+  const UN = [['', 1], ['K', 1e3], ['M', 1e6], ['B', 1e9], ['T', 1e12], ['Qa', 1e15]];
+  let i = 0;
+  while (i < UN.length - 1 && n >= UN[i + 1][1]) i++;
+  if (i === 0) return (neg ? '-' : '') + n;
+  let v = n / UN[i][1];
+  let s = v.toFixed(1);
+  // Arredondamento pode "esticar" a unidade (ex.: 999999 → 1000,0) → sobe de unidade
+  if (parseFloat(s) >= 1000 && i < UN.length - 1) {
+    i++;
+    v = n / UN[i][1];
+    s = v.toFixed(1);
+  }
+  s = s.replace('.', ',');
+  if (s.endsWith(',0')) s = s.slice(0, -2);
+  return (neg ? '-' : '') + s + UN[i][0];
+}
+
+function pad2(n) { return String(n).padStart(2, '0'); }
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+function pct(v) { return (v * 100).toFixed(1).replace('.', ',') + '%'; }
+function seg(ms) { return (ms / 1000).toFixed(2).replace('.', ',') + 's'; }
+
+/** Hash determinístico (FNV-1a) para o evento do dia ser igual para todos. */
+function hashStr(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** Chave local AAAA-MM-DD (hora local). */
+function hojeKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+
+/** Diferença em dias entre duas chaves AAAA-MM-DD. */
+function diasEntre(a, b) {
+  const pa = a.split('-').map(Number), pb = b.split('-').map(Number);
+  const ta = Date.UTC(pa[0], pa[1] - 1, pa[2]);
+  const tb = Date.UTC(pb[0], pb[1] - 1, pb[2]);
+  return Math.round((tb - ta) / 86400000);
+}
+
+/** Evento determinístico a partir da data. */
+function eventoDaData(key) {
+  return EVENTOS[hashStr('pesca:' + key) % EVENTOS.length];
+}
+
+function reduzMovimento() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/* ==========================================================================
+   4) ESTADO + PERSISTÊNCIA (tudo em try/catch com valores por defeito)
+   ========================================================================== */
+
+/** Estado por defeito — usado se o localStorage falhar ou estiver corrompido. */
+function estadoPorDefeito() {
+  const k = hojeKey();
+  return {
+    moedas: 0,
+    up: { rod:0, bait:0, boat:0, fisher:0, freezer:0 },
+    descobertos: [],
+    dataDia: k,             // data do dia de jogo atual
+    tempo: CONFIG.DIA_SEGUNDOS,
+    tempoTotal: CONFIG.DIA_SEGUNDOS,
+    evento: eventoDaData(k).id,
+    eventoVisto: false,
+    streak: 1,
+    melhorStreak: 1,
+    numeroDia: 1,           // nº do dia (para partilha)
+    anuncios: 0,            // anúncios vistos hoje
+    hoje: { moedas:0, peixes:0, melhor:null },
+    som: true,
+    ultimoVisto: Date.now(),
+    novato: true            // primeiro dia: boost de raridades + upgrade grátis
+  };
+}
+
+function carregar() {
+  let s = null;
+  try {
+    const raw = localStorage.getItem(CONFIG.SAVE_KEY);
+    if (raw) s = JSON.parse(raw);
+  } catch (e) { s = null; } // localStorage indisponível (modo privado, quota, JSON inválido)
+
+  const d = estadoPorDefeito();
+  if (!s || typeof s !== 'object') return d;
+
+  // Merge defensivo: tudo que estiver em falta ou com tipo errado volta ao defeito
+  const out = Object.assign({}, d, s);
+  out.up = Object.assign({}, d.up, (s.up && typeof s.up === 'object') ? s.up : {});
+  out.hoje = Object.assign({}, d.hoje, (s.hoje && typeof s.hoje === 'object') ? s.hoje : {});
+  out.descobertos = Array.isArray(s.descobertos) ? s.descobertos.slice() : [];
+  if (typeof out.moedas !== 'number' || !isFinite(out.moedas)) out.moedas = 0;
+  if (typeof out.tempo !== 'number' || !isFinite(out.tempo)) out.tempo = CONFIG.DIA_SEGUNDOS;
+  if (typeof out.tempoTotal !== 'number' || out.tempoTotal <= 0) out.tempoTotal = CONFIG.DIA_SEGUNDOS;
+  if (typeof out.ultimoVisto !== 'number') out.ultimoVisto = Date.now();
+  ['rod','bait','boat','fisher','freezer'].forEach(k => {
+    out.up[k] = clamp(Math.floor(Number(out.up[k]) || 0), 0, CONFIG.UPGRADE_MAX);
+  });
+  return out;
+}
+
+/** Grava o estado — nunca lança erro. */
+function guardar() {
+  try {
+    state.ultimoVisto = Date.now();
+    localStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify(state));
+  } catch (e) { /* silencioso: o jogo continua em memória */ }
+}
+
+let state = carregar();
+
+/* ==========================================================================
+   5) LÓGICA DE DIA E EVENTO
+   ========================================================================== */
+
+function eventoAtual() {
+  return EVENTOS.find(e => e.id === state.evento) || EVENTOS[0];
+}
+
+/** Trata a viragem de dia: streak, tempo, evento e estatísticas. */
+function verificarNovoDia() {
+  const k = hojeKey();
+  if (k === state.dataDia) return false;
+
+  const dif = state.dataDia ? diasEntre(state.dataDia, k) : 1;
+  state.streak = (dif === 1) ? state.streak + 1 : 1; // falhou um dia → volta a 1
+  state.melhorStreak = Math.max(state.melhorStreak, state.streak);
+
+  state.dataDia = k;
+  state.numeroDia += 1;
+  state.tempo = CONFIG.DIA_SEGUNDOS;
+  state.tempoTotal = CONFIG.DIA_SEGUNDOS;
+  state.evento = eventoDaData(k).id;
+  state.eventoVisto = false;
+  state.anuncios = 0;
+  state.hoje = { moedas:0, peixes:0, melhor:null };
+  state.novato = false; // boost do primeiro dia só no 1º dia
+
+  cancelarPesca();
+  fecharFimDia();
+  esconderEvento();
+  // Mostra o novo evento do dia (cartão de 2s) passados instantes
+  setTimeout(mostrarEvento, 300);
+  return true;
+}
+
+/** Modificadores ativos (evento do dia + primeiro dia). */
+function mods() {
+  const ev = eventoAtual();
+  const fx = ev.fx || {};
+  const isco = state.up.bait + (fx.iscoGratis || 0);
+  return {
+    espera:   fx.espera  || 1,
+    valor:    fx.valor   || 1,
+    grande:   fx.grande  || 1,
+    raro:     fx.raro    || 1,
+    mitico:   fx.mitico  || 1,
+    naoComum: (1 + isco * CONFIG.ISCO_SHIFT_NIVEL) * (fx.naoComum || 1) *
+              (state.novato ? CONFIG.PRIMEIRO_DIA_RARIDADE : 1),
+    isco: isco
+  };
+}
+
+/** Sorteia o índice da raridade respeitando pesos + efeitos. */
+function sortearRaridade(m) {
+  const pesos = RARIDADES.map((r, i) => {
+    let p = r.peso;
+    if (i >= 1) p *= m.naoComum;
+    if (i >= 2) p *= m.raro;
+    if (i === RARIDADES.length - 1) p *= m.mitico;
+    return p;
+  });
+  const total = pesos.reduce((a, b) => a + b, 0);
+  let x = Math.random() * total;
+  for (let i = 0; i < pesos.length; i++) {
+    x -= pesos[i];
+    if (x <= 0) return i;
+  }
+  return 0;
+}
+/* ==========================================================================
+   6) ÁUDIO (Web Audio API, bips simples) + FEEDBACK
+   ========================================================================== */
+let audioCtx = null;
+
+function bip(freq, dur, tipo) {
+  if (!state.som) return;
+  try {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = tipo || 'sine';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.1));
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + (dur || 0.1) + 0.02);
+  } catch (e) { /* áudio bloqueado — ignorar */ }
+}
+
+function sonsDoResultado(tipo) {
+  if (tipo === 'perfeito') { bip(880, .09); setTimeout(() => bip(1320, .12), 90); }
+  else if (tipo === 'bom') bip(1046, .12, 'triangle');
+  else if (tipo === 'falhou') bip(180, .25, 'sawtooth');
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+function vibrar(padrao) {
+  try { if (navigator.vibrate) navigator.vibrate(padrao); } catch (e) {}
+}
+
+/** Flash + partículas para Lendário e Mítico. */
+function efeitoEspecial(rIdx) {
+  if (rIdx < 4) return;
+  vibrar([40, 60, 40, 60, 80]);
+  const f = $('flashLayer');
+  f.style.background = rIdx === 5
+    ? 'radial-gradient(circle, rgba(255,77,109,.9), rgba(169,123,255,.5))'
+    : 'radial-gradient(circle, rgba(255,201,60,.9), rgba(46,230,214,.4))';
+  f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
+  setTimeout(() => f.classList.remove('on'), 600);
+  particulas(16);
+}
+
+function particulas(n) {
+  if (reduzMovimento()) return;
+  const box = $('catchBox');
+  const glyphs = ['✨', '⭐', '💫', '🌟'];
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.className = 'part';
+    s.textContent = glyphs[i % glyphs.length];
+    s.style.left = (8 + Math.random() * 84) + '%';
+    s.style.top = (25 + Math.random() * 55) + '%';
+    s.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+    s.style.animationDelay = (Math.random() * 0.35) + 's';
+    box.appendChild(s);
+    setTimeout(() => { try { s.remove(); } catch (e) {} }, 1400);
+  }
+}
+
+/** Moeda a voar até ao contador. */
+function vooMoeda(fromEl) {
+  if (reduzMovimento()) return;
+  try {
+    const a = fromEl.getBoundingClientRect();
+    const b = $('coinVal').getBoundingClientRect();
+    const el = document.createElement('div');
+    el.className = 'coin-fly';
+    el.textContent = '🪙';
+    el.style.left = (a.left + a.width / 2) + 'px';
+    el.style.top = a.top + 'px';
+    document.body.appendChild(el);
+    const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+    const dy = (b.top + b.height / 2) - a.top;
+    requestAnimationFrame(() => {
+      el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(.4)';
+      el.style.opacity = '0';
+    });
+    setTimeout(() => { try { el.remove(); } catch (e) {} }, 700);
+  } catch (e) {}
+}
+
+/* ==========================================================================
+   7) RENDER DO HUD, SEPARADORES E EVENTO
+   ========================================================================== */
+function atualizarHUD() {
+  $('coinVal').textContent = fmt(state.moedas);
+  const t = Math.max(0, state.tempo);
+  const timer = $('timer');
+  timer.textContent = pad2(Math.floor(t / 60)) + ':' + pad2(Math.floor(t % 60));
+  timer.classList.toggle('low', t <= 30);
+  const total = state.tempoTotal > 0 ? state.tempoTotal : CONFIG.DIA_SEGUNDOS;
+  $('timeFill').style.width = clamp(t / total * 100, 0, 100) + '%';
+}
+
+function mostrarSeloEvento() {
+  const ev = eventoAtual();
+  $('eventSeal').textContent = ev.emoji + ' ' + ev.nome;
+}
+
+let eventoTimer = null;
+function mostrarEvento() {
+  const ev = eventoAtual();
+  $('evEmoji').textContent = ev.emoji;
+  $('evTitle').textContent = ev.nome;
+  $('evDesc').textContent = ev.desc;
+  $('eventCard').classList.remove('hidden');
+  if (eventoTimer) clearTimeout(eventoTimer);
+  eventoTimer = setTimeout(fecharEvento, 2000); // some ao fim de 2 segundos
+}
+function fecharEvento() {
+  if (eventoTimer) { clearTimeout(eventoTimer); eventoTimer = null; }
+  esconderEvento();
+  state.eventoVisto = true;
+  guardar();
+}
+function esconderEvento() {
+  if (eventoTimer) { clearTimeout(eventoTimer); eventoTimer = null; }
+  $('eventCard').classList.add('hidden');
+}
+
+function mudarSeparador(nome) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === nome));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + nome));
+  if (nome === 'upgrades') renderUpgrades();
+  if (nome === 'livro') renderLivro();
+}
+
+/* ==========================================================================
+   8) UPGRADES
+   ========================================================================== */
+function custoUpgrade(u, nivel) {
+  return Math.round(CONFIG.CUSTO_BASE[u.id] * Math.pow(CONFIG.CRESCIMENTO[u.id], nivel));
+}
+
+/** Efeito legível de um nível (para mostrar custo/efeito com clareza). */
+function efeitoTexto(u, nivel) {
+  switch (u.id) {
+    case 'rod': {
+      const ms = CONFIG.ESPERA_MAX_MS * (1 - CONFIG.ESPERA_REDUCAO_NIVEL * nivel);
+      return 'espera ' + seg(ms) + ' · zona ' + pct(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * nivel);
+    }
+    case 'bait':   return 'raridades altas ×' + (1 + nivel * CONFIG.ISCO_SHIFT_NIVEL).toFixed(2).replace('.', ',');
+    case 'boat':   return 'valor ×' + (1 + nivel * CONFIG.BARCO_VALOR_NIVEL).toFixed(2).replace('.', ',');
+    case 'fisher': return (nivel * CONFIG.PESCADOR_MOEDAS_MIN) + ' moedas/min';
+    case 'freezer':return '+' + Math.round(nivel * CONFIG.GELEIRA_VALOR_NIVEL * 100) + '% em Raro+';
+  }
+  return '';
+}
+
+function renderUpgrades() {
+  const wrap = $('upgradesList');
+  wrap.innerHTML = '';
+  UPGRADES_DADOS.forEach(u => {
+    const lvl = state.up[u.id] || 0;
+    const maxed = lvl >= CONFIG.UPGRADE_MAX;
+    const custo = maxed ? 0 : custoUpgrade(u, lvl);
+    const pode = !maxed && state.moedas >= custo;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML =
+      '<div class="up-head">' +
+        '<span class="up-ico">' + u.emoji + '</span>' +
+        '<div><div class="up-name">' + u.nome + '</div>' +
+        '<div class="lvl">Nível ' + lvl + '/' + CONFIG.UPGRADE_MAX + '</div></div>' +
+      '</div>' +
+      '<div class="up-desc">' + u.desc + '</div>' +
+      '<div class="up-eff">Agora: <b>' + efeitoTexto(u, lvl) + '</b></div>' +
+      (maxed
+        ? '<div class="up-eff muted">Nível máximo atingido ✨</div>'
+        : '<div class="up-eff muted">Próximo: <b>' + efeitoTexto(u, lvl + 1) + '</b></div>') +
+      '<button class="btn buy' + (pode ? '' : ' off') + '" data-id="' + u.id + '"' + (pode ? '' : ' disabled') + '>' +
+        (maxed ? 'MÁXIMO' : 'Comprar · 💰 ' + fmt(custo)) +
+      '</button>';
+    wrap.appendChild(card);
+  });
+  wrap.querySelectorAll('.buy').forEach(b => {
+    b.addEventListener('click', () => comprarUpgrade(b.dataset.id));
+  });
+}
+
+function comprarUpgrade(id) {
+  const u = UPGRADES_DADOS.find(x => x.id === id);
+  if (!u) return;
+  const lvl = state.up[id] || 0;
+  if (lvl >= CONFIG.UPGRADE_MAX) return;
+  const custo = custoUpgrade(u, lvl);
+  if (state.moedas < custo) { toast('Moedas insuficientes!'); bip(200, .15, 'sawtooth'); return; }
+  state.moedas -= custo;
+  state.up[id] = lvl + 1;
+  bip(760, .08); setTimeout(() => bip(1140, .1), 80);
+  toast(u.emoji + ' ' + u.nome + ' → nível ' + (lvl + 1));
+  guardar();
+  renderUpgrades();
+  atualizarHUD();
+}
+/* ==========================================================================
+   9) LIVRO DE PESCA (coleção)
+   ========================================================================== */
+function renderLivro() {
+  const grid = $('bookGrid');
+  const total = PEIXES.length;
+  const n = state.descobertos.length;
+  $('bookCount').textContent = n + '/' + total + ' descobertas';
+
+  /* Selo pequeno por raridade completa */
+  const seals = $('bookSeals');
+  seals.innerHTML = '';
+  RARIDADES.forEach((r, i) => {
+    const todos = PEIXES.filter(p => p.r === i);
+    const ok = todos.every(p => state.descobertos.indexOf(p.id) !== -1);
+    const b = document.createElement('span');
+    b.className = 'seal-badge' + (ok ? '' : ' miss');
+    b.textContent = (ok ? '🏅 ' : '🔒 ') + r.nome + ' ' +
+      todos.filter(p => state.descobertos.indexOf(p.id) !== -1).length + '/' + todos.length;
+    seals.appendChild(b);
+  });
+
+  grid.innerHTML = '';
+  PEIXES.forEach(p => {
+    const desc = state.descobertos.indexOf(p.id) !== -1;
+    const r = RARIDADES[p.r];
+    const cell = document.createElement('div');
+    if (desc) {
+      cell.className = 'fish-cell';
+      cell.innerHTML =
+        '<div class="fc-emoji">' + p.emoji + '</div>' +
+        '<div class="fc-name">' + p.nome + '</div>' +
+        '<div class="fc-rar" style="color:' + r.cor + '">' + r.nome + '</div>' +
+        '<div class="fc-val">💰 ' + fmt(p.base * r.mult) + '</div>';
+    } else {
+      cell.className = 'fish-cell unknown';
+      cell.innerHTML =
+        '<div class="fc-emoji">?</div>' +
+        '<div class="fc-name">???</div>' +
+        '<div class="fc-rar" style="color:var(--muted)">—</div>';
+    }
+    grid.appendChild(cell);
+  });
+}
+
+/* ==========================================================================
+   10) CICLO DE PESCA
+   fases: idle → waiting → bar → result → idle
+   Tudo feito com tempo acumulado (dt), para pausar com o separador oculto.
+   ========================================================================== */
+let fase = 'idle';          // 'idle' | 'waiting' | 'bar' | 'result' | 'ended'
+let esperaMs = 0, esperaAcc = 0;
+let barAcc = 0, zonaPos = 0, zonaLarg = 0;
+let resultAcc = 0;
+let barVisivel = false;
+
+function botaoLancar() {
+  const b = $('castBtn');
+  b.classList.remove('hot');
+  if (fase === 'ended' || state.tempo <= 0) {
+    b.disabled = true;
+    b.textContent = '⏳ DIA TERMINADO';
+    return;
+  }
+  b.disabled = false;
+  if (fase === 'idle') b.textContent = 'LANÇAR';
+  else if (fase === 'waiting') b.textContent = '… A ESPERAR';
+  else if (fase === 'bar') { b.textContent = '🎯 AGORA!'; b.classList.add('hot'); }
+  else b.textContent = '…';
+}
+
+function setStatus(html) { $('status').innerHTML = html; }
+
+function cancelarPesca() {
+  fase = 'idle';
+  barVisivel = false;
+  $('timingBar').classList.add('hidden');
+  $('catchBox').classList.add('hidden');
+  $('catchBox').innerHTML = '';
+  setStatus('Pronto a pescar…');
+  botaoLancar();
+}
+
+/** 1) Lançar a cana. */
+function lancar() {
+  if (fase !== 'idle') return;
+  if (state.tempo <= 0) { abrirFimDia(); return; }
+  const m = mods();
+  const base = rnd(CONFIG.ESPERA_MIN_MS, CONFIG.ESPERA_MAX_MS);
+  const comCana = base * (1 - CONFIG.ESPERA_REDUCAO_NIVEL * state.up.rod);
+  esperaMs = clamp(comCana * m.espera, CONFIG.ESPERA_MIN_MS_ABS, 8000);
+  esperaAcc = 0;
+  fase = 'waiting';
+  const rod = $('rod');
+  rod.classList.remove('casting'); void rod.offsetWidth; rod.classList.add('casting');
+  setStatus('A lançar<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
+  bip(430, .07, 'triangle');
+  botaoLancar();
+}
+
+/** 2) O peixe morde: abre a barra de timing. */
+function mordida() {
+  fase = 'bar';
+  barAcc = 0;
+  zonaLarg = clamp(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * state.up.rod, 0.1, 0.85);
+  zonaPos = rnd(0, 1 - zonaLarg);
+  $('greenZone').style.left = (zonaPos * 100) + '%';
+  $('greenZone').style.width = (zonaLarg * 100) + '%';
+  $('marker').style.left = '0%';
+  $('timingBar').classList.remove('hidden');
+  barVisivel = true;
+  setStatus('<span class="bite">‼️ MORDIDA! Toca!</span>');
+  bip(920, .12, 'square');
+  botaoLancar();
+}
+
+/** 3) Resolução do toque (pos = posição 0..1 do marcador, null = tempo esgotado). */
+function resolverBarra(pos) {
+  if (fase !== 'bar') return;
+  fase = 'result';
+  resultAcc = 0;
+  $('timingBar').classList.add('hidden');
+  barVisivel = false;
+
+  let tipo = 'falhou';
+  if (pos !== null && pos >= zonaPos && pos <= zonaPos + zonaLarg) {
+    const centro = zonaPos + zonaLarg / 2;
+    tipo = Math.abs(pos - centro) <= (zonaLarg * CONFIG.JANELA_PERFEITA) / 2 ? 'perfeito' : 'bom';
+  }
+
+  if (tipo === 'falhou') {
+    sonsDoResultado('falhou');
+    mostrarCaptura({ falhou: true });
+    botaoLancar();
+    return;
+  }
+
+  const m = mods();
+  const rIdx = sortearRaridade(m);
+  const candidatos = PEIXES.filter(p => p.r === rIdx);
+  const peixe = candidatos[Math.floor(Math.random() * candidatos.length)];
+  const perfeito = (tipo === 'perfeito');
+  const valor = calcValor(peixe, rIdx, perfeito, m);
+
+  state.moedas += valor;
+  state.hoje.moedas += valor;
+  state.hoje.peixes += 1;
+
+  const novo = state.descobertos.indexOf(peixe.id) === -1;
+  if (novo) state.descobertos.push(peixe.id);
+  if (!state.hoje.melhor || valor >= state.hoje.melhor.valor) {
+    state.hoje.melhor = { nome: peixe.nome, emoji: peixe.emoji, r: rIdx, valor: valor, perfeito: perfeito };
+  }
+
+  sonsDoResultado(tipo);
+  mostrarCaptura({ peixe: peixe, rIdx: rIdx, valor: valor, perfeito: perfeito, novo: novo });
+  if (rIdx >= 4) efeitoEspecial(rIdx);
+  botaoLancar();
+  guardar();
+  if (novo) { renderLivro(); }
+}
+
+/** Valor final do peixe (raridade + barco + geleira + eventos + perfeito). */
+function calcValor(peixe, rIdx, perfeito, m) {
+  let v = peixe.base * RARIDADES[rIdx].mult;
+  v *= (1 + state.up.boat * CONFIG.BARCO_VALOR_NIVEL);
+  if (rIdx >= 2) v *= (1 + state.up.freezer * CONFIG.GELEIRA_VALOR_NIVEL);
+  v *= m.valor;
+  if (rIdx >= 2) v *= m.grande;   // "peixes grandes" = Raro ou superior
+  if (perfeito) v *= CONFIG.BONUS_PERFEITO;
+  return Math.max(1, Math.round(v));
+}
+
+/** Ecrã rápido do resultado (captura ou fuga). */
+function mostrarCaptura(res) {
+  const box = $('catchBox');
+  if (res.falhou) {
+    box.innerHTML =
+      '<div class="catch-fail">😅</div>' +
+      '<div class="catch-name">Escapou!</div>' +
+      '<div class="catch-rar" style="color:var(--muted)">Tenta outra vez</div>';
+    box.classList.remove('hidden');
+    return;
+  }
+  const r = RARIDADES[res.rIdx];
+  const p = res.peixe;
+  box.innerHTML =
+    '<div class="catch-fish">' + p.emoji + '</div>' +
+    (res.novo ? '<div class="catch-flag">✨ NOVO!</div>' : '') +
+    '<div class="catch-name">' + p.nome + '</div>' +
+    '<div class="catch-rar" style="color:' + r.cor + '">' + r.nome + '</div>' +
+    (res.perfeito ? '<div class="catch-perf">🎯 PERFEITO +50%</div>' : '') +
+    '<div class="catch-val">+' + fmt(res.valor) + ' 💰</div>';
+  box.classList.remove('hidden');
+  vooMoeda(box.querySelector('.catch-fish'));
+}
+
+function esconderCaptura() {
+  $('catchBox').classList.add('hidden');
+  $('catchBox').innerHTML = '';
+  if (fase === 'result') fase = 'idle';
+  setStatus('Pronto a pescar…');
+  botaoLancar();
+}
+/* ==========================================================================
+   11) LOOP PRINCIPAL (relógio só desconta com o separador visível)
+   ========================================================================== */
+let ultimoAgora = Date.now();
+let guardaAcc = 0;
+
+function loop() {
+  const agora = Date.now();
+  let dt = agora - ultimoAgora;
+  ultimoAgora = agora;
+
+  // Page Visibility API: com o separador oculto não se desconta tempo nem se avança
+  if (document.hidden) return;
+  if (dt > 2000) dt = 2000; // após throttling do navegador, limita o salto
+  if (dt < 0) dt = 0;
+
+  verificarNovoDia();
+
+  /* Relógio dos 180s */
+  if (state.tempo > 0 && fase !== 'ended') {
+    state.tempo -= dt / 1000;
+    if (state.tempo <= 0) {
+      state.tempo = 0;
+      encerrarDia();
+    }
+  }
+
+  /* Rendimento passivo em tempo real (Pescador Contratado) */
+  const taxa = state.up.fisher * CONFIG.PESCADOR_MOEDAS_MIN;
+  if (taxa > 0) {
+    state.moedas += taxa * (dt / 60000);
+  }
+
+  /* Máquinas de estados da pesca */
+  if (fase === 'waiting') {
+    esperaAcc += dt;
+    if (esperaAcc >= esperaMs) mordida();
+  } else if (fase === 'bar') {
+    barAcc += dt;
+    if (barAcc >= CONFIG.BARRA_MS) {
+      resolverBarra(null); // não tocou a tempo → escapa
+    } else if (barVisivel) {
+      $('marker').style.left = (barAcc / CONFIG.BARRA_MS * 100) + '%';
+    }
+  } else if (fase === 'result') {
+    resultAcc += dt;
+    if (resultAcc >= CONFIG.MOSTRA_CAPTURA_MS) esconderCaptura();
+  }
+
+  atualizarHUD();
+
+  /* Guardagem automática periódica */
+  guardaAcc += dt;
+  if (guardaAcc >= CONFIG.SAVE_INTERVAL) {
+    guardaAcc = 0;
+    guardar();
+    renderUpgradesSeVisivel();
+  }
+}
+
+function renderUpgradesSeVisivel() {
+  if ($('panel-upgrades').classList.contains('active')) renderUpgrades();
+}
+
+/* ==========================================================================
+   12) FIM DO DIA
+   ========================================================================== */
+let contadorFim = null;
+
+function encerrarDia() {
+  cancelarPesca();   // limpa a UI da pesca (fica em 'idle')
+  fase = 'ended';    // trava novos lançamentos
+  abrirFimDia();
+  guardar();
+}
+
+function abrirFimDia() {
+  $('fimMoedas').textContent = fmt(state.hoje.moedas);
+  $('fimPeixes').textContent = String(state.hoje.peixes);
+  const m = state.hoje.melhor;
+  $('fimMelhor').innerHTML = m
+    ? '<div class="big">' + m.emoji + '</div>' +
+      '🏆 Melhor captura: <b style="color:' + RARIDADES[m.r].cor + '">' + m.nome + '</b> ' +
+      '(' + RARIDADES[m.r].nome + ') · 💰 ' + fmt(m.valor) +
+      (m.perfeito ? ' · <span style="color:var(--purple)">🎯 perfeito</span>' : '')
+    : '<div class="big">🐟</div>Nenhuma captura hoje. Amanhã há mais!';
+  $('fimStreak').textContent = String(state.streak);
+  $('fimBestStreak').textContent = String(state.melhorStreak);
+  $('btnAnuncio').style.display = state.anuncios < CONFIG.ANUNCIO_MAX_DIA ? '' : 'none';
+  $('fimModal').classList.remove('hidden');
+  atualizarProximoDia();
+  if (contadorFim) clearInterval(contadorFim);
+  contadorFim = setInterval(atualizarProximoDia, 1000);
+  botaoLancar();
+}
+
+function fecharFimDia() {
+  $('fimModal').classList.add('hidden');
+  if (contadorFim) { clearInterval(contadorFim); contadorFim = null; }
+}
+
+/** Contador "Próximo dia em HH:MM:SS" (meia-noite local). */
+function atualizarProximoDia() {
+  const agora = new Date();
+  const meiaNoite = new Date(agora);
+  meiaNoite.setHours(24, 0, 0, 0);
+  const s = Math.max(0, Math.floor((meiaNoite - agora) / 1000));
+  $('nextDay').textContent = pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60);
+}
+
+/** Texto de partilha SEM spoilers (só o emoji da raridade). */
+function textoPartilha() {
+  const ev = eventoAtual();
+  const m = state.hoje.melhor;
+  const rarEmoji = m ? RARIDADES[m.r].emoji : '⚪';
+  return '🎣 Pesca Lendária #' + state.numeroDia + '\n' +
+         ev.emoji + ' ' + ev.nome + '\n' +
+         '🐟 ' + state.hoje.peixes + ' peixes | 💰 ' + fmt(state.hoje.moedas) + '\n' +
+         '🏆 Melhor captura: ' + rarEmoji + '\n' +
+         '🔥 Streak: ' + state.streak;
+}
+
+async function partilhar() {
+  const txt = textoPartilha();
+  // 1) API nativa de partilha quando existe (mobile)
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Pesca Lendária', text: txt }); return; }
+    catch (e) { /* cancelado pelo utilizador */ return; }
+  }
+  // 2) fallback: área de transferência
+  try {
+    await navigator.clipboard.writeText(txt);
+    toast('📋 Resultado copiado!');
+    return;
+  } catch (e) {}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    toast('📋 Resultado copiado!');
+  } catch (e) { toast('Não foi possível copiar.'); }
+}
+
+/** Anúncio recompensado — SIMULADO.
+ *  LIGAR SDK REAL MAIS TARDE: substituir o corpo desta função por
+ *  rewardedAd.show() e chamar concederTempo() apenas se o anúncio
+ *  terminou (ex.: if (resultado === 'completed') concederTempo()). */
+function verAnuncio() {
+  if (state.anuncios >= CONFIG.ANUNCIO_MAX_DIA) {
+    toast('Já viste os anúncios de hoje. Volta amanhã!');
+    return;
+  }
+  alert('📺 [Simulação de anúncio]\n\nAqui entraria o anúncio real (SDK de anúncios).\n+60 segundos de pesca!');
+  state.anuncios += 1;
+  concederTempo();
+}
+
+function concederTempo() {
+  state.tempo += CONFIG.ANUNCIO_SEGUNDOS;
+  state.tempoTotal += CONFIG.ANUNCIO_SEGUNDOS;
+  if (fase === 'ended') { fecharFimDia(); fase = 'idle'; }
+  bip(660, .08); setTimeout(() => bip(990, .12), 90);
+  toast(' +' + CONFIG.ANUNCIO_SEGUNDOS + ' segundos de pesca!');
+  cancelarPesca();
+  atualizarHUD();
+  guardar();
+}
+
+/* ==========================================================================
+   13) RENDIMENTO OFFLINE (máx. 24h)
+   ========================================================================== */
+let offlinePendente = 0;
+
+function calcularOffline() {
+  const taxa = state.up.fisher * CONFIG.PESCADOR_MOEDAS_MIN;
+  if (taxa <= 0) { state.ultimoVisto = Date.now(); return; }
+  const cap = CONFIG.OFFLINE_CAP_HORAS * 3600000;
+  const decorrido = clamp(Date.now() - state.ultimoVisto, 0, cap);
+  offlinePendente = Math.floor(taxa * (decorrido / 60000));
+  state.ultimoVisto = Date.now();
+  if (offlinePendente > 0) {
+    $('offlineVal').textContent = fmt(offlinePendente);
+    $('offlineModal').classList.remove('hidden');
+  }
+}
+
+function recolherOffline() {
+  state.moedas += offlinePendente;
+  offlinePendente = 0;
+  $('offlineModal').classList.add('hidden');
+  bip(880, .1); setTimeout(() => bip(1180, .12), 90);
+  toast('💰 Recolhido!');
+  atualizarHUD();
+  renderUpgradesSeVisivel();
+  guardar();
+}
+/* ==========================================================================
+   14) ARRANQUE, EVENTOS E INTEGRAÇÃO
+   ========================================================================== */
+
+/** Primeira experiência: upgrade grátis + boost de raridades (só no 1º dia). */
+function primeiraVez() {
+  if (!state.novato) return;
+  const id = CONFIG.PRIMEIRO_UPGRADE_GRATIS;
+  if ((state.up[id] || 0) < 1) {
+    state.up[id] = 1;
+    const u = UPGRADES_DADOS.find(x => x.id === id);
+    setTimeout(() => toast('🎁 Primeiro upgrade grátis: ' + u.emoji + ' ' + u.nome + ' nível 1!'), 400);
+  }
+}
+
+function alternarSom() {
+  state.som = !state.som;
+  $('btnSom').textContent = state.som ? '🔊' : '🔇';
+  if (state.som) bip(700, .08);
+  guardar();
+}
+
+/** Toque/clique na zona do mar também conta como "toco" durante a barra. */
+function toqueNoMar(ev) {
+  if (fase !== 'bar') return;
+  if (ev) ev.preventDefault();
+  resolverBarra($('marker').style.left ? parseFloat($('marker').style.left) / 100 : 0);
+}
+
+function iniciar() {
+  /* --- Estado já carregado; primeiro a viragem de dia e o offline
+         (o cálculo offline precisa do ultimoVisto guardado na visita anterior,
+         por isso corre ANTES da primeira gravação) --- */
+  const mudouDia = verificarNovoDia();
+  calcularOffline();
+  primeiraVez();
+
+  /* --- Interface --- */
+  $('btnSom').textContent = state.som ? '🔊' : '🔇';
+  mostrarSeloEvento();
+  atualizarHUD();
+  renderUpgrades();
+  renderLivro();
+  cancelarPesca();
+  guardar();
+
+  /* --- Se o jogo guardou no fim do dia, reabrir o resumo --- */
+  if (state.tempo <= 0 && offlinePendente <= 0) encerrarDia();
+
+  /* --- Evento do dia (cartão de 2s na primeira abertura do dia) --- */
+  if (!state.eventoVisto && state.tempo > 0) setTimeout(mostrarEvento, 350);
+
+  if (mudouDia) toast('🌅 Novo dia! Tempo reposto.');
+
+  /* --- Separadores --- */
+  document.querySelectorAll('.tab').forEach(b => {
+    b.addEventListener('click', () => mudarSeparador(b.dataset.tab));
+  });
+
+  /* --- Pesca --- */
+  $('castBtn').addEventListener('click', () => {
+    if (fase === 'bar') { toqueNoMar(); return; }  // o próprio botão serve de "toco"
+    if (fase === 'result') { esconderCaptura(); return; }
+    lancar();
+  });
+  $('sea').addEventListener('click', toqueNoMar);
+
+  /* --- Teclado (desktop): espaço lança / toca --- */
+  document.addEventListener('keydown', (e) => {
+    if (e.code !== 'Space') return;
+    if ($('fimModal').classList.contains('hidden') === false) return;
+    e.preventDefault();
+    if (fase === 'bar') toqueNoMar();
+    else if (fase === 'result') esconderCaptura();
+    else lancar();
+  });
+
+  /* --- Evento / upgrades / som --- */
+  $('evClose').addEventListener('click', fecharEvento);
+  $('btnSom').addEventListener('click', alternarSom);
+
+  /* --- Fim do dia / partilha / anúncios --- */
+  $('btnPartilhar').addEventListener('click', partilhar);
+  $('btnFecharFim').addEventListener('click', fecharFimDia);
+  $('btnAnuncio').addEventListener('click', verAnuncio);
+
+  /* --- Offline --- */
+  $('btnRecolher').addEventListener('click', recolherOffline);
+
+  /* --- Page Visibility API: pausar o relógio e sincronizar ao voltar --- */
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      ultimoAgora = Date.now();      // não descontar o tempo em que esteve oculto
+      verificarNovoDia();
+      atualizarHUD();
+    } else {
+      guardar();                     // gravar ao esconder o separador
+    }
+  });
+
+  /* --- Gravação de segurança ao sair --- */
+  window.addEventListener('pagehide', guardar);
+  window.addEventListener('beforeunload', guardar);
+
+  /* --- Loop principal --- */
+  ultimoAgora = Date.now();
+  setInterval(loop, CONFIG.TICK_MS);
+}
+
+iniciar();
+
+
+
+
+
+</script>
+</body>
+</html>
