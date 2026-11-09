@@ -85,11 +85,9 @@ Alternativa: GA4 — `provedor: 'ga4'` e `ga4: 'G-XXXXXXXXXX'`.
 
 O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio` para saberes o que as visitas fazem.
 
-## Reiniciar para testar
+## Nota para desenvolvimento
 
-- Separador **Upgrades** → botão **↺ Apagar progresso**.
-- Ou abre com **`?reset`** no endereço.
-- Manualmente: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`.
+O jogo **não tem botão para apagar o progresso** (para os jogadores não perderem tudo por engano). Para testar do zero: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`, ou usar uma janela anónima.
 
 ## Anúncios (GameDistribution)
 
