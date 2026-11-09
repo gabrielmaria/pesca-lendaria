@@ -3,7 +3,7 @@
 Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos por dia**.
 
 Um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas.
-O visual é pixel art inspirado em jogos de fazenda: madeira, papel, mar e **sprites desenhados pixel a pixel em `<canvas>`** pelo próprio código (peixes, barco, cana, ícones e sol).
+Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
 
 ## Como jogar
 
@@ -12,54 +12,59 @@ python3 -m http.server 8080
 # abre http://localhost:8080
 ```
 
-- **LANÇAR** → espera curta → **MORDE!** → toca na zona verde.
-- **Perfeito** dá +50% e sobe o **combo** (até ×2,2); falhar zera o combo.
-- A barra de timing **acelera** à medida que o combo sobe — mais risco, mais recompensa.
-- Cada peixe tem **peso aleatório** (0,85× a 1,35× no valor).
-- **Missão do dia** (determinística): apanhar peixes, raros+ ou acertos perfeitos, com prémio em moedas.
-- 30 espécies para colecionar no **Livro de Pesca**, com selo por raridade completa.
-- 5 upgrades (Cana, Isco, Barco, Pescador Contratado, Geleira), 10 níveis cada.
-- Pescadores rendem moedas mesmo offline (até 24 h).
-- Evento do dia igual para todos, gerado por hash da data; efeitos visuais na cena (chuva, nevoeiro, lua…).
-- O dia reinicia à meia-noite local; o tempo só desconta com o separador visível (Page Visibility API).
+- **LANÇAR** → espera → **MORDE!** → toca na zona verde.
+- **Perfeito** dá +50% e sobe o **combo** (até ×2,2); falhar zera. A barra **acelera** com o combo.
+- Cada peixe tem **peso aleatório** (0,85×–1,35× no valor).
+- **Escolhe o isco antes de lançar**: Comum (equilíbrio), Rápida (−35% espera, −15% valor) ou Funda (+50% raros, +35% espera).
+- **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares.
+- **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
+- **Livro de Pesca**: 30 espécies; cada raridade completa dá **+5% de valor permanente** (até +30%).
+- **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro e o streak ficam.
+- **Fim do dia** mostra o resumo e **o evento de amanhã** — para saberes o que te espera.
+- Pescadores rendem moedas offline (até 24h); o dia reinicia à meia-noite local; o tempo só desconta com o separador visível (Page Visibility API).
 
-## Equilíbrio (foi rebalanceado)
+## Equilíbrio
 
-A progressão foi simulada: com jogo diário completo, **maxar os 5 upgrades leva ~3 semanas** (mediana de 22 dias numa simulação de 15 partidas). Sem sorte grande, a primeira sessão dá apenas alguns níveis.
+Economia simulada: maxar os 5 upgrades leva **~3 semanas** de jogo diário (antes maximizava-se em 3 minutos). A primeira sessão dá poucos níveis.
 
-Ideias-chave do novo equilíbrio:
+Princípios:
 
-- Os **valores base dos peixes são planos por raridade** (8 a 44). Quem escala o valor é o multiplicador de raridade (1× a 1000×) — antes os dois escalavam ao mesmo tempo e qualquer lendário comprava tudo.
-- Custos a crescer **×2 por nível** (antes ×1,5), com base 300–1000.
-- **Isco** agora tem multiplicadores por escalão (Incomum+ até Mítico), em vez de um bónus fraco.
-- **Pescador** com rendimento quadrático suave e cap offline de 24 h.
+- Valores base dos peixes **planos por raridade** (8–44); quem escala é o multiplicador de raridade (1× a 1000×).
+- Custos a crescer **×2 por nível** (base 300–1000 → 4,1M no total).
+- Isco com multiplicadores **por escalão** (Incomum+ → Mítico).
+- Pescador com rendimento quadrático suave e cap offline.
+- Chefe diário e bónus de coleção adicionam receita, mas exigem jogar.
 
-Tudo ajustável no objeto `CONFIG` no topo do `<script>`:
+Tudo ajustável no `CONFIG` no topo do `<script>`:
 
 | Quero… | Variável |
 |---|---|
 | Tempo diário | `DIA_SEGUNDOS` |
 | Ritmo do ciclo | `ESPERA_MIN_MS`, `ESPERA_MAX_MS`, `BARRA_MS` |
 | Dificuldade do timing | `ZONA_BASE`, `JANELA_PERFEITA` |
-| Força do combo | `COMBO_MAX`, `COMBO_PASSO`, `BARRA_ACELERA_COMBO` |
+| Combo | `COMBO_MAX`, `COMBO_PASSO`, `BARRA_ACELERA_COMBO` |
 | Economia | `CUSTO_BASE`, `CRESCIMENTO` |
 | Upgrades | `BARCO_VALOR_NIVEL`, `GELEIRA_VALOR_NIVEL`, `ISCO_*` |
+| Iscas | `ISCAS` |
+| Chefe do dia | `CHEFE_*` |
+| Coleção | `COLECAO_BONUS` |
+| Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
 
 ## Trocar o tema
 
-- **Peixes:** array `PEIXES` (`id, nome, emoji, r, base`). O emoji decide o sprite: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
-- **Eventos:** array `EVENTOS` com efeitos em `fx` (`espera`, `valor`, `grande`, `raro`, `naoComum`, `mitico`, `iscoGratis`).
-- **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` (ícones) + `efeitoTexto()`.
+- **Peixes:** array `PEIXES` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Eventos:** `EVENTOS` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)` (adiciona um `case` para eventos novos).
+- **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` + `efeitoTexto()`.
 - **Cores:** variáveis CSS em `:root`.
 
 ## Reiniciar para testar
 
-- No separador **Upgrades** existe o botão **↺ Apagar progresso** (pede confirmação).
-- Ou abre o jogo com **`?reset`** no endereço (ex.: `index.html?reset`) — apaga a progressão e limpa o parâmetro do URL.
-- Manualmente: DevTools → Application → Local Storage → apagar a chave `pescaLendaria.v2`.
+- Separador **Upgrades** → botão **↺ Apagar progresso**.
+- Ou abre com **`?reset`** no endereço.
+- Manualmente: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`.
 
 ## Anúncios
 
@@ -69,5 +74,3 @@ Tudo ajustável no objeto `CONFIG` no topo do `<script>`:
 
 1. `git push`
 2. **Settings → Pages** → branch `main`, pasta `/ (root)`.
-
-> Nota: o save mudou de chave (`pescaLendaria.v2`) porque o equilíbrio foi refeito — quem já tinha tudo no máximo recomeça com a nova economia.

@@ -505,6 +505,96 @@ h1{
 @keyframes chuva{from{background-position:0 0;}to{background-position:-14px 24px;}}
 @keyframes nevoeiro{50%{opacity:.7;}}
 
+/* ---------- Ícones inline ---------- */
+.combo{display:flex;align-items:center;gap:5px;}
+.combo .spr-slot,.missao .spr-slot{flex:0 0 auto;}
+.missao{display:flex;align-items:center;gap:5px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.streak{display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* Tamanhos dos ícones em contexto (sobrepõem a escala do canvas) */
+.combo canvas,.missao canvas,.streak canvas{width:20px !important;height:20px !important;}
+.seal canvas{width:18px !important;height:18px !important;}
+.btn canvas{width:22px !important;height:22px !important;}
+.isca canvas{width:22px !important;height:22px !important;}
+.seal-badge canvas{width:14px !important;height:14px !important;}
+
+/* ---------- Cenário extra ---------- */
+.morro{position:absolute;bottom:0;z-index:0;opacity:.95;}
+.morro.m1{left:-12px;}
+.morro.m2{right:-12px;transform:scaleX(-1);}
+.farol{position:absolute;left:14px;bottom:0;z-index:1;}
+.personagem{position:absolute;right:62px;bottom:26px;z-index:6;animation:respira 2.6s steps(2) infinite;}
+@keyframes respira{50%{transform:translateY(-2px);}}
+
+/* ---------- Iscas ---------- */
+.iscas{display:flex;gap:5px;margin-top:9px;}
+.isca{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  padding:6px 2px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;
+  background:linear-gradient(180deg,#e6d6b4,#cbb489);
+  border:3px solid var(--wood-dd);color:#4a3324;
+  box-shadow:0 3px 0 rgba(43,27,18,.4);
+}
+.isca small{font-size:8px;font-weight:800;color:#7a6248;letter-spacing:0;text-transform:none;}
+.isca.ativa{
+  background:linear-gradient(180deg,#fff6e2,#ecd9b4);
+  border-color:var(--green);
+  box-shadow:inset 0 0 0 2px #b9e78f, 0 3px 0 rgba(43,27,18,.4);
+}
+.isca:active{transform:translateY(2px);box-shadow:none;}
+
+/* ---------- Chefe do dia ---------- */
+.chefe{
+  display:flex;align-items:center;gap:9px;margin:0 0 9px;
+  background:linear-gradient(180deg,#3a1f4d,#261334);
+  border:3px solid var(--ink);color:var(--cream);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.12), 0 4px 0 rgba(43,27,18,.4);
+  padding:6px 9px;
+}
+.chefe.done{background:linear-gradient(180deg,#2c5a2a,#1e3f1d);}
+.chefe-spr{width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.chefe-txt{min-width:0;}
+.chefe-nome{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:#ffe08a;}
+.chefe-estado{font-size:10px;color:#d8c8e8;line-height:1.25;}
+
+/* ---------- Prestígio ---------- */
+.epoca-card{
+  background:linear-gradient(180deg,#2b2a57,#1b1838);
+  border-color:#0d0b22;color:var(--cream);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.10), 0 4px 0 rgba(0,0,0,.45);
+}
+.epoca-card .up-name{color:#ffe08a;}
+.epoca-card .lvl{color:#b9a9d8;}
+.epoca-card .up-desc{color:#d8cdf0;}
+.epoca-card .up-eff{color:#c9b8e8;}
+.epoca-card .up-eff b{color:#ffe08a;}
+.epoca-card .up-ico{background:#3b2a6b;border-color:#0d0b22;}
+.epoca-card .pip{background:#4a3f78;border-color:#0d0b22;}
+.epoca-card .pip.on{background:#ffe08a;}
+
+/* ---------- Livro: bónus ---------- */
+.seal-badge canvas,.fc-val canvas{display:inline-block;vertical-align:-3px;}
+.book-bonus{
+  margin:0 0 8px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--paper);text-shadow:2px 2px 0 var(--wood-dd);
+}
+
+/* ---------- Amanhã (fim do dia) ---------- */
+.amanha{
+  display:flex;align-items:center;gap:9px;text-align:left;
+  background:#e8f0ff;border:3px solid var(--wood-dd);
+  box-shadow:inset 0 0 0 2px #ffffff;
+  padding:8px;margin:9px 0 2px;font-size:11px;color:#2b3a5a;
+}
+.amanha b{display:block;font-size:11px;color:#1f3f7a;text-transform:uppercase;letter-spacing:.5px;}
+.amanha span{font-size:10px;line-height:1.3;}
+.fim-chefe{
+  font-size:11px;font-weight:800;color:#5a2a6a;background:#f3e6fb;
+  border:3px solid var(--wood-dd);box-shadow:inset 0 0 0 2px #ffffff;
+  padding:7px;margin:8px 0 0;
+}
+
 /* Respeita utilizadores sensíveis a movimento */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
@@ -565,7 +655,7 @@ h1{
   <header>
     <div class="topbar">
       <h1>Pesca Lendária</h1>
-      <button class="icon-btn" id="btnSom" title="Som" aria-label="Som">🔊</button>
+      <button class="icon-btn" id="btnSom" title="Som" aria-label="Som"></button>
     </div>
 
     <div class="hud">
@@ -595,19 +685,31 @@ h1{
     <section class="panel active" id="panel-pesca">
 
       <div class="event-card hidden" id="eventCard">
-        <div class="ev-emoji" id="evEmoji">🎲</div>
+        <div class="ev-emoji" id="evEmoji"></div>
         <div class="ev-txt">
           <div class="ev-title" id="evTitle">Evento</div>
           <div class="ev-desc" id="evDesc"></div>
         </div>
-        <button class="ev-close" id="evClose" aria-label="Fechar">✕</button>
+        <button class="ev-close" id="evClose" aria-label="Fechar">X</button>
       </div>
 
       <div class="hint">Tens 3 minutos por dia. Pesca!</div>
 
+      <!-- Chefe do dia: o motivo para voltar amanhã -->
+      <div class="chefe" id="chefeBar">
+        <span class="chefe-spr" id="chefeIco"></span>
+        <div class="chefe-txt">
+          <div class="chefe-nome" id="chefeNome">Chefe do dia</div>
+          <div class="chefe-estado" id="chefeEstado">A calcular…</div>
+        </div>
+      </div>
+
       <!-- Cena pixel: céu, mar, cais, barco e cana -->
       <div class="scene" id="sea" data-clima="calmo">
         <div class="ceu">
+          <span class="spr-slot morro m1" data-sprite="morros"></span>
+          <span class="spr-slot morro m2" data-sprite="morros"></span>
+          <span class="spr-slot farol" data-sprite="farol"></span>
           <span class="spr-slot sol" data-sprite="sol"></span>
           <div class="nuvem n1"></div>
           <div class="nuvem n2"></div>
@@ -616,6 +718,7 @@ h1{
         <div class="clima"></div>
         <div class="cais"></div>
         <span class="spr-slot barco-spr" data-sprite="barco"></span>
+        <span class="spr-slot personagem" data-sprite="personagem"></span>
         <span class="spr-slot cana-spr" id="rod" data-sprite="cana"></span>
         <div class="linha" id="linha"></div>
         <div class="boia" id="boia"></div>
@@ -632,8 +735,15 @@ h1{
 
       <!-- Combo e missão do dia -->
       <div class="trip">
-        <span class="combo" id="comboBadge">COMBO ×1</span>
-        <span class="missao" id="missaoBadge">🎯 —</span>
+        <span class="combo" id="comboBadge"><span class="spr-slot" data-sprite="raio"></span><span id="comboTxt">×1,0</span></span>
+        <span class="missao" id="missaoBadge"><span class="spr-slot" data-sprite="alvo"></span><span id="missaoTxt">—</span></span>
+      </div>
+
+      <!-- Escolha de isco: decisão rápida antes de lançar -->
+      <div class="iscas" id="iscasBar">
+        <button class="isca ativa" data-isca="comum"><span class="spr-slot" data-sprite="isco"></span>Comum<small>equilíbrio</small></button>
+        <button class="isca" data-isca="rapida"><span class="spr-slot" data-sprite="raio"></span>Rápida<small>-35% espera<br>-15% valor</small></button>
+        <button class="isca" data-isca="funda"><span class="spr-slot" data-sprite="estrela"></span>Funda<small>+50% raros<br>+35% espera</small></button>
       </div>
 
       <button class="big-btn" id="castBtn">LANÇAR</button>
@@ -642,6 +752,21 @@ h1{
     <!-- ======================= UPGRADES ======================= -->
     <section class="panel" id="panel-upgrades">
       <div class="hint">Compras rápidas — não gastam tempo de pesca.</div>
+
+      <!-- Nova Época (prestígio) -->
+      <div class="card epoca-card" id="epocaCard">
+        <div class="up-head">
+          <span class="up-ico" data-sprite="estrela"></span>
+          <div>
+            <div class="up-name">Nova Época</div>
+            <div class="lvl" id="epocaInfo">Época 1 · 0 estrelas</div>
+          </div>
+        </div>
+        <div class="up-desc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.</div>
+        <div class="up-eff" id="epocaProg">Níveis 0/30</div>
+        <button class="btn gold" id="btnEpoca" disabled>Prestigiar</button>
+      </div>
+
       <div id="upgradesList"></div>
       <div class="dev-actions">
         <button class="btn ghost small" id="btnReset">↺ Apagar progresso</button>
@@ -655,6 +780,7 @@ h1{
         <span id="bookCount">0/30 descobertas</span>
         <span class="muted" id="bookHint">? = por descobrir</span>
       </div>
+      <div class="book-bonus" id="bookBonus">Bónus de coleção: +0%</div>
       <div class="seals" id="bookSeals"></div>
       <div class="grid" id="bookGrid"></div>
     </section>
@@ -682,9 +808,16 @@ h1{
     </div>
 
     <div class="fim-best" id="fimMelhor"></div>
-    <div class="streak">🔥 Streak: <b id="fimStreak">0</b> dias · Melhor: <b id="fimBestStreak">0</b></div>
+    <div class="streak"><span class="spr-slot" data-sprite="fogo"></span> Streak: <b id="fimStreak">0</b> dias · Melhor: <b id="fimBestStreak">0</b></div>
 
-    <button class="btn gold" id="btnPartilhar">📤 Partilhar</button>
+    <div class="fim-chefe" id="fimChefe"></div>
+
+    <div class="amanha" id="amanhaBox">
+      <span class="spr-slot" id="amanhaIco"></span>
+      <div><b>Amanhã</b><span id="amanhaTxt">…</span></div>
+    </div>
+
+    <button class="btn gold" id="btnPartilhar"><span class="spr-slot" data-sprite="partilhar"></span> Partilhar</button>
 
     <div class="nextday">Próximo dia em <span id="nextDay">00:00:00</span></div>
 
@@ -696,7 +829,7 @@ h1{
     <!-- ======== ANÚNCIO RECOMPENSADO (simulado) ========
          LIGAR SDK REAL MAIS TARDE: chamar rewardedAd.show() e só
          executar concederTempo() no fim do anúncio. -->
-    <button class="btn ad" id="btnAnuncio">📺 Ver anúncio: +60 segundos de pesca</button>
+    <button class="btn ad" id="btnAnuncio"><span class="spr-slot" data-sprite="tv"></span> Ver anúncio: +60s de pesca</button>
 
     <button class="btn ghost" id="btnFecharFim">Fechar</button>
   </div>
@@ -1049,6 +1182,84 @@ function spriteIcone(nome, escala) {
       rectPx(g, 5, 9, 5, 1, '#ffffff');
       px(g, 4, 12, '#e8f8ff'); px(g, 11, 12, '#e8f8ff');
       break;
+    case 'som':
+      rectPx(g, 2, 6, 3, 4, '#f7ead0');
+      triPx(g, 5, 8, 9, 3, 9, 13, '#f7ead0');
+      px(g, 11, 5, '#f7ead0'); px(g, 12, 6, '#f7ead0'); px(g, 13, 7, '#f7ead0');
+      px(g, 13, 8, '#f7ead0'); px(g, 12, 9, '#f7ead0'); px(g, 11, 10, '#f7ead0');
+      px(g, 14, 3, '#ffe08a'); px(g, 15, 5, '#ffe08a'); px(g, 15, 9, '#ffe08a'); px(g, 14, 11, '#ffe08a');
+      break;
+    case 'som_off':
+      rectPx(g, 2, 6, 3, 4, '#b9a9d8');
+      triPx(g, 5, 8, 9, 3, 9, 13, '#b9a9d8');
+      linhaPx(g, 11, 5, 14, 11, '#c8453a');
+      linhaPx(g, 14, 5, 11, 11, '#c8453a');
+      break;
+    case 'alvo':
+      elipsePx(g, 8, 8, 6.6, 6.6, '#c8453a');
+      elipsePx(g, 8, 8, 4.7, 4.7, '#f7ead0');
+      elipsePx(g, 8, 8, 2.7, 2.7, '#c8453a');
+      elipsePx(g, 8, 8, 1.0, 1.0, '#f7ead0');
+      break;
+    case 'raio':
+      triPx(g, 9, 1, 4, 8, 9, 8, '#ffe08a');
+      rectPx(g, 6, 8, 4, 2, '#ffe08a');
+      triPx(g, 7, 15, 12, 7, 7, 7, '#ffe08a');
+      break;
+    case 'fogo':
+      triPx(g, 8, 1, 4, 9, 12, 9, '#ff9e3d');
+      elipsePx(g, 8, 11, 4.4, 3.6, '#ff9e3d');
+      elipsePx(g, 8, 12, 2.6, 2.2, '#ffe08a');
+      px(g, 8, 8, '#fff6c0');
+      break;
+    case 'medalha':
+      triPx(g, 5, 1, 3, 6, 6, 6, '#c8453a');
+      triPx(g, 11, 1, 13, 6, 10, 6, '#2f7fb5');
+      elipsePx(g, 8, 10, 4.6, 4.6, '#f2b632');
+      elipsePx(g, 8, 10, 2.8, 2.8, '#ffe08a');
+      px(g, 8, 9, '#c08a12'); px(g, 7, 10, '#c08a12'); px(g, 8, 10, '#c08a12'); px(g, 9, 10, '#c08a12');
+      break;
+    case 'cadeado':
+      rectPx(g, 3, 7, 10, 6, '#c9a06a');
+      rectPx(g, 3, 7, 10, 1, '#e0c08a');
+      rectPx(g, 5, 3, 1, 4, '#9a9a9a');
+      rectPx(g, 10, 3, 1, 4, '#9a9a9a');
+      rectPx(g, 5, 2, 6, 1, '#9a9a9a');
+      rectPx(g, 7, 9, 2, 3, '#3b2416');
+      break;
+    case 'partilhar':
+      rectPx(g, 3, 8, 10, 6, '#f7ead0');
+      rectPx(g, 3, 8, 10, 1, '#fffdf5');
+      rectPx(g, 7, 3, 2, 6, '#2f7fb0');
+      triPx(g, 8, 0, 4, 4, 12, 4, '#2f7fb0');
+      break;
+    case 'tv':
+      rectPx(g, 2, 3, 12, 8, '#3b2416');
+      rectPx(g, 3, 4, 10, 6, '#8fd3f4');
+      rectPx(g, 7, 11, 2, 2, '#3b2416');
+      rectPx(g, 4, 13, 8, 1, '#3b2416');
+      break;
+    case 'estrela':
+      triPx(g, 8, 1, 5, 8, 11, 8, '#ffe08a');
+      triPx(g, 8, 15, 5, 8, 11, 8, '#ffe08a');
+      triPx(g, 1, 8, 8, 5, 8, 11, '#ffe08a');
+      triPx(g, 15, 8, 8, 5, 8, 11, '#ffe08a');
+      rectPx(g, 7, 7, 2, 2, '#fff6c0');
+      break;
+    case 'trofeu':
+      rectPx(g, 4, 2, 8, 6, '#f2b632');
+      elipsePx(g, 8, 8, 4.2, 3.2, '#f2b632');
+      rectPx(g, 2, 3, 2, 3, '#c08a12');
+      rectPx(g, 12, 3, 2, 3, '#c08a12');
+      rectPx(g, 7, 10, 2, 3, '#c08a12');
+      rectPx(g, 5, 13, 6, 2, '#8b5a2b');
+      break;
+    case 'presente':
+      rectPx(g, 3, 6, 10, 8, '#c8453a');
+      rectPx(g, 2, 4, 12, 3, '#e05a4a');
+      rectPx(g, 7, 4, 2, 10, '#ffe08a');
+      rectPx(g, 3, 8, 10, 1, '#ffb0a0');
+      break;
     case 'peixe':
     default:
       elipsePx(g, 9, 8, 4.4, 3, '#6fb7d8');
@@ -1061,7 +1272,117 @@ function spriteIcone(nome, escala) {
   return gridParaCanvas(g, escala);
 }
 
-/** Preenche todos os espaços [data-sprite] (uma única vez por elemento). */
+
+/** Ícones 16x16 dos eventos do dia. */
+function spriteEvento(id, escala) {
+  const g = novoGrid(16, 16);
+  switch (id) {
+    case 'chuva':
+      rectPx(g, 3, 4, 10, 4, '#e8f0ff');
+      rectPx(g, 5, 2, 6, 2, '#e8f0ff');
+      for (let x = 4; x <= 12; x += 4) linhaPx(g, x, 10, x - 1, 14, '#4db8ff');
+      break;
+    case 'nevoeiro':
+      rectPx(g, 3, 3, 10, 4, '#e8f0ff');
+      rectPx(g, 5, 1, 6, 2, '#e8f0ff');
+      rectPx(g, 1, 9, 14, 2, '#cfe0ee');
+      rectPx(g, 3, 13, 10, 2, '#cfe0ee');
+      break;
+    case 'lua':
+      for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 16; x++) {
+          const fora = Math.pow((x - 8) / 5.6, 2) + Math.pow((y - 8) / 5.6, 2) <= 1;
+          const dentro = Math.pow((x - 10.6) / 4.9, 2) + Math.pow((y - 6.6) / 4.9, 2) <= 1;
+          if (fora && !dentro) px(g, x, y, '#ffe08a');
+        }
+      }
+      break;
+    case 'tubaroes':
+      rectPx(g, 0, 12, 16, 2, '#2f7fb5');
+      rectPx(g, 0, 15, 16, 1, '#1b5a86');
+      triPx(g, 8, 4, 5, 11, 11, 11, '#5b7f9e');
+      px(g, 4, 10, '#ffffff'); px(g, 12, 10, '#ffffff');
+      break;
+    case 'calmo':
+      linhaPx(g, 3, 3, 8, 3, '#cfe6ff'); linhaPx(g, 8, 3, 3, 8, '#cfe6ff'); linhaPx(g, 3, 8, 8, 8, '#cfe6ff');
+      linhaPx(g, 9, 9, 13, 9, '#9ec4e8'); linhaPx(g, 13, 9, 9, 13, '#9ec4e8'); linhaPx(g, 9, 13, 13, 13, '#9ec4e8');
+      break;
+    case 'mare':
+      for (let i = 0; i < 3; i++) {
+        for (let x = 1; x < 15; x++) {
+          px(g, x, 4 + i * 4 + Math.round(Math.sin(x * 0.9 + i) * 1.2), '#cfe6ff');
+        }
+      }
+      break;
+    case 'dourado':
+      elipsePx(g, 8, 8, 5.4, 5.4, '#f2b632');
+      elipsePx(g, 8, 8, 3.7, 3.7, '#ffe08a');
+      elipsePx(g, 8, 8, 1.4, 1.4, '#c08a12');
+      break;
+    case 'polvos':
+    default:
+      elipsePx(g, 8, 6, 4.6, 3.8, '#b06bff');
+      rectPx(g, 5, 5, 2, 2, '#ffffff'); px(g, 6, 6, '#111111');
+      rectPx(g, 9, 5, 2, 2, '#ffffff'); px(g, 10, 6, '#111111');
+      for (let i = 0; i < 4; i++) {
+        const bx = 4 + i * 3;
+        for (let y = 9; y <= 14; y++) px(g, bx + Math.round(Math.sin((y + i) * 1.1)), y, '#8a4fd0');
+      }
+      break;
+  }
+  contorno(g, '#241608');
+  return gridParaCanvas(g, escala);
+}
+
+/** Sprites maiores do cenário (morros, farol e pescador). */
+function spriteCenario(nome, escala) {
+  if (nome === 'morros') {
+    const g = novoGrid(40, 12);
+    for (let x = 0; x < 40; x++) {
+      const h = 4 + Math.round(2.2 * Math.sin(x * 0.28));
+      for (let y = 12 - h; y < 12; y++) px(g, x, y, '#2f6b7a');
+    }
+    for (let x = 0; x < 40; x++) {
+      const h = 3 + Math.round(1.8 * Math.sin(x * 0.42 + 1.2));
+      for (let y = 12 - h; y < 12; y++) px(g, x, y, '#1f4f5c');
+    }
+    return gridParaCanvas(g, escala);
+  }
+  if (nome === 'farol') {
+    const g = novoGrid(12, 22);
+    rectPx(g, 4, 4, 4, 16, '#f4f0e6');
+    rectPx(g, 4, 7, 4, 2, '#c8453a');
+    rectPx(g, 4, 12, 4, 2, '#c8453a');
+    rectPx(g, 4, 17, 4, 2, '#c8453a');
+    rectPx(g, 3, 3, 6, 2, '#3b2416');
+    rectPx(g, 4, 1, 4, 2, '#ffd24a');
+    rectPx(g, 2, 20, 8, 2, '#5c3a1c');
+    contorno(g, '#241608');
+    return gridParaCanvas(g, escala);
+  }
+  if (nome === 'personagem') {
+    const g = novoGrid(14, 21);
+    rectPx(g, 3, 2, 8, 2, '#c9a06a');   // chapéu
+    rectPx(g, 2, 4, 10, 1, '#8b5a2b');
+    rectPx(g, 4, 5, 6, 4, '#f0c9a0');   // cara
+    px(g, 5, 6, '#241608'); px(g, 8, 6, '#241608');
+    rectPx(g, 3, 9, 8, 6, '#3f7ab0');   // corpo
+    rectPx(g, 3, 9, 8, 1, '#2f5f8f');
+    rectPx(g, 1, 10, 2, 4, '#3f7ab0');  // braços
+    rectPx(g, 11, 10, 2, 4, '#3f7ab0');
+    rectPx(g, 4, 15, 3, 4, '#3b2416');  // pernas
+    rectPx(g, 8, 15, 3, 4, '#3b2416');
+    rectPx(g, 4, 19, 3, 2, '#241608');  // botas
+    rectPx(g, 8, 19, 3, 2, '#241608');
+    contorno(g, '#241608');
+    return gridParaCanvas(g, escala);
+  }
+  return spriteIcone(nome, escala);
+}
+
+/**
+ * Preenche todos os espaços [data-sprite] (uma única vez por elemento).
+ */
 function hidratarSprites(raiz) {
   const alvo = raiz || document;
   if (!alvo.querySelectorAll) return;
@@ -1071,10 +1392,10 @@ function hidratarSprites(raiz) {
     if (el.getAttribute('data-pronto') === '1') continue;
     const nome = el.getAttribute('data-sprite');
     let escala = 2;
-    if (nome === 'sol') escala = 3;
-    if (nome === 'barco') escala = 3;
-    if (nome === 'cana') escala = 3;
-    const cv = spriteIcone(nome, escala);
+    if (nome === 'sol' || nome === 'barco' || nome === 'cana') escala = 3;
+    if (nome === 'morros') escala = 4;
+    if (nome === 'farol' || nome === 'personagem') escala = 3;
+    const cv = spriteCenario(nome, escala);
     el.appendChild(cv);
     el.setAttribute('data-pronto', '1');
   }
@@ -1133,6 +1454,28 @@ const CONFIG = {
     raros:     { alvo: 4,  nome: 'raros+' },
     perfeitos: { alvo: 6,  nome: 'perfeitos' }
   },
+
+  /* --- Coleção --- */
+  COLECAO_BONUS: 0.05,        // +5% de valor por cada raridade completa
+
+  /* --- Prestígio (Nova Época) --- */
+  EPOCA_NIVEIS: 30,           // níveis totais mínimos para prestigiar
+  EPOCA_POR_NIVEL: 5,         // 1 estrela por cada 5 níveis
+  EPOCA_ESTRELA: 0.08,        // +8% de valor permanente por estrela
+
+  /* --- Iscas (escolha antes de lançar) --- */
+  ISCAS: {
+    comum:  { nome: 'Comum',  espera: 1,    valor: 1,    raro: 1   },
+    rapida: { nome: 'Rápida', espera: 0.65, valor: 0.85, raro: 1   },
+    funda:  { nome: 'Funda',  espera: 1.35, valor: 1,    raro: 1.5 }
+  },
+
+  /* --- Chefe do dia (gancho de regresso) --- */
+  CHEFE_BONUS: 4,             // recompensa do chefe = valor normal x4
+  CHEFE_ZONA: 0.10,           // zona verde no confronto com o chefe
+  CHEFE_BARRA: 0.8,           // barra do chefe mais rápida
+  CHEFE_APOS: 4,              // capturas até o chefe aparecer
+  CHEFE_RETRY: 3,             // capturas até reaparecer depois de fugir
 
   /* --- Primeira experiência --- */
   PRIMEIRO_DIA_RARIDADE: 1.8, // multiplicador extra de raridades altas no 1º dia
@@ -1304,8 +1647,11 @@ function estadoPorDefeito() {
     melhorStreak: 1,
     numeroDia: 1,           // nº do dia (para partilha)
     anuncios: 0,            // anúncios vistos hoje
-    hoje: { moedas:0, peixes:0, melhor:null, missao:null },
+    hoje: { moedas:0, peixes:0, melhor:null, missao:null, chefe:null },
     combo: 0,
+    isca: 'comum',          // isco escolhido
+    estrelas: 0,            // estrelas de prestígio
+    epoca: 1,
     som: true,
     ultimoVisto: Date.now(),
     novato: true            // primeiro dia: boost de raridades + upgrade grátis
@@ -1334,6 +1680,10 @@ function carregar() {
   ['rod','bait','boat','fisher','freezer'].forEach(k => {
     out.up[k] = clamp(Math.floor(Number(out.up[k]) || 0), 0, CONFIG.UPGRADE_MAX);
   });
+  if (!CONFIG.ISCAS[out.isca]) out.isca = 'comum';
+  out.estrelas = Math.max(0, Math.floor(Number(out.estrelas) || 0));
+  out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
+  if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
   return out;
 }
 
@@ -1386,12 +1736,15 @@ function verificarNovoDia() {
   state.eventoVisto = false;
   state.anuncios = 0;
   state.combo = 0;
-  state.hoje = { moedas:0, peixes:0, melhor:null, missao: gerarMissao(k) };
+  state.hoje = { moedas:0, peixes:0, melhor:null, missao: gerarMissao(k), chefe: gerarChefe(k) };
   state.novato = false; // boost do primeiro dia só no 1º dia
+  bossAtual = false;
 
   cancelarPesca();
   fecharFimDia();
   esconderEvento();
+  mostrarSeloEvento();
+  atualizarChefeUI();
   // Mostra o novo evento do dia (cartão de 2s) passados instantes
   setTimeout(mostrarEvento, 300);
   return true;
@@ -1413,6 +1766,10 @@ function mods() {
     1 + isco * CONFIG.ISCO_LEND,
     1 + isco * CONFIG.ISCO_MIT
   ];
+  // Isca escolhida antes de lançar (congelada no início do lance)
+  const isc = (iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual();
+  if (isc && isc.raro !== 1) for (let i = 1; i < tier.length; i++) tier[i] *= isc.raro;
+
   // Primeiro dia: ajuda extra nas raridades altas
   if (state.novato) for (let i = 1; i < tier.length; i++) tier[i] *= CONFIG.PRIMEIRO_DIA_RARIDADE;
   // Eventos do dia
@@ -1485,7 +1842,7 @@ function avancarMissao(tipo, qtd) {
     m.ok = true;
     state.moedas += m.premio;
     state.hoje.moedas += m.premio;
-    toast('🎯 Missão concluída: +' + fmt(m.premio) + ' moedas!');
+    toast('Missão concluída: +' + fmt(m.premio) + ' moedas!');
     bip(880, .1);
     setTimeout(function () { bip(1180, .12); }, 110);
     atualizarHUD();
@@ -1603,27 +1960,36 @@ function atualizarHUD() {
 
   // Combo
   const cb = $('comboBadge');
-  cb.textContent = 'COMBO ×' + multCombo().toFixed(1).replace('.', ',');
+  $('comboTxt').textContent = '×' + multCombo().toFixed(1).replace('.', ',');
   cb.classList.toggle('hot', (state.combo || 0) >= 3);
 
   // Missão do dia
   const mb = $('missaoBadge');
+  const mt = $('missaoTxt');
   const m = state.hoje && state.hoje.missao;
   if (!m) {
-    mb.textContent = '🎯 —';
+    mt.textContent = '—';
     mb.classList.remove('ok');
   } else if (m.ok) {
-    mb.textContent = '✅ Missão +' + fmt(m.premio);
+    mt.textContent = 'Feita +' + fmt(m.premio);
     mb.classList.add('ok');
   } else {
-    mb.textContent = '🎯 ' + Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + CONFIG.MISSAO[m.tipo].nome;
+    mt.textContent = Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + CONFIG.MISSAO[m.tipo].nome;
     mb.classList.remove('ok');
   }
 }
 
 function mostrarSeloEvento() {
   const ev = eventoAtual();
-  $('eventSeal').textContent = ev.emoji + ' ' + ev.nome;
+  const el = $('eventSeal');
+  el.innerHTML = '';
+  const ic = document.createElement('span');
+  ic.className = 'spr-slot';
+  ic.appendChild(spriteEvento(ev.id, 1));
+  el.appendChild(ic);
+  const t = document.createElement('span');
+  t.textContent = ev.nome;
+  el.appendChild(t);
   const sea = $('sea');
   if (sea) sea.dataset.clima = ev.id;
 }
@@ -1631,7 +1997,9 @@ function mostrarSeloEvento() {
 let eventoTimer = null;
 function mostrarEvento() {
   const ev = eventoAtual();
-  $('evEmoji').textContent = ev.emoji;
+  const ic = $('evEmoji');
+  ic.innerHTML = '';
+  ic.appendChild(spriteEvento(ev.id, 2));
   $('evTitle').textContent = ev.nome;
   $('evDesc').textContent = ev.desc;
   $('eventCard').classList.remove('hidden');
@@ -1708,11 +2076,12 @@ function renderUpgrades() {
         ? '<div class="up-eff muted">Nível máximo atingido</div>'
         : '<div class="up-eff muted">Próximo: <b>' + efeitoTexto(u, lvl + 1) + '</b></div>') +
       '<button class="btn buy' + (pode ? '' : ' off') + '" data-id="' + u.id + '"' + (pode ? '' : ' disabled') + '>' +
-        (maxed ? 'MÁXIMO' : 'Comprar · 💰 ' + fmt(custo)) +
+        (maxed ? 'MÁXIMO' : 'Comprar por ' + fmt(custo)) +
       '</button>';
     wrap.appendChild(card);
   });
   hidratarSprites(wrap);
+  renderEpoca();
   wrap.querySelectorAll('.buy').forEach(function (b) {
     b.addEventListener('click', function () { comprarUpgrade(b.dataset.id); });
   });
@@ -1728,7 +2097,7 @@ function comprarUpgrade(id) {
   state.moedas -= custo;
   state.up[id] = lvl + 1;
   bip(760, .08); setTimeout(() => bip(1140, .1), 80);
-  toast(u.emoji + ' ' + u.nome + ' → nível ' + (lvl + 1));
+  toast(u.nome + ' → nível ' + (lvl + 1));
   guardar();
   renderUpgrades();
   atualizarHUD();
@@ -1740,6 +2109,7 @@ function renderLivro() {
   const grid = $('bookGrid');
   const total = PEIXES.length;
   $('bookCount').textContent = state.descobertos.length + '/' + total + ' descobertas';
+  $('bookBonus').textContent = 'Bónus de coleção: +' + Math.round(bonusColecao() * 100) + '%';
 
   /* Selo pequeno por raridade completa */
   const seals = $('bookSeals');
@@ -1750,7 +2120,10 @@ function renderLivro() {
     const ok = achados === todos.length;
     const b = document.createElement('span');
     b.className = 'seal-badge' + (ok ? '' : ' miss');
-    b.textContent = (ok ? '🏅 ' : '🔒 ') + r.nome + ' ' + achados + '/' + todos.length;
+    b.appendChild(spriteIcone(ok ? 'medalha' : 'cadeado', 1));
+    const bt = document.createElement('span');
+    bt.textContent = ' ' + r.nome + ' ' + achados + '/' + todos.length;
+    b.appendChild(bt);
     seals.appendChild(b);
   });
 
@@ -1782,7 +2155,8 @@ function renderLivro() {
     if (desc) {
       const val = document.createElement('div');
       val.className = 'fc-val';
-      val.textContent = '💰 ' + fmt(p.base * r.mult);
+      val.appendChild(spriteIcone('moeda', 1));
+      val.appendChild(document.createTextNode(' ' + fmt(p.base * r.mult)));
       cell.appendChild(val);
     }
     grid.appendChild(cell);
@@ -1799,6 +2173,8 @@ let esperaMs = 0, esperaAcc = 0;
 let barAcc = 0, zonaPos = 0, zonaLarg = 0, barraAtual = CONFIG.BARRA_MS;
 let resultAcc = 0;
 let barVisivel = false;
+let bossAtual = false;
+let iscaLance = null;
 
 function botaoLancar() {
   const b = $('castBtn');
@@ -1811,7 +2187,7 @@ function botaoLancar() {
   b.disabled = false;
   if (fase === 'idle') b.textContent = 'LANÇAR';
   else if (fase === 'waiting') b.textContent = '… A ESPERAR';
-  else if (fase === 'bar') { b.textContent = '🎯 AGORA!'; b.classList.add('hot'); }
+  else if (fase === 'bar') { b.textContent = 'AGORA!'; b.classList.add('hot'); }
   else b.textContent = '…';
 }
 
@@ -1824,6 +2200,7 @@ function cancelarPesca() {
   $('catchBox').classList.add('hidden');
   $('catchBox').innerHTML = '';
   $('sea').classList.remove('pescando', 'mordeu');
+  iscaLance = null;
   setStatus('Gira a cana e lança!');
   botaoLancar();
 }
@@ -1832,17 +2209,22 @@ function cancelarPesca() {
 function lancar() {
   if (fase !== 'idle') return;
   if (state.tempo <= 0) { abrirFimDia(); return; }
+  iscaLance = state.isca;          // congela o isco escolhido para este lance
   const m = mods();
+  const isc = iscaAtual();
   const base = rnd(CONFIG.ESPERA_MIN_MS, CONFIG.ESPERA_MAX_MS);
   const comCana = base * (1 - CONFIG.ESPERA_REDUCAO_NIVEL * state.up.rod);
-  esperaMs = clamp(comCana * m.espera, CONFIG.ESPERA_MIN_MS_ABS, 8000);
+  esperaMs = clamp(comCana * m.espera * isc.espera, CONFIG.ESPERA_MIN_MS_ABS, 9000);
   esperaAcc = 0;
+  bossAtual = chefePronto();
   fase = 'waiting';
   const rod = $('rod');
   rod.classList.remove('casting'); void rod.offsetWidth; rod.classList.add('casting');
   $('sea').classList.add('pescando');
   $('sea').classList.remove('mordeu');
-  setStatus('A lançar<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
+  setStatus(bossAtual
+    ? 'Algo enorme se aproxima<span class="dots"><span>.</span><span>.</span><span>.</span></span>'
+    : 'A lançar<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
   bip(430, .07, 'triangle');
   botaoLancar();
 }
@@ -1851,17 +2233,22 @@ function lancar() {
 function mordida() {
   fase = 'bar';
   barAcc = 0;
-  zonaLarg = clamp(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * state.up.rod, 0.1, 0.85);
+  const baseZona = CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * state.up.rod;
+  zonaLarg = bossAtual ? CONFIG.CHEFE_ZONA : clamp(baseZona, 0.1, 0.85);
   zonaPos = rnd(0, 1 - zonaLarg);
   $('greenZone').style.left = (zonaPos * 100) + '%';
   $('greenZone').style.width = (zonaLarg * 100) + '%';
   $('marker').style.left = '0%';
-  barraAtual = duracaoBarra();
+  barraAtual = bossAtual
+    ? Math.max(480, duracaoBarra() * CONFIG.CHEFE_BARRA)
+    : duracaoBarra();
   $('timingBar').classList.remove('hidden');
   barVisivel = true;
   $('sea').classList.add('mordeu');
-  setStatus('<span class="bite">‼️ MORDIDA! Toca!</span>');
-  bip(920, .12, 'square');
+  setStatus(bossAtual
+    ? '<span class="bite">CHEFE! TOCA AGORA!</span>'
+    : '<span class="bite">MORDIDA! Toca!</span>');
+  bip(bossAtual ? 700 : 920, .12, 'square');
   botaoLancar();
 }
 
@@ -1874,14 +2261,47 @@ function resolverBarra(pos) {
   barVisivel = false;
   $('sea').classList.remove('pescando', 'mordeu');
 
+  const eraChefe = bossAtual;
+  bossAtual = false;
+
   let tipo = 'falhou';
   if (pos !== null && pos >= zonaPos && pos <= zonaPos + zonaLarg) {
     const centro = zonaPos + zonaLarg / 2;
     tipo = Math.abs(pos - centro) <= (zonaLarg * CONFIG.JANELA_PERFEITA) / 2 ? 'perfeito' : 'bom';
   }
 
+  /* ---------- Confronto com o chefe do dia ---------- */
+  if (eraChefe) {
+    if (tipo === 'falhou') {
+      state.combo = 0;
+      if (state.hoje.chefe) state.hoje.chefe.prox = state.hoje.peixes + CONFIG.CHEFE_RETRY;
+      sonsDoResultado('falhou');
+      mostrarCaptura({ falhou: true, chefe: true });
+      toast('O chefe escapou… volta a tentar.');
+      atualizarChefeUI();
+    } else {
+      const chefe = peixePorId(state.hoje.chefe.id) || PEIXES[0];
+      const m = mods();
+      const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
+      const valor = Math.round(calcValor(chefe, chefe.r, tipo === 'perfeito', m, peso) * CONFIG.CHEFE_BONUS);
+      registarCaptura(chefe, chefe.r, tipo === 'perfeito', valor, peso);
+      state.hoje.chefe.feito = true;
+      if (tipo === 'perfeito') state.combo = (state.combo || 0) + 1;
+      sonsDoResultado(tipo);
+      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true });
+      efeitoEspecial(Math.max(4, chefe.r));
+      toast('Chefe do dia apanhado! Bónus ×' + CONFIG.CHEFE_BONUS);
+      atualizarChefeUI();
+    }
+    atualizarHUD();
+    botaoLancar();
+    guardar();
+    return;
+  }
+
+  /* ---------- Captura normal ---------- */
   if (tipo === 'falhou') {
-    state.combo = 0;                 // falhar quebra o combo
+    state.combo = 0;
     sonsDoResultado('falhou');
     mostrarCaptura({ falhou: true });
     atualizarHUD();
@@ -1889,7 +2309,6 @@ function resolverBarra(pos) {
     return;
   }
 
-  // Acerto perfeito aumenta o combo; "bom" mantém
   if (tipo === 'perfeito') state.combo = (state.combo || 0) + 1;
 
   const m = mods();
@@ -1900,28 +2319,13 @@ function resolverBarra(pos) {
   const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
   const valor = calcValor(peixe, rIdx, perfeito, m, peso);
 
-  state.moedas += valor;
-  state.hoje.moedas += valor;
-  state.hoje.peixes += 1;
-
-  const novo = state.descobertos.indexOf(peixe.id) === -1;
-  if (novo) state.descobertos.push(peixe.id);
-  if (!state.hoje.melhor || valor >= state.hoje.melhor.valor) {
-    state.hoje.melhor = {
-      nome: peixe.nome, emoji: peixe.emoji, id: peixe.id,
-      r: rIdx, valor: valor, perfeito: perfeito, peso: peso
-    };
-  }
-
-  // Missões do dia
-  avancarMissao('peixes', 1);
-  if (rIdx >= 2) avancarMissao('raros', 1);
-  if (perfeito) avancarMissao('perfeitos', 1);
+  const novo = registarCaptura(peixe, rIdx, perfeito, valor, peso);
 
   sonsDoResultado(tipo);
   mostrarCaptura({ peixe: peixe, rIdx: rIdx, valor: valor, perfeito: perfeito, novo: novo, peso: peso });
   if (rIdx >= 4) efeitoEspecial(rIdx);
   atualizarHUD();
+  atualizarChefeUI();
   botaoLancar();
   guardar();
   if (novo) renderLivro();
@@ -1936,6 +2340,9 @@ function calcValor(peixe, rIdx, perfeito, m, peso) {
   if (rIdx >= 2) v *= m.grande;        // "peixes grandes" = Raro ou superior
   v *= (peso || 1);                    // peso aleatório do exemplar
   v *= multCombo();                    // bónus de combo
+  v *= ((iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual()).valor; // isco do lance
+  v *= (1 + bonusColecao());           // bónus do Livro de Pesca
+  v *= bonusEstrelas();                // bónus das estrelas de prestígio
   if (perfeito) v *= CONFIG.BONUS_PERFEITO;
   return Math.max(1, Math.round(v));
 }
@@ -1946,10 +2353,21 @@ function mostrarCaptura(res) {
   box.innerHTML = '';
 
   if (res.falhou) {
-    box.innerHTML =
-      '<div class="catch-fail">🎣</div>' +
-      '<div class="catch-name">Escapou!</div>' +
-      '<div class="catch-rar" style="color:#7a6248">Tenta outra vez</div>';
+    const ico = document.createElement('div');
+    ico.className = 'catch-fail';
+    ico.appendChild(spriteIcone('cana', 3));
+    box.appendChild(ico);
+
+    const titulo = document.createElement('div');
+    titulo.className = 'catch-name';
+    titulo.textContent = res.chefe ? 'O chefe escapou!' : 'Escapou!';
+    box.appendChild(titulo);
+
+    const sub = document.createElement('div');
+    sub.className = 'catch-rar';
+    sub.style.color = '#7a6248';
+    sub.textContent = res.chefe ? 'Tenta outra vez daqui a pouco' : 'Tenta outra vez';
+    box.appendChild(sub);
     box.classList.remove('hidden');
     return;
   }
@@ -1963,7 +2381,13 @@ function mostrarCaptura(res) {
   sprite.appendChild(spritePeixe(p, 4));
   box.appendChild(sprite);
 
-  if (res.novo) {
+  if (res.chefe) {
+    const f = document.createElement('div');
+    f.className = 'catch-flag';
+    f.style.background = 'var(--purple)';
+    f.textContent = 'CHEFE DO DIA';
+    box.appendChild(f);
+  } else if (res.novo) {
     const f = document.createElement('div');
     f.className = 'catch-flag';
     f.textContent = 'NOVO!';
@@ -1985,7 +2409,8 @@ function mostrarCaptura(res) {
   info.className = 'catch-rar';
   info.style.color = '#7a6248';
   info.textContent = (res.peso || 1).toFixed(2).replace('.', ',') + ' kg' +
-    (res.perfeito ? ' · PERFEITO +50%' : '');
+    (res.perfeito ? ' · PERFEITO +50%' : '') +
+    (res.chefe ? ' · BÓNUS ×' + CONFIG.CHEFE_BONUS : '');
   box.appendChild(info);
 
   const val = document.createElement('div');
@@ -2004,6 +2429,166 @@ function esconderCaptura() {
   setStatus('Gira a cana e lança!');
   botaoLancar();
 }
+
+/* ==========================================================================
+   10.b) NOVOS SISTEMAS: coleção, iscas, chefe do dia e prestígio
+   ========================================================================== */
+
+function peixePorId(id) {
+  return PEIXES.find(function (p) { return p.id === id; }) || null;
+}
+
+/* --- Livro de Pesca: bónus por raridade completa --- */
+function raridadesCompletas() {
+  let n = 0;
+  for (let i = 0; i < RARIDADES.length; i++) {
+    const todos = PEIXES.filter(function (p) { return p.r === i; });
+    if (todos.length && todos.every(function (p) { return state.descobertos.indexOf(p.id) !== -1; })) n++;
+  }
+  return n;
+}
+function bonusColecao() {
+  return raridadesCompletas() * CONFIG.COLECAO_BONUS;
+}
+
+/* --- Prestígio --- */
+function bonusEstrelas() {
+  return 1 + (state.estrelas || 0) * CONFIG.EPOCA_ESTRELA;
+}
+function totalNiveis() {
+  let n = 0;
+  ['rod','bait','boat','fisher','freezer'].forEach(function (k) { n += state.up[k] || 0; });
+  return n;
+}
+function renderEpoca() {
+  const niveis = totalNiveis();
+  const est = state.estrelas || 0;
+  $('epocaInfo').textContent = 'Época ' + state.epoca + ' · ' + est + ' estrela' + (est === 1 ? '' : 's') +
+    ' (+' + Math.round(est * CONFIG.EPOCA_ESTRELA * 100) + '% valor)';
+  const falta = Math.max(0, CONFIG.EPOCA_NIVEIS - niveis);
+  const ganhas = Math.max(1, Math.floor(niveis / CONFIG.EPOCA_POR_NIVEL));
+  $('epocaProg').innerHTML = falta > 0
+    ? 'Níveis ' + niveis + '/' + CONFIG.EPOCA_NIVEIS + ' · faltam ' + falta
+    : 'Pronto! Vais ganhar <b>+' + ganhas + ' estrelas</b>';
+  const b = $('btnEpoca');
+  b.disabled = falta > 0;
+  b.textContent = falta > 0 ? 'Prestigiar' : 'Prestigiar agora';
+}
+function prestigiar() {
+  const niveis = totalNiveis();
+  if (niveis < CONFIG.EPOCA_NIVEIS) { toast('Ainda precisas de mais níveis.'); return; }
+  const ganhas = Math.max(1, Math.floor(niveis / CONFIG.EPOCA_POR_NIVEL));
+  if (!confirm('Começar uma nova época?\n\nPerdes moedas e upgrades, mas ganhas ' + ganhas +
+      ' estrelas permanentes (+' + Math.round(ganhas * CONFIG.EPOCA_ESTRELA * 100) + '% de valor).')) return;
+
+  state.estrelas = (state.estrelas || 0) + ganhas;
+  state.epoca = (state.epoca || 1) + 1;
+  state.up = { rod: 0, bait: 0, boat: 0, fisher: 0, freezer: 0 };
+  state.moedas = 1000 * ganhas;
+  state.combo = 0;
+  state.isca = 'comum';
+
+  bip(660, .1);
+  setTimeout(function () { bip(990, .12); }, 100);
+  setTimeout(function () { bip(1320, .16); }, 210);
+  toast('Nova época! +' + ganhas + ' estrelas');
+  guardar();
+  renderUpgrades();
+  renderIscas();
+  atualizarHUD();
+}
+
+/* --- Iscas --- */
+function iscaAtual() {
+  return CONFIG.ISCAS[state.isca] || CONFIG.ISCAS.comum;
+}
+function renderIscas() {
+  const nos = document.querySelectorAll('.isca');
+  for (let i = 0; i < nos.length; i++) {
+    nos[i].classList.toggle('ativa', nos[i].dataset.isca === state.isca);
+  }
+}
+function escolherIsca(id) {
+  if (!CONFIG.ISCAS[id] || state.isca === id) return;
+  state.isca = id;
+  renderIscas();
+  guardar();
+  toast('Isca ' + CONFIG.ISCAS[id].nome + ' selecionada.');
+  bip(620, .06);
+}
+
+/* --- Chefe do dia --- */
+function gerarChefe(key) {
+  const lista = PEIXES.filter(function (p) { return p.r >= 3; });
+  const p = lista[hashStr('chefe:' + key) % lista.length];
+  return { id: p.id, feito: false, prox: CONFIG.CHEFE_APOS };
+}
+function chefePronto() {
+  const c = state.hoje && state.hoje.chefe;
+  if (!c || c.feito) return false;
+  return state.hoje.peixes >= (c.prox || CONFIG.CHEFE_APOS);
+}
+function atualizarChefeUI() {
+  const c = state.hoje && state.hoje.chefe;
+  const bar = $('chefeBar');
+  if (!c) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  const peixe = peixePorId(c.id) || PEIXES[0];
+  const ico = $('chefeIco');
+  if (ico.getAttribute('data-bicho') !== c.id) {
+    ico.innerHTML = '';
+    ico.appendChild(spritePeixe(peixe, 2));
+    ico.setAttribute('data-bicho', c.id);
+  }
+  $('chefeNome').textContent = peixe.nome;
+  const est = $('chefeEstado');
+  if (c.feito) {
+    bar.classList.add('done');
+    est.textContent = 'Apanhado hoje! Amanhã há outro.';
+  } else {
+    bar.classList.remove('done');
+    const falta = Math.max(0, (c.prox || CONFIG.CHEFE_APOS) - state.hoje.peixes);
+    est.textContent = falta > 0
+      ? 'Aparece daqui a ' + falta + ' peixe' + (falta === 1 ? '' : 's') + ' · bónus ×' + CONFIG.CHEFE_BONUS
+      : 'Está à vista! Lança a cana · bónus ×' + CONFIG.CHEFE_BONUS;
+  }
+}
+
+/* --- Botão de som --- */
+function atualizarBotaoSom() {
+  const b = $('btnSom');
+  b.innerHTML = '';
+  b.appendChild(spriteIcone(state.som ? 'som' : 'som_off', 2));
+}
+
+/* --- Registo de uma captura (normal ou chefe) --- */
+function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
+  state.moedas += valor;
+  state.hoje.moedas += valor;
+  state.hoje.peixes += 1;
+
+  const novo = state.descobertos.indexOf(peixe.id) === -1;
+  const antes = raridadesCompletas();
+  if (novo) state.descobertos.push(peixe.id);
+  const depois = raridadesCompletas();
+  if (depois > antes) {
+    toast('Raridade completa! +' + Math.round(CONFIG.COLECAO_BONUS * 100) + '% de valor permanente.');
+    bip(760, .1);
+  }
+
+  if (!state.hoje.melhor || valor >= state.hoje.melhor.valor) {
+    state.hoje.melhor = {
+      nome: peixe.nome, emoji: peixe.emoji, id: peixe.id,
+      r: rIdx, valor: valor, perfeito: perfeito, peso: peso
+    };
+  }
+
+  avancarMissao('peixes', 1);
+  if (rIdx >= 2) avancarMissao('raros', 1);
+  if (perfeito) avancarMissao('perfeitos', 1);
+  return novo;
+}
+
 /* ==========================================================================
    11) LOOP PRINCIPAL (relógio só desconta com o separador visível)
    ========================================================================== */
@@ -2083,25 +2668,54 @@ function encerrarDia() {
 function abrirFimDia() {
   $('fimMoedas').textContent = fmt(state.hoje.moedas);
   $('fimPeixes').textContent = String(state.hoje.peixes);
+
   const m = state.hoje.melhor;
   const fb = $('fimMelhor');
   fb.innerHTML = '';
   if (m) {
-    let peixe = PEIXES.find(function (p) { return p.id === m.id; });
-    if (!peixe) peixe = PEIXES.find(function (p) { return p.nome === m.nome; }) || PEIXES[0];
+    const peixe = peixePorId(m.id) || PEIXES[0];
     const big = document.createElement('div');
     big.className = 'big';
     big.appendChild(spritePeixe(peixe, 3));
     fb.appendChild(big);
     const txt = document.createElement('div');
-    txt.innerHTML = '🏆 Melhor: <b style="color:' + RARIDADES[m.r].cor + '">' + m.nome + '</b> (' +
-      RARIDADES[m.r].nome + ')<br>💰 ' + fmt(m.valor) +
+    txt.innerHTML = 'Melhor: <b style="color:' + RARIDADES[m.r].cor + '">' + m.nome + '</b> (' +
+      RARIDADES[m.r].nome + ')<br>' + fmt(m.valor) + ' moedas' +
       (m.peso ? ' · ' + m.peso.toFixed(2).replace('.', ',') + ' kg' : '') +
-      (m.perfeito ? ' · 🎯 perfeito' : '');
+      (m.perfeito ? ' · perfeito' : '');
     fb.appendChild(txt);
   } else {
-    fb.innerHTML = '<div class="big">🎣</div>Nenhuma captura hoje. Amanhã há mais!';
+    const big = document.createElement('div');
+    big.className = 'big';
+    big.appendChild(spriteIcone('cana', 3));
+    fb.appendChild(big);
+    fb.appendChild(document.createTextNode('Nenhuma captura hoje. Amanhã há mais!'));
   }
+
+  /* Chefe do dia */
+  const c = state.hoje.chefe;
+  const fc = $('fimChefe');
+  if (c && c.feito) {
+    fc.textContent = 'Chefe do dia apanhado! Grande trabalho.';
+    fc.style.display = '';
+  } else if (c) {
+    const p = peixePorId(c.id);
+    fc.textContent = 'O chefe de hoje (' + (p ? p.nome : '?') + ') escapou. Amanhã há outro.';
+    fc.style.display = '';
+  } else {
+    fc.style.display = 'none';
+  }
+
+  /* Pré-visualização do evento de amanhã (gancho para voltar) */
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  const kAmanha = amanha.getFullYear() + '-' + pad2(amanha.getMonth() + 1) + '-' + pad2(amanha.getDate());
+  const evAmanha = eventoDaData(kAmanha);
+  const icoA = $('amanhaIco');
+  icoA.innerHTML = '';
+  icoA.appendChild(spriteEvento(evAmanha.id, 2));
+  $('amanhaTxt').textContent = evAmanha.nome + ' — ' + evAmanha.desc;
+
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
   $('btnAnuncio').style.display = state.anuncios < CONFIG.ANUNCIO_MAX_DIA ? '' : 'none';
@@ -2148,7 +2762,7 @@ async function partilhar() {
   // 2) fallback: área de transferência
   try {
     await navigator.clipboard.writeText(txt);
-    toast('📋 Resultado copiado!');
+    toast('Resultado copiado!');
     return;
   } catch (e) {}
   try {
@@ -2160,7 +2774,7 @@ async function partilhar() {
     ta.select();
     document.execCommand('copy');
     ta.remove();
-    toast('📋 Resultado copiado!');
+    toast('Resultado copiado!');
   } catch (e) { toast('Não foi possível copiar.'); }
 }
 
@@ -2173,7 +2787,7 @@ function verAnuncio() {
     toast('Já viste os anúncios de hoje. Volta amanhã!');
     return;
   }
-  alert('📺 [Simulação de anúncio]\n\nAqui entraria o anúncio real (SDK de anúncios).\n+60 segundos de pesca!');
+  alert('[Simulação de anúncio]\n\nAqui entraria o anúncio real (SDK de anúncios).\n+60 segundos de pesca!');
   state.anuncios += 1;
   concederTempo();
 }
@@ -2212,7 +2826,7 @@ function recolherOffline() {
   offlinePendente = 0;
   $('offlineModal').classList.add('hidden');
   bip(880, .1); setTimeout(() => bip(1180, .12), 90);
-  toast('💰 Recolhido!');
+  toast('Moedas recolhidas!');
   atualizarHUD();
   renderUpgradesSeVisivel();
   guardar();
@@ -2227,14 +2841,14 @@ function primeiraVez() {
   const id = CONFIG.PRIMEIRO_UPGRADE_GRATIS;
   if ((state.up[id] || 0) < 1) {
     state.up[id] = 1;
-    const u = UPGRADES_DADOS.find(x => x.id === id);
-    setTimeout(() => toast('🎁 Primeiro upgrade grátis: ' + u.emoji + ' ' + u.nome + ' nível 1!'), 400);
+    const u = UPGRADES_DADOS.find(function (x) { return x.id === id; });
+    setTimeout(function () { toast('Primeiro upgrade grátis: ' + u.nome + ' nível 1!'); }, 400);
   }
 }
 
 function alternarSom() {
   state.som = !state.som;
-  $('btnSom').textContent = state.som ? '🔊' : '🔇';
+  atualizarBotaoSom();
   if (state.som) bip(700, .08);
   guardar();
 }
@@ -2247,21 +2861,22 @@ function toqueNoMar(ev) {
 }
 
 function iniciar() {
-  /* --- Estado já carregado; primeiro a viragem de dia e o offline
-         (o cálculo offline precisa do ultimoVisto guardado na visita anterior,
-         por isso corre ANTES da primeira gravação) --- */
+  /* --- Estado já carregado; primeiro a viragem de dia e o offline --- */
   const mudouDia = verificarNovoDia();
   if (!state.hoje.missao) state.hoje.missao = gerarMissao(state.dataDia);
+  if (!state.hoje.chefe) state.hoje.chefe = gerarChefe(state.dataDia);
   calcularOffline();
   primeiraVez();
 
   /* --- Interface --- */
-  $('btnSom').textContent = state.som ? '🔊' : '🔇';
+  atualizarBotaoSom();
   mostrarSeloEvento();
   hidratarSprites(document);
   atualizarHUD();
   renderUpgrades();
   renderLivro();
+  renderIscas();
+  atualizarChefeUI();
   cancelarPesca();
   guardar();
 
@@ -2271,23 +2886,31 @@ function iniciar() {
   /* --- Evento do dia (cartão de 2s na primeira abertura do dia) --- */
   if (!state.eventoVisto && state.tempo > 0) setTimeout(mostrarEvento, 350);
 
-  if (mudouDia) toast('🌅 Novo dia! Tempo reposto.');
+  if (mudouDia) toast('Novo dia! Tempo reposto.');
 
   /* --- Separadores --- */
-  document.querySelectorAll('.tab').forEach(b => {
-    b.addEventListener('click', () => mudarSeparador(b.dataset.tab));
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () { mudarSeparador(b.dataset.tab); });
   });
 
   /* --- Pesca --- */
-  $('castBtn').addEventListener('click', () => {
-    if (fase === 'bar') { toqueNoMar(); return; }  // o próprio botão serve de "toco"
+  $('castBtn').addEventListener('click', function () {
+    if (fase === 'bar') { toqueNoMar(); return; }
     if (fase === 'result') { esconderCaptura(); return; }
     lancar();
   });
   $('sea').addEventListener('click', toqueNoMar);
 
-  /* --- Teclado (desktop): espaço lança / toca --- */
-  document.addEventListener('keydown', (e) => {
+  /* --- Iscas --- */
+  document.querySelectorAll('.isca').forEach(function (b) {
+    b.addEventListener('click', function () { escolherIsca(b.dataset.isca); });
+  });
+
+  /* --- Prestígio --- */
+  $('btnEpoca').addEventListener('click', prestigiar);
+
+  /* --- Teclado (desktop) --- */
+  document.addEventListener('keydown', function (e) {
     if (e.code !== 'Space') return;
     if ($('fimModal').classList.contains('hidden') === false) return;
     e.preventDefault();
@@ -2296,7 +2919,7 @@ function iniciar() {
     else lancar();
   });
 
-  /* --- Evento / upgrades / som --- */
+  /* --- Evento / som --- */
   $('evClose').addEventListener('click', fecharEvento);
   $('btnSom').addEventListener('click', alternarSom);
 
@@ -2310,23 +2933,24 @@ function iniciar() {
 
   /* Apagar progresso (útil para experimentar o equilíbrio) */
   $('btnReset').addEventListener('click', function () {
-    if (!confirm('Apagar todo o progresso (moedas, upgrades, livro e streak) e recomeçar?')) return;
+    if (!confirm('Apagar todo o progresso (moedas, upgrades, livro, estrelas e streak) e recomeçar?')) return;
     try { localStorage.removeItem(CONFIG.SAVE_KEY); } catch (e) {}
     location.reload();
   });
 
-  /* --- Page Visibility API: pausar o relógio e sincronizar ao voltar --- */
-  document.addEventListener('visibilitychange', () => {
+  /* --- Page Visibility API --- */
+  document.addEventListener('visibilitychange', function () {
     if (!document.hidden) {
-      ultimoAgora = Date.now();      // não descontar o tempo em que esteve oculto
+      ultimoAgora = Date.now();
       verificarNovoDia();
       atualizarHUD();
+      atualizarChefeUI();
     } else {
-      guardar();                     // gravar ao esconder o separador
+      guardar();
     }
   });
 
-  /* --- Gravação de segurança ao sair --- */
+  /* --- Gravação de segurança --- */
   window.addEventListener('pagehide', guardar);
   window.addEventListener('beforeunload', guardar);
 
