@@ -60,6 +60,20 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 - **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` + `efeitoTexto()`.
 - **Cores:** variáveis CSS em `:root`.
 
+## Analytics (visitas e origens)
+
+Desligado por defeito (`ANALYTICS.ativo = false`). Recomendo **GoatCounter** (grátis, sem cookies, dashboard simples):
+
+1. Cria conta em <https://www.goatcounter.com> e adiciona o site.
+2. Copia o URL do contador: `https://OTEUCODIGO.goatcounter.com/count`.
+3. No topo do `<script>`, em `ANALYTICS`, põe `ativo: true`, o `goatcounter` e o `painel`.
+4. Divulga com `?ref=reddit_incremental` (ou `utm_source`/`utm_campaign`). Cada origem aparece como `origem/...` no dashboard.
+5. No fundo do separador **Upgrades** aparece o botão **Ver estatísticas**.
+
+Alternativa: GA4 — `provedor: 'ga4'` e `ga4: 'G-XXXXXXXXXX'`.
+
+O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio` para saberes o que as visitas fazem.
+
 ## Reiniciar para testar
 
 - Separador **Upgrades** → botão **↺ Apagar progresso**.

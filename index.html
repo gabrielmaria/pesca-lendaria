@@ -509,7 +509,8 @@ h1{
 .combo{display:flex;align-items:center;gap:5px;}
 .combo .spr-slot,.missao .spr-slot{flex:0 0 auto;}
 .missao{display:flex;align-items:center;gap:5px;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
+a.btn{color:var(--ink);}
 .streak{display:flex;align-items:center;justify-content:center;gap:6px;}
 
 /* Tamanhos dos ícones em contexto (sobrepõem a escala do canvas) */
@@ -770,6 +771,7 @@ h1{
       <div id="upgradesList"></div>
       <div class="dev-actions">
         <button class="btn ghost small" id="btnReset"><span class="spr-slot" data-sprite="reiniciar"></span> Apagar progresso</button>
+        <a class="btn ghost small hidden" id="btnStats" target="_blank" rel="noopener">Ver estatísticas</a>
       </div>
       <p class="nota-dev">Para testar do zero: abre o jogo com <b>?reset</b> no endereço.</p>
     </section>
@@ -1520,6 +1522,25 @@ const ADS = {
   modo: 'simulado',            // 'simulado' | 'gamedistribution'
   sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
   intersticialFimDia: false    // true para interstitial quando o dia acaba
+};
+
+/* ==========================================================================
+   1.c) ANALYTICS (opcional) — visitas e origens
+   --------------------------------------------------------------------------
+   Recomendado: GoatCounter (grátis, sem cookies, dashboard simples).
+   1. Cria conta em https://www.goatcounter.com e adiciona o site.
+   2. Copia o URL do contador: https://OTEUCODIGO.goatcounter.com/count
+   3. Põe ANALYTICS.ativo = true e preenche goatcounter + painel.
+   4. Divulga com ?ref=reddit_incremental (ou utm_source/utm_campaign).
+      Cada origem aparece no dashboard e como evento "origem/...".
+   Alternativa: GA4 (preenche ga4 com G-XXXXXXXXXX e provedor 'ga4').
+   ========================================================================== */
+const ANALYTICS = {
+  ativo: false,
+  provedor: 'goatcounter',                       // 'goatcounter' | 'ga4'
+  goatcounter: 'https://SEUCODIGO.goatcounter.com/count',
+  ga4: 'G-XXXXXXXXXX',
+  painel: 'https://SEUCODIGO.goatcounter.com'     // usado pelo botão "Ver estatísticas"
 };
 
 /* ==========================================================================
@@ -2333,6 +2354,7 @@ function resolverBarra(pos) {
       mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true });
       efeitoEspecial(Math.max(4, chefe.r));
       toast('Chefe do dia apanhado! Bónus ×' + CONFIG.CHEFE_BONUS);
+      track('chefe', { raridade: chefe.r });
       atualizarChefeUI();
     }
     atualizarHUD();
@@ -2362,6 +2384,7 @@ function resolverBarra(pos) {
   const valor = calcValor(peixe, rIdx, perfeito, m, peso);
 
   const novo = registarCaptura(peixe, rIdx, perfeito, valor, peso);
+  track('captura', { raridade: rIdx, perfeito: perfeito });
 
   sonsDoResultado(tipo);
   mostrarCaptura({ peixe: peixe, rIdx: rIdx, valor: valor, perfeito: perfeito, novo: novo, peso: peso });
@@ -2534,6 +2557,7 @@ function prestigiar() {
   setTimeout(function () { bip(990, .12); }, 100);
   setTimeout(function () { bip(1320, .16); }, 210);
   toast('Nova época! +' + ganhas + ' estrelas');
+  track('prestigio', { estrelas: ganhas });
   guardar();
   renderUpgrades();
   renderIscas();
@@ -2557,6 +2581,72 @@ function escolherIsca(id) {
   guardar();
   toast('Isca ' + CONFIG.ISCAS[id].nome + ' selecionada.');
   bip(620, .06);
+}
+
+/* --- Analytics: visitas, origem e eventos --- */
+let origemVisita = 'direto';
+
+function lerOrigem() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref') || params.get('utm_source') || params.get('utm_campaign');
+    if (ref) origemVisita = String(ref).slice(0, 40);
+    else if (document.referrer) {
+      try { origemVisita = new URL(document.referrer).hostname; }
+      catch (e) { origemVisita = 'referrer'; }
+    }
+  } catch (e) { /* sem location (ex.: testes) */ }
+  return origemVisita;
+}
+
+function gcContar(obj, tentativa) {
+  tentativa = tentativa || 0;
+  if (window.goatcounter && window.goatcounter.count) {
+    try { window.goatcounter.count(obj); } catch (e) {}
+    return;
+  }
+  if (tentativa < 12) setTimeout(function () { gcContar(obj, tentativa + 1); }, 300);
+}
+
+function iniciarAnalytics() {
+  lerOrigem();
+  if (!ANALYTICS.ativo) return;
+
+  if (ANALYTICS.provedor === 'goatcounter' && ANALYTICS.goatcounter.indexOf('SEUCODIGO') === -1) {
+    const sc = document.createElement('script');
+    sc.async = true;
+    sc.src = 'https://gc.zgo.at/count.js';
+    sc.setAttribute('data-goatcounter', ANALYTICS.goatcounter);
+    document.head.appendChild(sc);
+    // regista a origem como evento, para saberes de que subreddit veio
+    gcContar({ path: 'origem/' + origemVisita, title: 'Origem: ' + origemVisita, event: true });
+  } else if (ANALYTICS.provedor === 'ga4' && ANALYTICS.ga4.indexOf('XXXXXXXX') === -1) {
+    const sc = document.createElement('script');
+    sc.async = true;
+    sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + ANALYTICS.ga4;
+    document.head.appendChild(sc);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', ANALYTICS.ga4);
+    window.gtag('event', 'origem_visita', { origem: origemVisita });
+  }
+
+  // botão "Ver estatísticas" (só aparece se estiver configurado)
+  const b = $('btnStats');
+  if (b && ANALYTICS.painel && ANALYTICS.painel.indexOf('SEUCODIGO') === -1) {
+    b.href = ANALYTICS.painel;
+    b.classList.remove('hidden');
+  }
+}
+
+function track(nome, dados) {
+  if (!ANALYTICS.ativo) return;
+  if (ANALYTICS.provedor === 'goatcounter') {
+    gcContar({ path: 'jogo/' + nome, title: nome, event: true });
+  } else if (ANALYTICS.provedor === 'ga4' && typeof window.gtag === 'function') {
+    window.gtag('event', nome, dados || {});
+  }
 }
 
 /* --- Chefe do dia --- */
@@ -2801,6 +2891,7 @@ function textoPartilha() {
 
 async function partilhar() {
   const txt = textoPartilha();
+  track('partilha');
   // 1) API nativa de partilha quando existe (mobile)
   if (navigator.share) {
     try { await navigator.share({ title: 'Pesca Lendária', text: txt }); return; }
@@ -2915,6 +3006,7 @@ function verAnuncio() {
     }
     state.anuncios += 1;
     concederTempo();
+    track('anuncio');
   };
   if (ADS.modo === 'gamedistribution') {
     if (!window.gdsdk) {
@@ -3005,6 +3097,7 @@ function iniciar() {
 
   /* --- Interface --- */
   iniciarAnuncios();
+  iniciarAnalytics();
   atualizarBotaoSom();
   mostrarSeloEvento();
   hidratarSprites(document);
