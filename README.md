@@ -62,28 +62,39 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 
 ## Analytics (visitas e origens)
 
-Já está configurado com **GoatCounter** (grátis, sem cookies):
+O jogo usa **GoatCounter** através de um **proxy first-party no Vercel** (`vercel.json`), para reduzir o bloqueio por adblockers:
+
+- `/count` → `https://pescalendaria.goatcounter.com/count`
+- `/count.js` → `https://gc.zgo.at/count.js`
+
+No topo do `<script>`:
 
 ```js
 const ANALYTICS = {
   ativo: true,
   provedor: 'goatcounter',
-  goatcounter: 'https://pescalendaria.goatcounter.com/count',
+  goatcounter: '/count',
+  script: '/count.js',
   ga4: 'G-XXXXXXXXXX',
-  painel: 'https://pescalendaria.goatcounter.com'
+  painel: 'https://pescalendaria.goatcounter.com',
+  vercelAtivo: false
 };
 ```
 
-- **Dashboard:** <https://pescalendaria.goatcounter.com>
-- Divulga com `?ref=reddit_incremental` (ou `utm_source`/`utm_campaign`). Cada origem aparece como `origem/...`.
-- Abre o site com **`?dono`** para aparecer o botão **Ver estatísticas** no separador Upgrades (os jogadores não o veem).
+- **Dashboard GoatCounter:** <https://pescalendaria.goatcounter.com>
+- Divulga com `?ref=reddit_incremental`; cada origem aparece como `origem/...`.
+- Abre o site com **`?dono`** para aparecer o botão **Ver estatísticas** no separador Upgrades.
 - O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio`.
 
-Nota: o plano gratuito do GoatCounter é para uso não comercial; se o site passar a ter anúncios, usa o plano pago ou aloja o GoatCounter tu mesmo.
+### Vercel Web Analytics (first-party)
 
-Alternativa: GA4 — `provedor: 'ga4'` e `ga4: 'G-XXXXXXXXXX'`.
+1. No painel do Vercel: **Project → Analytics → Enable Web Analytics**.
+2. No código, põe `vercelAtivo: true` em `ANALYTICS`.
+3. Faz deploy. O Vercel passa a mostrar **visitors, page views, páginas, referrers, países e dispositivos**.
 
-O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio` para saberes o que as visitas fazem.
+O Vercel Analytics é servido do teu domínio (`/_vercel/insights/script.js`), por isso os adblockers têm muito mais dificuldade em bloqueá-lo. Compara os números com o GoatCounter: a diferença é, aproximadamente, a fatia que estava a ser perdida.
+
+> Nem o Vercel nem o GoatCounter contam a 100%: são JavaScript. Para contagens server-side (incluindo quem bloqueia JS/analytics) só com logs de servidor ou CDN. O `plano` gratuito do Vercel tem limite mensal de eventos.
 
 ## Nota para desenvolvimento
 

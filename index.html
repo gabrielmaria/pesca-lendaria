@@ -1768,9 +1768,12 @@ const ADS = {
 const ANALYTICS = {
   ativo: true,
   provedor: 'goatcounter',                       // 'goatcounter' | 'ga4'
-  goatcounter: 'https://pescalendaria.goatcounter.com/count',
+  // Proxy first-party no Vercel (ver vercel.json): evita bloqueadores
+  goatcounter: '/count',
+  script: '/count.js',                            // fallback automático para gc.zgo.at
   ga4: 'G-XXXXXXXXXX',
-  painel: 'https://pescalendaria.goatcounter.com' // botão "Ver estatísticas" (com ?dono)
+  painel: 'https://pescalendaria.goatcounter.com', // botão "Ver estatísticas" (com ?dono)
+  vercelAtivo: false                              // true depois de ligar Vercel Web Analytics
 };
 
 /* ==========================================================================
@@ -2846,8 +2849,18 @@ function iniciarAnalytics() {
   if (ANALYTICS.provedor === 'goatcounter' && ANALYTICS.goatcounter.indexOf('SEUCODIGO') === -1) {
     const sc = document.createElement('script');
     sc.async = true;
-    sc.src = 'https://gc.zgo.at/count.js';
+    sc.src = ANALYTICS.script || 'https://gc.zgo.at/count.js';
     sc.setAttribute('data-goatcounter', ANALYTICS.goatcounter);
+    // fallback: se o proxy falhar, usa o GoatCounter diretamente
+    sc.onerror = function () {
+      try {
+        const fb = document.createElement('script');
+        fb.async = true;
+        fb.src = 'https://gc.zgo.at/count.js';
+        fb.setAttribute('data-goatcounter', 'https://pescalendaria.goatcounter.com/count');
+        if (document.head) document.head.appendChild(fb);
+      } catch (e) {}
+    };
     if (document.head) document.head.appendChild(sc);
     // regista a origem como evento, para saberes de que subreddit veio
     gcContar({ path: 'origem/' + origemVisita, title: 'Origem: ' + origemVisita, event: true });
@@ -2861,6 +2874,17 @@ function iniciarAnalytics() {
     window.gtag('js', new Date());
     window.gtag('config', ANALYTICS.ga4);
     window.gtag('event', 'origem_visita', { origem: origemVisita });
+  }
+
+  // Vercel Web Analytics (first-party). Ligar no painel antes de ativar a flag.
+  if (ANALYTICS.vercelAtivo) {
+    try {
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      const va = document.createElement('script');
+      va.defer = true;
+      va.src = '/_vercel/insights/script.js';
+      if (document.head) document.head.appendChild(va);
+    } catch (e) {}
   }
 
   // botão "Ver estatísticas": só para o dono (abre o site com ?dono)

@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/count", "destination": "https://pescalendaria.goatcounter.com/count" },
+    { "source": "/count.js", "destination": "https://gc.zgo.at/count.js" }
+  ]
+}
