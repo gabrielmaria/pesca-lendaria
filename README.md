@@ -66,9 +66,33 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 - Ou abre com **`?reset`** no endereço.
 - Manualmente: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`.
 
-## Anúncios
+## Anúncios (GameDistribution)
 
-`#ad-banner` (320×100) e `verAnuncio()` estão marcados com `LIGAR SDK REAL MAIS TARDE`.
+O jogo já traz um adaptador de anúncios. Por defeito está em **modo simulado** (não envia nada para a rede).
+
+Para ligar a **GameDistribution**:
+
+1. Cria conta e regista o jogo em <https://gamedistribution.com>.
+2. Publica o `index.html` no portal.
+3. No topo do `<script>`, muda `ADS.modo` para `'gamedistribution'`.
+4. Opcional: `ADS.intersticialFimDia = true` para um interstitial quando o dia acaba.
+5. Enquanto o SDK não carregar, o botão "+60s" mostra "anúncio indisponível" (não dá recompensa sem anúncio).
+
+O SDK pausa o relógio de pesca durante o anúncio (`SDK_GAME_PAUSE` / `SDK_GAME_START`), para não perderes tempo.
+
+O `#ad-banner` (320×100) continua reservado para uma futura integração AdSense no teu site.
+
+## Habilitar anúncios reais
+
+Tudo está em `const ADS` no topo do script:
+
+```js
+const ADS = {
+  modo: 'simulado',            // 'simulado' | 'gamedistribution'
+  sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
+  intersticialFimDia: false
+};
+```
 
 ## Publicar (GitHub Pages)
 

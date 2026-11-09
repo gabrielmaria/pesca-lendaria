@@ -316,7 +316,7 @@ h1{
 
 /* Botão principal */
 .big-btn{
-  display:block;width:100%;margin-top:10px;padding:16px;
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:16px;
   font-size:20px;font-weight:900;letter-spacing:2px;text-transform:uppercase;
   color:#12300a;
   background:linear-gradient(180deg,var(--green-l) 0%,var(--green) 70%,#3f7a1a 100%);
@@ -769,7 +769,7 @@ h1{
 
       <div id="upgradesList"></div>
       <div class="dev-actions">
-        <button class="btn ghost small" id="btnReset">↺ Apagar progresso</button>
+        <button class="btn ghost small" id="btnReset"><span class="spr-slot" data-sprite="reiniciar"></span> Apagar progresso</button>
       </div>
       <p class="nota-dev">Para testar do zero: abre o jogo com <b>?reset</b> no endereço.</p>
     </section>
@@ -1260,6 +1260,24 @@ function spriteIcone(nome, escala) {
       rectPx(g, 7, 4, 2, 10, '#ffe08a');
       rectPx(g, 3, 8, 10, 1, '#ffb0a0');
       break;
+    case 'ampulheta':
+      rectPx(g, 3, 1, 10, 2, '#c9a06a');
+      rectPx(g, 3, 13, 10, 2, '#c9a06a');
+      triPx(g, 4, 3, 12, 3, 8, 8, '#cfeaf5');
+      triPx(g, 4, 13, 12, 13, 8, 8, '#cfeaf5');
+      triPx(g, 6, 5, 10, 5, 8, 8, '#f2b632');
+      triPx(g, 6, 12, 10, 12, 8, 9, '#f2b632');
+      px(g, 8, 8, '#f2b632');
+      break;
+    case 'reiniciar':
+      for (let yy = 0; yy < 16; yy++) {
+        for (let xx = 0; xx < 16; xx++) {
+          const d = Math.sqrt((xx - 8) * (xx - 8) + (yy - 8) * (yy - 8));
+          if (d >= 3.6 && d <= 5.6 && !(xx > 9 && yy < 8)) px(g, xx, yy, '#c9a06a');
+        }
+      }
+      triPx(g, 10, 2, 14, 7, 8, 7, '#c9a06a');
+      break;
     case 'peixe':
     default:
       elipsePx(g, 9, 8, 4.4, 3, '#6fb7d8');
@@ -1485,6 +1503,23 @@ const CONFIG = {
   SAVE_KEY: 'pescaLendaria.v2',
   SAVE_INTERVAL: 5000,        // guarda automática periódica
   TICK_MS: 100                // cadência do loop principal
+};
+
+/* ==========================================================================
+   1.b) ANÚNCIOS — GameDistribution (rewarded)
+   --------------------------------------------------------------------------
+   COMO LIGAR:
+   1. Cria conta em https://gamedistribution.com e regista o jogo.
+   2. Publica o index.html como jogo no portal (eles alojam ou dão o embed).
+   3. Muda ADS.modo para 'gamedistribution'.
+   4. (Opcional) Liga o intersticial no fim do dia.
+   O SDK é carregado só quando o modo é este; caso contrário fica a
+   simulação (nada quebra, nada é enviado para a rede).
+   ========================================================================== */
+const ADS = {
+  modo: 'simulado',            // 'simulado' | 'gamedistribution'
+  sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
+  intersticialFimDia: false    // true para interstitial quando o dia acaba
 };
 
 /* ==========================================================================
@@ -2181,7 +2216,14 @@ function botaoLancar() {
   b.classList.remove('hot');
   if (fase === 'ended' || state.tempo <= 0) {
     b.disabled = true;
-    b.textContent = '⏳ DIA TERMINADO';
+    b.innerHTML = '';
+    const cv = spriteIcone('ampulheta', 2);
+    cv.style.width = '30px';
+    cv.style.height = '30px';
+    b.appendChild(cv);
+    const t = document.createElement('span');
+    t.textContent = 'DIA TERMINADO';
+    b.appendChild(t);
     return;
   }
   b.disabled = false;
@@ -2593,6 +2635,7 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
    11) LOOP PRINCIPAL (relógio só desconta com o separador visível)
    ========================================================================== */
 let ultimoAgora = Date.now();
+let adPausado = false;
 let guardaAcc = 0;
 
 function loop() {
@@ -2601,7 +2644,7 @@ function loop() {
   ultimoAgora = agora;
 
   // Page Visibility API: com o separador oculto não se desconta tempo nem se avança
-  if (document.hidden) return;
+  if (document.hidden || adPausado) return;
   if (dt > 2000) dt = 2000; // após throttling do navegador, limita o salto
   if (dt < 0) dt = 0;
 
@@ -2663,6 +2706,10 @@ function encerrarDia() {
   fase = 'ended';    // trava novos lançamentos
   abrirFimDia();
   guardar();
+  // Intersticial opcional (só quando publicado no portal)
+  if (ADS.modo === 'gamedistribution' && ADS.intersticialFimDia) {
+    try { if (window.gdsdk && window.gdsdk.showAd) window.gdsdk.showAd(); } catch (e) {}
+  }
 }
 
 function abrirFimDia() {
@@ -2782,14 +2829,102 @@ async function partilhar() {
  *  LIGAR SDK REAL MAIS TARDE: substituir o corpo desta função por
  *  rewardedAd.show() e chamar concederTempo() apenas se o anúncio
  *  terminou (ex.: if (resultado === 'completed') concederTempo()). */
+let gdCarregado = false;
+let gdPronto = false;
+
+/** Carrega o SDK da GameDistribution (só no modo correspondente). */
+function iniciarAnuncios() {
+  if (ADS.modo !== 'gamedistribution' || gdCarregado) return;
+  gdCarregado = true;
+  const s = document.createElement('script');
+  s.src = ADS.sdkUrl;
+  s.async = true;
+  s.onload = function () {
+    try {
+      if (window.gdsdk && window.gdsdk.addEventListener) {
+        window.gdsdk.addEventListener('SDK_READY', function () {
+          gdPronto = true;
+          // pré-carrega o rewarded para aparecer depressa
+          try { if (window.gdsdk.preloadAd) window.gdsdk.preloadAd('rewarded'); } catch (e) {}
+        });
+        window.gdsdk.addEventListener('SDK_GAME_PAUSE', function () { adPausado = true; });
+        window.gdsdk.addEventListener('SDK_GAME_START', function () {
+          adPausado = false;
+          ultimoAgora = Date.now(); // não descontar o tempo do anúncio
+        });
+      }
+    } catch (e) {}
+  };
+  s.onerror = function () { /* sem SDK: mantém-se o fallback simulado */ };
+  document.head.appendChild(s);
+}
+
+/** Pede um anúncio rewarded.
+ *  cb(true)  = visto até ao fim (dá recompensa)
+ *  cb(false) = não visto / erro
+ *  cb(null)  = SDK indisponível (usar simulação)
+ */
+function pedirRewardedGD(cb) {
+  if (!window.gdsdk || typeof window.gdsdk.showAd !== 'function') { cb(null); return; }
+  let respondido = false;
+  let concluido = false;
+
+  const limpar = function () {
+    try { window.gdsdk.removeEventListener('SDK_REWARDED_WATCH_COMPLETE', onComplete); } catch (e) {}
+  };
+  const responder = function (ok) {
+    if (respondido) return;
+    respondido = true;
+    limpar();
+    cb(ok);
+  };
+  const onComplete = function () { concluido = true; responder(true); };
+
+  try { window.gdsdk.addEventListener('SDK_REWARDED_WATCH_COMPLETE', onComplete); } catch (e) {}
+
+  try {
+    const p = window.gdsdk.showAd('rewarded');
+    if (p && typeof p.then === 'function') {
+      p.then(function () { responder(true); })
+       .catch(function () { responder(concluido); });
+    }
+    // Rede de segurança: se o SDK não responder em 30s, não damos recompensa
+    setTimeout(function () { responder(concluido); }, 30000);
+  } catch (e) {
+    limpar();
+    cb(false);
+  }
+}
+
+/** Anúncio simulado (sem rede) — mantém o jogo testável. */
+function simularAnuncio(cb) {
+  alert('[Simulação de anúncio]\n\nAqui entraria o anúncio recompensado real (GameDistribution).\n+60 segundos de pesca!');
+  cb(true);
+}
+
+/** Botão "Ver anúncio: +60s". */
 function verAnuncio() {
   if (state.anuncios >= CONFIG.ANUNCIO_MAX_DIA) {
     toast('Já viste os anúncios de hoje. Volta amanhã!');
     return;
   }
-  alert('[Simulação de anúncio]\n\nAqui entraria o anúncio real (SDK de anúncios).\n+60 segundos de pesca!');
-  state.anuncios += 1;
-  concederTempo();
+  const aplicar = function (visto) {
+    if (visto !== true) {
+      toast('Anúncio indisponível. Tenta outra vez.');
+      return;
+    }
+    state.anuncios += 1;
+    concederTempo();
+  };
+  if (ADS.modo === 'gamedistribution') {
+    if (!window.gdsdk) {
+      toast('Anúncio indisponível. Tenta outra vez.');
+      return;
+    }
+    pedirRewardedGD(aplicar);
+  } else {
+    simularAnuncio(aplicar);
+  }
 }
 
 function concederTempo() {
@@ -2869,6 +3004,7 @@ function iniciar() {
   primeiraVez();
 
   /* --- Interface --- */
+  iniciarAnuncios();
   atualizarBotaoSom();
   mostrarSeloEvento();
   hidratarSprites(document);
