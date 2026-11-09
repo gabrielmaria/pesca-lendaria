@@ -113,7 +113,20 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;background:n
 .icon-btn:active{transform:translateY(3px);box-shadow:inset 2px 2px 0 var(--wood-d);}
 
 /* ---------- Cabeçalho ---------- */
-header{margin-bottom:8px;}
+header{margin-bottom:2px;}
+.topbar h1{display:flex;align-items:center;gap:8px;}
+.logo canvas{width:26px !important;height:26px !important;}
+.hud-sticky{
+  position:sticky; top:0; z-index:40;
+  margin:0 -10px;
+  padding:7px 10px 8px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 4px),
+    linear-gradient(180deg,#0b2242 0%,#081a33 100%);
+  border-bottom:3px solid var(--wood-dd);
+  box-shadow:0 5px 0 rgba(0,0,0,.22);
+}
+.hud-sticky .hud{margin-top:0;}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;}
 h1{
   font-size:16px;margin:0;letter-spacing:1.5px;text-transform:uppercase;
@@ -655,10 +668,14 @@ a.btn{color:var(--ink);}
   <!-- ======================= CABEÇALHO ======================= -->
   <header>
     <div class="topbar">
-      <h1>Pesca Lendária</h1>
+      <h1><span class="spr-slot logo" data-sprite="peixe"></span> Pesca Lendária</h1>
       <button class="icon-btn" id="btnSom" title="Som" aria-label="Som"></button>
     </div>
 
+  </header>
+
+  <!-- HUD fixo: o tempo fica sempre visível enquanto jogas -->
+  <div class="hud-sticky">
     <div class="hud">
       <div class="plate timer-plate">
         <span class="plate-lbl">TEMPO DE PESCA</span>
@@ -669,10 +686,10 @@ a.btn{color:var(--ink);}
         <span id="coinVal">0</span>
       </div>
     </div>
-
     <div class="timebar"><div id="timeFill"></div></div>
-    <div class="seal" id="eventSeal">…</div>
-  </header>
+  </div>
+
+  <div class="seal" id="eventSeal">…</div>
 
   <!-- ======================= SEPARADORES ======================= -->
   <nav class="tabs">
@@ -1403,6 +1420,45 @@ function spriteCenario(nome, escala) {
 /**
  * Preenche todos os espaços [data-sprite] (uma única vez por elemento).
  */
+/**
+ * Desenha o favicon pixel (peixe num quadro azul) e aplica-o na aba.
+ * Tudo em canvas, sem ficheiros externos.
+ */
+function criarFavicon() {
+  try {
+    if (!document.head) return;
+    const peixe = novoGrid(24, 18);
+    desenharForma('peixe', peixe, paletaPeixe(PEIXES[0]), hashStr('favicon'));
+    contorno(peixe, '#241608');
+
+    const g = novoGrid(32, 32);
+    rectPx(g, 0, 0, 32, 32, '#0b2242');
+    rectPx(g, 1, 1, 30, 1, '#f2b632');
+    rectPx(g, 1, 30, 30, 1, '#f2b632');
+    rectPx(g, 1, 1, 1, 30, '#f2b632');
+    rectPx(g, 30, 1, 1, 30, '#f2b632');
+    for (let y = 0; y < 18; y++) {
+      for (let x = 0; x < 24; x++) {
+        if (peixe[y][x]) px(g, x + 4, y + 7, peixe[y][x]);
+      }
+    }
+    const cv = gridParaCanvas(g, 1);
+    if (!cv.toDataURL) return;
+    const url = cv.toDataURL('image/png');
+
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/png';
+    link.href = url;
+    document.head.appendChild(link);
+
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon';
+    apple.href = url;
+    document.head.appendChild(apple);
+  } catch (e) { /* sem canvas/head: ignora */ }
+}
+
 function hidratarSprites(raiz) {
   const alvo = raiz || document;
   if (!alvo.querySelectorAll) return;
@@ -3109,6 +3165,7 @@ function iniciar() {
   /* --- Interface --- */
   iniciarAnuncios();
   iniciarAnalytics();
+  criarFavicon();
   atualizarBotaoSom();
   mostrarSeloEvento();
   hidratarSprites(document);
