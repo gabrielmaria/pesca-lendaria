@@ -62,13 +62,24 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 
 ## Analytics (visitas e origens)
 
-Desligado por defeito (`ANALYTICS.ativo = false`). Recomendo **GoatCounter** (grátis, sem cookies, dashboard simples):
+Já está configurado com **GoatCounter** (grátis, sem cookies):
 
-1. Cria conta em <https://www.goatcounter.com> e adiciona o site.
-2. Copia o URL do contador: `https://OTEUCODIGO.goatcounter.com/count`.
-3. No topo do `<script>`, em `ANALYTICS`, põe `ativo: true`, o `goatcounter` e o `painel`.
-4. Divulga com `?ref=reddit_incremental` (ou `utm_source`/`utm_campaign`). Cada origem aparece como `origem/...` no dashboard.
-5. No fundo do separador **Upgrades** aparece o botão **Ver estatísticas**.
+```js
+const ANALYTICS = {
+  ativo: true,
+  provedor: 'goatcounter',
+  goatcounter: 'https://pescalendaria.goatcounter.com/count',
+  ga4: 'G-XXXXXXXXXX',
+  painel: 'https://pescalendaria.goatcounter.com'
+};
+```
+
+- **Dashboard:** <https://pescalendaria.goatcounter.com>
+- Divulga com `?ref=reddit_incremental` (ou `utm_source`/`utm_campaign`). Cada origem aparece como `origem/...`.
+- Abre o site com **`?dono`** para aparecer o botão **Ver estatísticas** no separador Upgrades (os jogadores não o veem).
+- O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio`.
+
+Nota: o plano gratuito do GoatCounter é para uso não comercial; se o site passar a ter anúncios, usa o plano pago ou aloja o GoatCounter tu mesmo.
 
 Alternativa: GA4 — `provedor: 'ga4'` e `ga4: 'G-XXXXXXXXXX'`.
 

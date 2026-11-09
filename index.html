@@ -1536,11 +1536,11 @@ const ADS = {
    Alternativa: GA4 (preenche ga4 com G-XXXXXXXXXX e provedor 'ga4').
    ========================================================================== */
 const ANALYTICS = {
-  ativo: false,
+  ativo: true,
   provedor: 'goatcounter',                       // 'goatcounter' | 'ga4'
-  goatcounter: 'https://SEUCODIGO.goatcounter.com/count',
+  goatcounter: 'https://pescalendaria.goatcounter.com/count',
   ga4: 'G-XXXXXXXXXX',
-  painel: 'https://SEUCODIGO.goatcounter.com'     // usado pelo botão "Ver estatísticas"
+  painel: 'https://pescalendaria.goatcounter.com' // botão "Ver estatísticas" (com ?dono)
 };
 
 /* ==========================================================================
@@ -2586,14 +2586,24 @@ function escolherIsca(id) {
 /* --- Analytics: visitas, origem e eventos --- */
 let origemVisita = 'direto';
 
+function paramURL(nome) {
+  try {
+    const busca = (window.location.search || '').replace(/^\?/, '');
+    const partes = busca.split('&');
+    for (let i = 0; i < partes.length; i++) {
+      const par = partes[i].split('=');
+      if (decodeURIComponent(par[0]) === nome) return decodeURIComponent(par[1] || '');
+    }
+  } catch (e) {}
+  return null;
+}
+
 function lerOrigem() {
   try {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref') || params.get('utm_source') || params.get('utm_campaign');
+    const ref = paramURL('ref') || paramURL('utm_source') || paramURL('utm_campaign');
     if (ref) origemVisita = String(ref).slice(0, 40);
     else if (document.referrer) {
-      try { origemVisita = new URL(document.referrer).hostname; }
-      catch (e) { origemVisita = 'referrer'; }
+      origemVisita = document.referrer.replace(/^https?:\/\//, '').split('/')[0] || 'referrer';
     }
   } catch (e) { /* sem location (ex.: testes) */ }
   return origemVisita;
@@ -2617,14 +2627,14 @@ function iniciarAnalytics() {
     sc.async = true;
     sc.src = 'https://gc.zgo.at/count.js';
     sc.setAttribute('data-goatcounter', ANALYTICS.goatcounter);
-    document.head.appendChild(sc);
+    if (document.head) document.head.appendChild(sc);
     // regista a origem como evento, para saberes de que subreddit veio
     gcContar({ path: 'origem/' + origemVisita, title: 'Origem: ' + origemVisita, event: true });
   } else if (ANALYTICS.provedor === 'ga4' && ANALYTICS.ga4.indexOf('XXXXXXXX') === -1) {
     const sc = document.createElement('script');
     sc.async = true;
     sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + ANALYTICS.ga4;
-    document.head.appendChild(sc);
+    if (document.head) document.head.appendChild(sc);
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
@@ -2632,9 +2642,10 @@ function iniciarAnalytics() {
     window.gtag('event', 'origem_visita', { origem: origemVisita });
   }
 
-  // botão "Ver estatísticas" (só aparece se estiver configurado)
+  // botão "Ver estatísticas": só para o dono (abre o site com ?dono)
+  const ehDono = paramURL('dono') !== null;
   const b = $('btnStats');
-  if (b && ANALYTICS.painel && ANALYTICS.painel.indexOf('SEUCODIGO') === -1) {
+  if (b && ehDono && ANALYTICS.painel && ANALYTICS.painel.indexOf('SEUCODIGO') === -1) {
     b.href = ANALYTICS.painel;
     b.classList.remove('hidden');
   }
