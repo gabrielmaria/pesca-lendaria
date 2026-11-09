@@ -872,7 +872,7 @@ body{
 
       <div class="hint" data-i18n="dica">Tens 3 minutos a cada 12 horas. Pesca!</div>
 
-      <!-- Chefe do dia: o motivo para voltar amanhã -->
+      <!-- Chefe do dia: o motivo para voltar -->
       <div class="chefe" id="chefeBar">
         <span class="chefe-spr" id="chefeIco"></span>
         <div class="chefe-txt">
@@ -1700,7 +1700,7 @@ function hidratarSprites(raiz) {
 }
 
 /* ==========================================================================
-   PESCA LENDÁRIA — tycoon de pesca com 180 segundos por dia
+   PESCA LENDÁRIA — tycoon de pesca com 180 segundos a cada 12 horas
    JavaScript vanilla, sem bibliotecas. Tudo guardado em localStorage.
    ========================================================================== */
 
@@ -3529,7 +3529,7 @@ function fecharFimDia() {
   if (contadorFim) { clearInterval(contadorFim); contadorFim = null; }
 }
 
-/** Contador "Próximo dia em HH:MM:SS" (meia-noite local). */
+/** Contador "Próxima sessão em HH:MM:SS" (12h). */
 function atualizarProximoDia() {
   const alvo = (typeof state.proximoRefill === 'number') ? state.proximoRefill : Date.now();
   const s = Math.max(0, Math.floor((alvo - Date.now()) / 1000));
