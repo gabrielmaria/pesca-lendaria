@@ -5,6 +5,12 @@ Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segun
 Um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas.
 Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
 
+## Idiomas (PT / EN)
+
+O jogo deteta o idioma do browser (português → PT, resto → EN) e tem um botão **EN/PT** no cabeçalho. A escolha fica guardada.
+
+Para forçar num link de divulgação: `?lang=en` ou `?lang=pt`.
+
 ## Como jogar
 
 ```bash

@@ -118,6 +118,8 @@ button{font-family:inherit;cursor:pointer;border:none;color:inherit;background:n
 /* ---------- Cabeçalho ---------- */
 header{margin-bottom:2px;}
 .topbar h1{display:flex;align-items:center;gap:8px;}
+.topbar-acoes{display:flex;gap:6px;}
+#btnIdioma{font-family:'Silkscreen', var(--font);font-size:13px;font-weight:700;letter-spacing:0;}
 .logo canvas{width:26px !important;height:26px !important;}
 .hud-sticky{
   position:sticky; top:0; z-index:40;
@@ -793,7 +795,10 @@ body{
   <header>
     <div class="topbar">
       <h1><span class="spr-slot logo" data-sprite="peixe"></span> Pesca Lendária</h1>
-      <button class="icon-btn" id="btnSom" title="Som" aria-label="Som"></button>
+      <div class="topbar-acoes">
+        <button class="icon-btn" id="btnIdioma" title="Mudar para inglês" aria-label="Mudar para inglês">EN</button>
+        <button class="icon-btn" id="btnSom" title="Som" aria-label="Som"></button>
+      </div>
     </div>
 
   </header>
@@ -802,7 +807,7 @@ body{
   <div class="hud-sticky">
     <div class="hud">
       <div class="plate timer-plate">
-        <span class="plate-lbl">TEMPO DE PESCA</span>
+        <span class="plate-lbl" data-i18n="tempo">TEMPO DE PESCA</span>
         <div id="timer">03:00</div>
       </div>
       <div class="plate coin-plate">
@@ -817,9 +822,9 @@ body{
 
   <!-- ======================= SEPARADORES ======================= -->
   <nav class="tabs">
-    <button class="tab active" data-tab="pesca">Pesca</button>
-    <button class="tab" data-tab="upgrades">Upgrades</button>
-    <button class="tab" data-tab="livro">Livro</button>
+    <button class="tab active" data-tab="pesca" data-i18n="abaPesca">Pesca</button>
+    <button class="tab" data-tab="upgrades" data-i18n="abaUpgrades">Upgrades</button>
+    <button class="tab" data-tab="livro" data-i18n="abaLivro">Livro</button>
   </nav>
 
   <main>
@@ -835,14 +840,14 @@ body{
         <button class="ev-close" id="evClose" aria-label="Fechar">X</button>
       </div>
 
-      <div class="hint">Tens 3 minutos por dia. Pesca!</div>
+      <div class="hint" data-i18n="dica">Tens 3 minutos por dia. Pesca!</div>
 
       <!-- Chefe do dia: o motivo para voltar amanhã -->
       <div class="chefe" id="chefeBar">
         <span class="chefe-spr" id="chefeIco"></span>
         <div class="chefe-txt">
-          <div class="chefe-nome" id="chefeNome">Chefe do dia</div>
-          <div class="chefe-estado" id="chefeEstado">A calcular…</div>
+          <div class="chefe-nome" id="chefeNome" data-i18n="chefeTitulo">Chefe do dia</div>
+          <div class="chefe-estado" id="chefeEstado" data-i18n="chefeCalculando">A calcular…</div>
         </div>
       </div>
 
@@ -890,9 +895,9 @@ body{
 
       <!-- Escolha de isco: decisão rápida antes de lançar -->
       <div class="iscas" id="iscasBar">
-        <button class="isca ativa" data-isca="comum"><span class="spr-slot" data-sprite="isco"></span>Comum<small>equilíbrio</small></button>
-        <button class="isca" data-isca="rapida"><span class="spr-slot" data-sprite="raio"></span>Rápida<small>-35% espera<br>-15% valor</small></button>
-        <button class="isca" data-isca="funda"><span class="spr-slot" data-sprite="estrela"></span>Funda<small>+50% raros<br>+35% espera</small></button>
+        <button class="isca ativa" data-isca="comum"><span class="spr-slot" data-sprite="isco"></span><span data-i18n="iscaComum">Comum</span><small data-i18n="iscaComumSub">equilíbrio</small></button>
+        <button class="isca" data-isca="rapida"><span class="spr-slot" data-sprite="raio"></span><span data-i18n="iscaRapida">Rápida</span><small data-i18n="iscaRapidaSub">-35% espera · -15% valor</small></button>
+        <button class="isca" data-isca="funda"><span class="spr-slot" data-sprite="estrela"></span><span data-i18n="iscaFunda">Funda</span><small data-i18n="iscaFundaSub">+50% raros · +35% espera</small></button>
       </div>
 
       <button class="big-btn" id="castBtn">LANÇAR</button>
@@ -900,25 +905,25 @@ body{
 
     <!-- ======================= UPGRADES ======================= -->
     <section class="panel" id="panel-upgrades">
-      <div class="hint">Compras rápidas — não gastam tempo de pesca.</div>
+      <div class="hint" data-i18n="upgradesDica">Compras rápidas — não gastam tempo de pesca.</div>
 
       <!-- Nova Época (prestígio) -->
       <div class="card epoca-card" id="epocaCard">
         <div class="up-head">
           <span class="up-ico" data-sprite="estrela"></span>
           <div>
-            <div class="up-name">Nova Época</div>
+            <div class="up-name" data-i18n="epocaNome">Nova Época</div>
             <div class="lvl" id="epocaInfo">Época 1 · 0 estrelas</div>
           </div>
         </div>
-        <div class="up-desc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.</div>
+        <div class="up-desc" data-i18n="epocaDesc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.</div>
         <div class="up-eff" id="epocaProg">Níveis 0/30</div>
-        <button class="btn gold" id="btnEpoca" disabled>Prestigiar</button>
+        <button class="btn gold" id="btnEpoca" disabled data-i18n="prestigiar">Prestigiar</button>
       </div>
 
       <div id="upgradesList"></div>
       <div class="dev-actions">
-        <a class="btn ghost small hidden" id="btnStats" target="_blank" rel="noopener">Ver estatísticas</a>
+        <a class="btn ghost small hidden" id="btnStats" target="_blank" rel="noopener" data-i18n="stats">Ver estatísticas</a>
       </div>
     </section>
 
@@ -926,7 +931,7 @@ body{
     <section class="panel" id="panel-livro">
       <div class="book-top">
         <span id="bookCount">0/30 descobertas</span>
-        <span class="muted" id="bookHint">? = por descobrir</span>
+        <span class="muted" id="bookHint" data-i18n="livroDica">? = por descobrir</span>
       </div>
       <div class="book-bonus" id="bookBonus">Bónus de coleção: +0%</div>
       <div class="seals" id="bookSeals"></div>
@@ -938,48 +943,48 @@ body{
 <!-- ======================= MODAL: OFFLINE ======================= -->
 <div class="modal hidden" id="offlineModal">
   <div class="modal-card">
-    <h2>Equipa a trabalhar</h2>
-    <p>Enquanto estiveste fora, os teus pescadores ganharam <b id="offlineVal" style="color:#8a5a00">0</b> moedas.</p>
-    <button class="btn gold" id="btnRecolher">Recolher</button>
+    <h2 data-i18n="offlineTitulo">Equipa a trabalhar</h2>
+    <p><span data-i18n="offlineAntes">Enquanto estiveste fora, os teus pescadores ganharam</span> <b id="offlineVal" style="color:#8a5a00">0</b> <span data-i18n="offlineDepois">moedas.</span></p>
+    <button class="btn gold" id="btnRecolher" data-i18n="recolher">Recolher</button>
   </div>
 </div>
 
 <!-- ======================= MODAL: FIM DO DIA ======================= -->
 <div class="modal hidden" id="fimModal">
   <div class="modal-card">
-    <h2>Fim do Dia</h2>
-    <p>O negócio continua a render. Volta amanhã!</p>
+    <h2 data-i18n="fimTitulo">Fim do Dia</h2>
+    <p data-i18n="fimTexto">O negócio continua a render. Volta amanhã!</p>
 
     <div class="fim-grid">
-      <div><b id="fimMoedas">0</b><span>moedas hoje</span></div>
-      <div><b id="fimPeixes">0</b><span>peixes</span></div>
+      <div><b id="fimMoedas">0</b><span data-i18n="moedasHoje">moedas hoje</span></div>
+      <div><b id="fimPeixes">0</b><span data-i18n="peixesLabel">peixes</span></div>
     </div>
 
     <div class="fim-best" id="fimMelhor"></div>
-    <div class="streak"><span class="spr-slot" data-sprite="fogo"></span> Streak: <b id="fimStreak">0</b> dias · Melhor: <b id="fimBestStreak">0</b></div>
+    <div class="streak"><span class="spr-slot" data-sprite="fogo"></span> <span data-i18n="streakLabel">Streak:</span> <b id="fimStreak">0</b> <span data-i18n="diasLabel">dias</span> · <span data-i18n="melhorLabel">Melhor:</span> <b id="fimBestStreak">0</b></div>
 
     <div class="fim-chefe" id="fimChefe"></div>
 
     <div class="amanha" id="amanhaBox">
       <span class="spr-slot" id="amanhaIco"></span>
-      <div><b>Amanhã</b><span id="amanhaTxt">…</span></div>
+      <div><b data-i18n="amanhaLabel">Amanhã</b><span id="amanhaTxt">…</span></div>
     </div>
 
-    <button class="btn gold" id="btnPartilhar"><span class="spr-slot" data-sprite="partilhar"></span> Partilhar</button>
+    <button class="btn gold" id="btnPartilhar"><span class="spr-slot" data-sprite="partilhar"></span> <span data-i18n="partilhar">Partilhar</span></button>
 
-    <div class="nextday">Próximo dia em <span id="nextDay">00:00:00</span></div>
+    <div class="nextday"><span data-i18n="proximoDia">Próximo dia em</span> <span id="nextDay">00:00:00</span></div>
 
     <!-- ======== ESPAÇO RESERVADO PARA ANÚNCIO (320x100) ========
          LIGAR SDK REAL MAIS TARDE: substituir o conteúdo deste div
          pelo código do AdSense ou pelo interstitial do SDK. -->
-    <div id="ad-banner">Anúncio</div>
+    <div id="ad-banner" data-i18n="anuncio">Anúncio</div>
 
     <!-- ======== ANÚNCIO RECOMPENSADO (simulado) ========
          LIGAR SDK REAL MAIS TARDE: chamar rewardedAd.show() e só
          executar concederTempo() no fim do anúncio. -->
-    <button class="btn ad" id="btnAnuncio"><span class="spr-slot" data-sprite="tv"></span> Ver anúncio: +60s de pesca</button>
+    <button class="btn ad" id="btnAnuncio"><span class="spr-slot" data-sprite="tv"></span> <span data-i18n="verAnuncio">Ver anúncio: +60s de pesca</span></button>
 
-    <button class="btn ghost" id="btnFecharFim">Fechar</button>
+    <button class="btn ghost" id="btnFecharFim" data-i18n="fechar">Fechar</button>
   </div>
 </div>
 
@@ -1777,6 +1782,236 @@ const ANALYTICS = {
 };
 
 /* ==========================================================================
+   1.d) TEXTOS PT / EN
+   ========================================================================== */
+const TEXTOS = {
+  pt: {
+    tituloJogo: "Pesca Lendária",
+    tempo: "TEMPO DE PESCA",
+    som: "Som",
+    idiomaParaEN: "Mudar para inglês",
+    idiomaParaPT: "Mudar para português",
+    abaPesca: "Pesca",
+    abaUpgrades: "Upgrades",
+    abaLivro: "Livro",
+    dica: "Tens 3 minutos por dia. Pesca!",
+    chefeTitulo: "Chefe do dia",
+    chefeCalculando: "A calcular…",
+    iscaComum: "Comum",
+    iscaComumSub: "equilíbrio",
+    iscaRapida: "Rápida",
+    iscaRapidaSub: "-35% espera · -15% valor",
+    iscaFunda: "Funda",
+    iscaFundaSub: "+50% raros · +35% espera",
+    lancar: "LANÇAR",
+    esperar: "… A ESPERAR",
+    agora: "AGORA!",
+    terminado: "DIA TERMINADO",
+    statusPronto: "Gira a cana e lança!",
+    statusLancar: "A lançar",
+    statusAproxima: "Algo enorme se aproxima",
+    statusMordida: "MORDIDA! Toca!",
+    statusChefeMordida: "CHEFE! TOCA AGORA!",
+    chefeApanhadoHoje: "Apanhado hoje! Amanhã há outro.",
+    chefeAparece1: "Aparece daqui a 1 peixe · bónus ×4",
+    chefeApareceN: "Aparece daqui a {n} peixes · bónus ×4",
+    chefeAVista: "Está à vista! Lança a cana · bónus ×4",
+    chefeEscapou: "O chefe escapou… volta a tentar.",
+    chefeApanhado: "Chefe do dia apanhado! Bónus ×4",
+    escapou: "Escapou!",
+    chefeTituloCatch: "O chefe escapou!",
+    tentaOutra: "Tenta outra vez",
+    tentaOutraBreve: "Tenta outra vez daqui a pouco",
+    novo: "NOVO!",
+    chefeFlag: "CHEFE DO DIA",
+    perfeito: "PERFEITO +50%",
+    bonusChefe: "BÓNUS ×4",
+    missaoFeita: "Feita +{v}",
+    upgradesDica: "Compras rápidas — não gastam tempo de pesca.",
+    epocaNome: "Nova Época",
+    epocaDesc: "Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.",
+    epocaLabel: "Época",
+    estrela: "estrela",
+    estrelas: "estrelas",
+    valorSufixo: "% valor",
+    epocaProg: "Níveis {n}/30 · faltam {f}",
+    epocaPronto: "Pronto! Vais ganhar +{g} estrelas",
+    prestigiar: "Prestigiar",
+    prestigiarAgora: "Prestigiar agora",
+    comprarPor: "Comprar por {v}",
+    maximo: "MÁXIMO",
+    stats: "Ver estatísticas",
+    livroContagem: "{n}/30 descobertas",
+    livroDica: "? = por descobrir",
+    livroBonus: "Bónus de coleção: +{p}%",
+    offlineTitulo: "Equipa a trabalhar",
+    offlineAntes: "Enquanto estiveste fora, os teus pescadores ganharam",
+    offlineDepois: "moedas.",
+    recolher: "Recolher",
+    fimTitulo: "Fim do Dia",
+    fimTexto: "O negócio continua a render. Volta amanhã!",
+    moedasHoje: "moedas hoje",
+    peixesLabel: "peixes",
+    melhorLabel: "Melhor:",
+    nenhumaCaptura: "Nenhuma captura hoje. Amanhã há mais!",
+    streakLabel: "Streak:",
+    diasLabel: "dias",
+    chefeFimOk: "Chefe do dia apanhado! Grande trabalho.",
+    chefeFimEscapou: "O chefe de hoje ({n}) escapou. Amanhã há outro.",
+    partilhar: "Partilhar",
+    amanhaLabel: "Amanhã",
+    proximoDia: "Próximo dia em",
+    anuncio: "Anúncio",
+    verAnuncio: "Ver anúncio: +60s de pesca",
+    fechar: "Fechar",
+    anuncioIndisponivel: "Anúncio indisponível. Tenta outra vez.",
+    jaVisteAnuncios: "Já viste os anúncios de hoje. Volta amanhã!",
+    anuncioSimulado: "[Simulação de anúncio]\n\nAqui entraria o anúncio recompensado real (GameDistribution).\n+60 segundos de pesca!",
+    segundosExtra: " +60 segundos de pesca!",
+    missaoConcluida: "Missão concluída: +{v} moedas!",
+    raridadeCompleta: "Raridade completa! +{p}% de valor permanente.",
+    copiado: "Resultado copiado!",
+    naoCopiado: "Não foi possível copiar.",
+    recolhido: "Moedas recolhidas!",
+    novoDia: "Novo dia! Tempo reposto.",
+    upgradeNivel: "{n} → nível {l}",
+    moedasUnit: "moedas",
+    perfeitoMin: "perfeito",
+    novaEpoca: "Nova época! +{g} estrelas",
+    nivel: "Nível",
+    nivelMax: "Nível máximo atingido",
+    agoraLabel: "Agora:",
+    proximoLabel: "Próximo:",
+    moedasInsuficientes: "Moedas insuficientes!",
+    semNiveis: "Ainda precisas de mais níveis.",
+    confirmarPrestigio: "Começar uma nova época?\n\nPerdes moedas e upgrades, mas ganhas {g} estrelas permanentes (+{p}% de valor).",
+    primeiroUpgrade: "Primeiro upgrade grátis: {n} nível 1!",
+    iscaSelecionada: "Isca {n} selecionada.",
+    efeitoEspera: "espera {v} · zona {z}",
+    efeitoRaros: "raros ×{v} · mítico ×{m}",
+    efeitoValor: "valor ×{v}",
+    efeitoMoedas: "{v} moedas/min",
+    efeitoGeleira: "+{v}% em Raro+",
+    partilhaTitulo: "🎣 Pesca Lendária #{n}",
+    partilhaPeixes: "🐟 {p} peixes | 💰 {m}",
+    partilhaMelhor: "🏆 Melhor captura: {r}",
+    partilhaStreak: "🔥 Streak: {s}"
+  },
+  en: {
+    tituloJogo: "Pesca Lendária",
+    tempo: "FISHING TIME",
+    som: "Sound",
+    idiomaParaEN: "Switch to English",
+    idiomaParaPT: "Switch to Portuguese",
+    abaPesca: "Fishing",
+    abaUpgrades: "Upgrades",
+    abaLivro: "Book",
+    dica: "You get 3 minutes a day. Fish!",
+    chefeTitulo: "Daily boss",
+    chefeCalculando: "Calculating…",
+    iscaComum: "Common",
+    iscaComumSub: "balanced",
+    iscaRapida: "Fast",
+    iscaRapidaSub: "-35% wait · -15% value",
+    iscaFunda: "Deep",
+    iscaFundaSub: "+50% rare · +35% wait",
+    lancar: "CAST",
+    esperar: "… WAITING",
+    agora: "NOW!",
+    terminado: "DAY OVER",
+    statusPronto: "Line up the rod and cast!",
+    statusLancar: "Casting",
+    statusAproxima: "Something huge is coming",
+    statusMordida: "BITE! Tap!",
+    statusChefeMordida: "BOSS! TAP NOW!",
+    chefeApanhadoHoje: "Caught today! Another one tomorrow.",
+    chefeAparece1: "Appears after 1 more fish · ×4 bonus",
+    chefeApareceN: "Appears after {n} more fish · ×4 bonus",
+    chefeAVista: "It is here! Cast your rod · ×4 bonus",
+    chefeEscapou: "The boss got away… try again.",
+    chefeApanhado: "Daily boss caught! ×4 bonus",
+    escapou: "It got away!",
+    chefeTituloCatch: "The boss got away!",
+    tentaOutra: "Try again",
+    tentaOutraBreve: "Try again in a moment",
+    novo: "NEW!",
+    chefeFlag: "DAILY BOSS",
+    perfeito: "PERFECT +50%",
+    bonusChefe: "×4 BONUS",
+    missaoFeita: "Done +{v}",
+    upgradesDica: "Quick buys — they do not use fishing time.",
+    epocaNome: "New Season",
+    epocaDesc: "You reset coins and upgrades and earn permanent stars (+8% value each). Your Book, streak and day stay.",
+    epocaLabel: "Season",
+    estrela: "star",
+    estrelas: "stars",
+    valorSufixo: "% value",
+    epocaProg: "Levels {n}/30 · {f} to go",
+    epocaPronto: "Ready! You will earn +{g} stars",
+    prestigiar: "Prestige",
+    prestigiarAgora: "Prestige now",
+    comprarPor: "Buy for {v}",
+    maximo: "MAXED",
+    stats: "View stats",
+    livroContagem: "{n}/30 discovered",
+    livroDica: "? = undiscovered",
+    livroBonus: "Collection bonus: +{p}%",
+    offlineTitulo: "Crew at work",
+    offlineAntes: "While you were away, your fishermen earned",
+    offlineDepois: "coins.",
+    recolher: "Collect",
+    fimTitulo: "End of Day",
+    fimTexto: "The business keeps earning. Come back tomorrow!",
+    moedasHoje: "coins today",
+    peixesLabel: "fish",
+    melhorLabel: "Best:",
+    nenhumaCaptura: "No catches today. More tomorrow!",
+    streakLabel: "Streak:",
+    diasLabel: "days",
+    chefeFimOk: "Daily boss caught! Great job.",
+    chefeFimEscapou: "The daily boss ({n}) got away. Another one tomorrow.",
+    partilhar: "Share",
+    amanhaLabel: "Tomorrow",
+    proximoDia: "Next day in",
+    anuncio: "Ad",
+    verAnuncio: "Watch ad: +60s of fishing",
+    fechar: "Close",
+    anuncioIndisponivel: "Ad unavailable. Try again.",
+    jaVisteAnuncios: "All ads for today are done. Come back tomorrow!",
+    anuncioSimulado: "[Ad simulation]\n\nA real rewarded ad (GameDistribution) would play here.\n+60 seconds of fishing!",
+    segundosExtra: " +60 seconds of fishing!",
+    missaoConcluida: "Mission complete: +{v} coins!",
+    raridadeCompleta: "Rarity complete! +{p}% permanent value.",
+    copiado: "Result copied!",
+    naoCopiado: "Could not copy.",
+    recolhido: "Coins collected!",
+    novoDia: "New day! Time restored.",
+    upgradeNivel: "{n} → level {l}",
+    moedasUnit: "coins",
+    perfeitoMin: "perfect",
+    novaEpoca: "New season! +{g} stars",
+    nivel: "Level",
+    nivelMax: "Max level reached",
+    agoraLabel: "Now:",
+    proximoLabel: "Next:",
+    moedasInsuficientes: "Not enough coins!",
+    semNiveis: "You need more levels.",
+    confirmarPrestigio: "Start a new season?\n\nYou lose coins and upgrades, but earn {g} permanent stars (+{p}% value).",
+    primeiroUpgrade: "Free first upgrade: {n} level 1!",
+    iscaSelecionada: "{n} bait selected.",
+    efeitoEspera: "wait {v} · zone {z}",
+    efeitoRaros: "rare ×{v} · mythic ×{m}",
+    efeitoValor: "value ×{v}",
+    efeitoMoedas: "{v} coins/min",
+    efeitoGeleira: "+{v}% on Rare+",
+    partilhaTitulo: "🎣 Pesca Lendária #{n}",
+    partilhaPeixes: "🐟 {p} fish | 💰 {m}",
+    partilhaMelhor: "🏆 Best catch: {r}",
+    partilhaStreak: "🔥 Streak: {s}"
+  }
+};
+
+/* ==========================================================================
    2) DADOS DE CONTEÚDO (troca o tema alterando só estes arrays)
    ========================================================================== */
 
@@ -1872,16 +2107,17 @@ function fmt(n) {
     v = n / UN[i][1];
     s = v.toFixed(1);
   }
-  s = s.replace('.', ',');
-  if (s.endsWith(',0')) s = s.slice(0, -2);
+  const sep = idiomaAtual() === 'en' ? '.' : ',';
+  s = s.replace('.', sep);
+  if (s.endsWith(sep + '0')) s = s.slice(0, -2);
   return (neg ? '-' : '') + s + UN[i][0];
 }
 
 function pad2(n) { return String(n).padStart(2, '0'); }
 function rnd(a, b) { return a + Math.random() * (b - a); }
 function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
-function pct(v) { return (v * 100).toFixed(1).replace('.', ',') + '%'; }
-function seg(ms) { return (ms / 1000).toFixed(2).replace('.', ',') + 's'; }
+function pct(v) { return num(v * 100, 1) + '%'; }
+function seg(ms) { return num(ms / 1000, 2) + 's'; }
 
 /** Hash determinístico (FNV-1a) para o evento do dia ser igual para todos. */
 function hashStr(s) {
@@ -1940,6 +2176,11 @@ function estadoPorDefeito() {
     combo: 0,
     isca: 'comum',          // isco escolhido
     idioma: (function () {
+      // ?lang=en ou ?lang=pt força o idioma (útil para partilhar no Reddit)
+      try {
+        const forcar = paramURL('lang');
+        if (forcar === 'en' || forcar === 'pt') return forcar;
+      } catch (e) {}
       try { return (navigator.language || 'pt').toLowerCase().indexOf('pt') === 0 ? 'pt' : 'en'; }
       catch (e) { return 'pt'; }
     })(),
@@ -1990,6 +2231,47 @@ function guardar() {
 }
 
 let state = carregar();
+
+/* --- Acesso ao idioma --- */
+function idiomaAtual() {
+  try { return state.idioma === 'en' ? 'en' : 'pt'; } catch (e) { return 'pt'; }
+}
+function t(chave) {
+  const dic = TEXTOS[idiomaAtual()] || TEXTOS.pt;
+  if (dic[chave] !== undefined) return dic[chave];
+  return TEXTOS.pt[chave] !== undefined ? TEXTOS.pt[chave] : chave;
+}
+function tf(chave, dados) {
+  let txt = t(chave);
+  if (dados) {
+    Object.keys(dados).forEach(function (k) {
+      txt = txt.split('{' + k + '}').join(dados[k]);
+    });
+  }
+  return txt;
+}
+function nomePeixe(p) { return (idiomaAtual() === 'en' && p.en) ? p.en : p.nome; }
+function nomeEvento(ev) { return (idiomaAtual() === 'en' && ev.nomeEn) ? ev.nomeEn : ev.nome; }
+function descEvento(ev) { return (idiomaAtual() === 'en' && ev.descEn) ? ev.descEn : ev.desc; }
+function nomeUpgrade(u) { return (idiomaAtual() === 'en' && u.nomeEn) ? u.nomeEn : u.nome; }
+function descUpgrade(u) { return (idiomaAtual() === 'en' && u.descEn) ? u.descEn : u.desc; }
+function nomeRaridade(i) {
+  const r = RARIDADES[i];
+  return (idiomaAtual() === 'en' && r.en) ? r.en : r.nome;
+}
+function nomeMissao(tipo) {
+  const m = CONFIG.MISSAO[tipo];
+  if (!m) return tipo;
+  return (idiomaAtual() === 'en' && m.nomeEn) ? m.nomeEn : m.nome;
+}
+function nomeIsca(id) {
+  const mapa = { comum: 'iscaComum', rapida: 'iscaRapida', funda: 'iscaFunda' };
+  return t(mapa[id] || 'iscaComum');
+}
+function num(v, casas) {
+  const txt = Number(v).toFixed(casas === undefined ? 1 : casas);
+  return idiomaAtual() === 'en' ? txt : txt.replace('.', ',');
+}
 
 /* ==========================================================================
    5) LÓGICA DE DIA E EVENTO
@@ -2122,7 +2404,7 @@ function avancarMissao(tipo, qtd) {
     m.ok = true;
     state.moedas += m.premio;
     state.hoje.moedas += m.premio;
-    toast('Missão concluída: +' + fmt(m.premio) + ' moedas!');
+    toast(tf('missaoConcluida', { v: fmt(m.premio) }));
     bip(880, .1);
     setTimeout(function () { bip(1180, .12); }, 110);
     atualizarHUD();
@@ -2231,19 +2513,17 @@ function vooMoeda(fromEl) {
    ========================================================================== */
 function atualizarHUD() {
   $('coinVal').textContent = fmt(state.moedas);
-  const t = Math.max(0, state.tempo);
+  const restante = Math.max(0, state.tempo);
   const timer = $('timer');
-  timer.textContent = pad2(Math.floor(t / 60)) + ':' + pad2(Math.floor(t % 60));
-  timer.classList.toggle('low', t <= 30);
+  timer.textContent = pad2(Math.floor(restante / 60)) + ':' + pad2(Math.floor(restante % 60));
+  timer.classList.toggle('low', restante <= 30);
   const total = state.tempoTotal > 0 ? state.tempoTotal : CONFIG.DIA_SEGUNDOS;
-  $('timeFill').style.width = clamp(t / total * 100, 0, 100) + '%';
+  $('timeFill').style.width = clamp(restante / total * 100, 0, 100) + '%';
 
-  // Combo
   const cb = $('comboBadge');
-  $('comboTxt').textContent = '×' + multCombo().toFixed(1).replace('.', ',');
+  $('comboTxt').textContent = '×' + num(multCombo(), 1);
   cb.classList.toggle('hot', (state.combo || 0) >= 3);
 
-  // Missão do dia
   const mb = $('missaoBadge');
   const mt = $('missaoTxt');
   const m = state.hoje && state.hoje.missao;
@@ -2251,10 +2531,10 @@ function atualizarHUD() {
     mt.textContent = '—';
     mb.classList.remove('ok');
   } else if (m.ok) {
-    mt.textContent = 'Feita +' + fmt(m.premio);
+    mt.textContent = tf('missaoFeita', { v: fmt(m.premio) });
     mb.classList.add('ok');
   } else {
-    mt.textContent = Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + CONFIG.MISSAO[m.tipo].nome;
+    mt.textContent = Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + nomeMissao(m.tipo);
     mb.classList.remove('ok');
   }
 }
@@ -2267,9 +2547,9 @@ function mostrarSeloEvento() {
   ic.className = 'spr-slot';
   ic.appendChild(spriteEvento(ev.id, 1));
   el.appendChild(ic);
-  const t = document.createElement('span');
-  t.textContent = ev.nome;
-  el.appendChild(t);
+  const txt = document.createElement('span');
+  txt.textContent = nomeEvento(ev);
+  el.appendChild(txt);
   const sea = $('sea');
   if (sea) sea.dataset.clima = ev.id;
 }
@@ -2280,11 +2560,11 @@ function mostrarEvento() {
   const ic = $('evEmoji');
   ic.innerHTML = '';
   ic.appendChild(spriteEvento(ev.id, 2));
-  $('evTitle').textContent = ev.nome;
-  $('evDesc').textContent = ev.desc;
+  $('evTitle').textContent = nomeEvento(ev);
+  $('evDesc').textContent = descEvento(ev);
   $('eventCard').classList.remove('hidden');
   if (eventoTimer) clearTimeout(eventoTimer);
-  eventoTimer = setTimeout(fecharEvento, 2000); // some ao fim de 2 segundos
+  eventoTimer = setTimeout(fecharEvento, 2000);
 }
 function fecharEvento() {
   if (eventoTimer) { clearTimeout(eventoTimer); eventoTimer = null; }
@@ -2316,13 +2596,20 @@ function efeitoTexto(u, nivel) {
   switch (u.id) {
     case 'rod': {
       const ms = CONFIG.ESPERA_MAX_MS * (1 - CONFIG.ESPERA_REDUCAO_NIVEL * nivel);
-      return 'espera ' + seg(ms) + ' · zona ' + pct(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * nivel);
+      return tf('efeitoEspera', {
+        v: seg(ms),
+        z: pct(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * nivel)
+      });
     }
-    case 'bait':   return 'raros ×' + (1 + nivel * CONFIG.ISCO_RARO).toFixed(2).replace('.', ',') +
-                            ' · mítico ×' + (1 + nivel * CONFIG.ISCO_MIT).toFixed(2).replace('.', ',');
-    case 'boat':   return 'valor ×' + (1 + nivel * CONFIG.BARCO_VALOR_NIVEL).toFixed(2).replace('.', ',');
-    case 'fisher': return Math.round(nivel * (1 + nivel * CONFIG.PESCADOR_ESCALA) * CONFIG.PESCADOR_MOEDAS_MIN) + ' moedas/min';
-    case 'freezer':return '+' + Math.round(nivel * CONFIG.GELEIRA_VALOR_NIVEL * 100) + '% em Raro+';
+    case 'bait': return tf('efeitoRaros', {
+      v: num(1 + nivel * CONFIG.ISCO_RARO, 2),
+      m: num(1 + nivel * CONFIG.ISCO_MIT, 2)
+    });
+    case 'boat': return tf('efeitoValor', { v: num(1 + nivel * CONFIG.BARCO_VALOR_NIVEL, 2) });
+    case 'fisher': return tf('efeitoMoedas', {
+      v: Math.round(nivel * (1 + nivel * CONFIG.PESCADOR_ESCALA) * CONFIG.PESCADOR_MOEDAS_MIN)
+    });
+    case 'freezer': return tf('efeitoGeleira', { v: Math.round(nivel * CONFIG.GELEIRA_VALOR_NIVEL * 100) });
   }
   return '';
 }
@@ -2346,17 +2633,17 @@ function renderUpgrades() {
     card.innerHTML =
       '<div class="up-head">' +
         '<span class="up-ico" data-sprite="' + SPRITE_UP[u.id] + '"></span>' +
-        '<div><div class="up-name">' + u.nome + '</div>' +
-        '<div class="lvl">Nível ' + lvl + '/' + CONFIG.UPGRADE_MAX + '</div></div>' +
+        '<div><div class="up-name">' + nomeUpgrade(u) + '</div>' +
+        '<div class="lvl">' + t('nivel') + ' ' + lvl + '/' + CONFIG.UPGRADE_MAX + '</div></div>' +
       '</div>' +
       '<div class="pips">' + pips + '</div>' +
-      '<div class="up-desc">' + u.desc + '</div>' +
-      '<div class="up-eff">Agora: <b>' + efeitoTexto(u, lvl) + '</b></div>' +
+      '<div class="up-desc">' + descUpgrade(u) + '</div>' +
+      '<div class="up-eff">' + t('agoraLabel') + ' <b>' + efeitoTexto(u, lvl) + '</b></div>' +
       (maxed
-        ? '<div class="up-eff muted">Nível máximo atingido</div>'
-        : '<div class="up-eff muted">Próximo: <b>' + efeitoTexto(u, lvl + 1) + '</b></div>') +
+        ? '<div class="up-eff muted">' + t('nivelMax') + '</div>'
+        : '<div class="up-eff muted">' + t('proximoLabel') + ' <b>' + efeitoTexto(u, lvl + 1) + '</b></div>') +
       '<button class="btn buy' + (pode ? '' : ' off') + '" data-id="' + u.id + '"' + (pode ? '' : ' disabled') + '>' +
-        (maxed ? 'MÁXIMO' : 'Comprar por ' + fmt(custo)) +
+        (maxed ? t('maximo') : tf('comprarPor', { v: fmt(custo) })) +
       '</button>';
     wrap.appendChild(card);
   });
@@ -2373,11 +2660,11 @@ function comprarUpgrade(id) {
   const lvl = state.up[id] || 0;
   if (lvl >= CONFIG.UPGRADE_MAX) return;
   const custo = custoUpgrade(u, lvl);
-  if (state.moedas < custo) { toast('Moedas insuficientes!'); bip(200, .15, 'sawtooth'); return; }
+  if (state.moedas < custo) { toast(t('moedasInsuficientes')); bip(200, .15, 'sawtooth'); return; }
   state.moedas -= custo;
   state.up[id] = lvl + 1;
   bip(760, .08); setTimeout(() => bip(1140, .1), 80);
-  toast(u.nome + ' → nível ' + (lvl + 1));
+  toast(tf('upgradeNivel', { n: nomeUpgrade(u), l: lvl + 1 }));
   guardar();
   renderUpgrades();
   atualizarHUD();
@@ -2387,11 +2674,9 @@ function comprarUpgrade(id) {
    ========================================================================== */
 function renderLivro() {
   const grid = $('bookGrid');
-  const total = PEIXES.length;
-  $('bookCount').textContent = state.descobertos.length + '/' + total + ' descobertas';
-  $('bookBonus').textContent = 'Bónus de coleção: +' + Math.round(bonusColecao() * 100) + '%';
+  $('bookCount').textContent = tf('livroContagem', { n: state.descobertos.length });
+  $('bookBonus').textContent = tf('livroBonus', { p: Math.round(bonusColecao() * 100) });
 
-  /* Selo pequeno por raridade completa */
   const seals = $('bookSeals');
   seals.innerHTML = '';
   RARIDADES.forEach(function (r, i) {
@@ -2402,7 +2687,7 @@ function renderLivro() {
     b.className = 'seal-badge' + (ok ? '' : ' miss');
     b.appendChild(spriteIcone(ok ? 'medalha' : 'cadeado', 1));
     const bt = document.createElement('span');
-    bt.textContent = ' ' + r.nome + ' ' + achados + '/' + todos.length;
+    bt.textContent = ' ' + nomeRaridade(i) + ' ' + achados + '/' + todos.length;
     b.appendChild(bt);
     seals.appendChild(b);
   });
@@ -2421,12 +2706,12 @@ function renderLivro() {
 
     const nome = document.createElement('div');
     nome.className = 'fc-name';
-    nome.textContent = desc ? p.nome : '???';
+    nome.textContent = desc ? nomePeixe(p) : '???';
 
     const rar = document.createElement('div');
     rar.className = 'fc-rar';
     rar.style.color = desc ? r.cor : '#5a4a33';
-    rar.textContent = desc ? r.nome : '—';
+    rar.textContent = desc ? nomeRaridade(p.r) : '—';
 
     cell.appendChild(ico);
     cell.appendChild(nome);
@@ -2466,15 +2751,15 @@ function botaoLancar() {
     cv.style.width = '30px';
     cv.style.height = '30px';
     b.appendChild(cv);
-    const t = document.createElement('span');
-    t.textContent = 'DIA TERMINADO';
-    b.appendChild(t);
+    const sp = document.createElement('span');
+    sp.textContent = t('terminado');
+    b.appendChild(sp);
     return;
   }
   b.disabled = false;
-  if (fase === 'idle') b.textContent = 'LANÇAR';
-  else if (fase === 'waiting') b.textContent = '… A ESPERAR';
-  else if (fase === 'bar') { b.textContent = 'AGORA!'; b.classList.add('hot'); }
+  if (fase === 'idle') b.textContent = t('lancar');
+  else if (fase === 'waiting') b.textContent = t('esperar');
+  else if (fase === 'bar') { b.textContent = t('agora'); b.classList.add('hot'); }
   else b.textContent = '…';
 }
 
@@ -2488,7 +2773,7 @@ function cancelarPesca() {
   $('catchBox').innerHTML = '';
   $('sea').classList.remove('pescando', 'mordeu');
   iscaLance = null;
-  setStatus('Gira a cana e lança!');
+  setStatus(t('statusPronto'));
   botaoLancar();
 }
 
@@ -2496,7 +2781,7 @@ function cancelarPesca() {
 function lancar() {
   if (fase !== 'idle') return;
   if (state.tempo <= 0) { abrirFimDia(); return; }
-  iscaLance = state.isca;          // congela o isco escolhido para este lance
+  iscaLance = state.isca;
   const m = mods();
   const isc = iscaAtual();
   const base = rnd(CONFIG.ESPERA_MIN_MS, CONFIG.ESPERA_MAX_MS);
@@ -2509,9 +2794,8 @@ function lancar() {
   rod.classList.remove('casting'); void rod.offsetWidth; rod.classList.add('casting');
   $('sea').classList.add('pescando');
   $('sea').classList.remove('mordeu');
-  setStatus(bossAtual
-    ? 'Algo enorme se aproxima<span class="dots"><span>.</span><span>.</span><span>.</span></span>'
-    : 'A lançar<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
+  setStatus((bossAtual ? t('statusAproxima') : t('statusLancar')) +
+    '<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
   bip(430, .07, 'triangle');
   botaoLancar();
 }
@@ -2533,8 +2817,8 @@ function mordida() {
   barVisivel = true;
   $('sea').classList.add('mordeu');
   setStatus(bossAtual
-    ? '<span class="bite">CHEFE! TOCA AGORA!</span>'
-    : '<span class="bite">MORDIDA! Toca!</span>');
+    ? '<span class="bite">' + t('statusChefeMordida') + '</span>'
+    : '<span class="bite">' + t('statusMordida') + '</span>');
   bip(bossAtual ? 700 : 920, .12, 'square');
   botaoLancar();
 }
@@ -2564,7 +2848,7 @@ function resolverBarra(pos) {
       if (state.hoje.chefe) state.hoje.chefe.prox = state.hoje.peixes + CONFIG.CHEFE_RETRY;
       sonsDoResultado('falhou');
       mostrarCaptura({ falhou: true, chefe: true });
-      toast('O chefe escapou… volta a tentar.');
+      toast(t('chefeEscapou'));
       atualizarChefeUI();
     } else {
       const chefe = peixePorId(state.hoje.chefe.id) || PEIXES[0];
@@ -2577,7 +2861,7 @@ function resolverBarra(pos) {
       sonsDoResultado(tipo);
       mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true });
       efeitoEspecial(Math.max(4, chefe.r));
-      toast('Chefe do dia apanhado! Bónus ×' + CONFIG.CHEFE_BONUS);
+      toast(t('chefeApanhado'));
       track('chefe', { raridade: chefe.r });
       atualizarChefeUI();
     }
@@ -2646,16 +2930,14 @@ function mostrarCaptura(res) {
     ico.className = 'catch-fail';
     ico.appendChild(spriteIcone('cana', 3));
     box.appendChild(ico);
-
     const titulo = document.createElement('div');
     titulo.className = 'catch-name';
-    titulo.textContent = res.chefe ? 'O chefe escapou!' : 'Escapou!';
+    titulo.textContent = res.chefe ? t('chefeTituloCatch') : t('escapou');
     box.appendChild(titulo);
-
     const sub = document.createElement('div');
     sub.className = 'catch-rar';
     sub.style.color = '#7a6248';
-    sub.textContent = res.chefe ? 'Tenta outra vez daqui a pouco' : 'Tenta outra vez';
+    sub.textContent = res.chefe ? t('tentaOutraBreve') : t('tentaOutra');
     box.appendChild(sub);
     box.classList.remove('hidden');
     return;
@@ -2664,7 +2946,6 @@ function mostrarCaptura(res) {
   const r = RARIDADES[res.rIdx];
   const p = res.peixe;
 
-  /* Sprite pixel do peixe */
   const sprite = document.createElement('div');
   sprite.className = 'catch-fish';
   sprite.appendChild(spritePeixe(p, 4));
@@ -2674,32 +2955,32 @@ function mostrarCaptura(res) {
     const f = document.createElement('div');
     f.className = 'catch-flag';
     f.style.background = 'var(--purple)';
-    f.textContent = 'CHEFE DO DIA';
+    f.textContent = t('chefeFlag');
     box.appendChild(f);
   } else if (res.novo) {
     const f = document.createElement('div');
     f.className = 'catch-flag';
-    f.textContent = 'NOVO!';
+    f.textContent = t('novo');
     box.appendChild(f);
   }
 
   const nome = document.createElement('div');
   nome.className = 'catch-name';
-  nome.textContent = p.nome;
+  nome.textContent = nomePeixe(p);
   box.appendChild(nome);
 
   const rar = document.createElement('div');
   rar.className = 'catch-rar';
   rar.style.color = r.cor;
-  rar.textContent = r.nome;
+  rar.textContent = nomeRaridade(res.rIdx);
   box.appendChild(rar);
 
   const info = document.createElement('div');
   info.className = 'catch-rar';
   info.style.color = '#7a6248';
-  info.textContent = (res.peso || 1).toFixed(2).replace('.', ',') + ' kg' +
-    (res.perfeito ? ' · PERFEITO +50%' : '') +
-    (res.chefe ? ' · BÓNUS ×' + CONFIG.CHEFE_BONUS : '');
+  info.textContent = num(res.peso || 1, 2) + ' kg' +
+    (res.perfeito ? ' · ' + t('perfeito') : '') +
+    (res.chefe ? ' · ' + t('bonusChefe') : '');
   box.appendChild(info);
 
   const val = document.createElement('div');
@@ -2752,23 +3033,24 @@ function totalNiveis() {
 function renderEpoca() {
   const niveis = totalNiveis();
   const est = state.estrelas || 0;
-  $('epocaInfo').textContent = 'Época ' + state.epoca + ' · ' + est + ' estrela' + (est === 1 ? '' : 's') +
-    ' (+' + Math.round(est * CONFIG.EPOCA_ESTRELA * 100) + '% valor)';
+  $('epocaInfo').textContent = t('epocaLabel') + ' ' + state.epoca + ' · ' + est + ' ' +
+    (est === 1 ? t('estrela') : t('estrelas')) +
+    ' (+' + Math.round(est * CONFIG.EPOCA_ESTRELA * 100) + t('valorSufixo') + ')';
   const falta = Math.max(0, CONFIG.EPOCA_NIVEIS - niveis);
   const ganhas = Math.max(1, Math.floor(niveis / CONFIG.EPOCA_POR_NIVEL));
-  $('epocaProg').innerHTML = falta > 0
-    ? 'Níveis ' + niveis + '/' + CONFIG.EPOCA_NIVEIS + ' · faltam ' + falta
-    : 'Pronto! Vais ganhar <b>+' + ganhas + ' estrelas</b>';
+  $('epocaProg').innerHTML = '<b>' + (falta > 0
+    ? tf('epocaProg', { n: niveis, f: falta })
+    : tf('epocaPronto', { g: ganhas })) + '</b>';
   const b = $('btnEpoca');
   b.disabled = falta > 0;
-  b.textContent = falta > 0 ? 'Prestigiar' : 'Prestigiar agora';
+  b.textContent = t(falta > 0 ? 'prestigiar' : 'prestigiarAgora');
 }
 function prestigiar() {
   const niveis = totalNiveis();
-  if (niveis < CONFIG.EPOCA_NIVEIS) { toast('Ainda precisas de mais níveis.'); return; }
+  if (niveis < CONFIG.EPOCA_NIVEIS) { toast(t('semNiveis')); return; }
   const ganhas = Math.max(1, Math.floor(niveis / CONFIG.EPOCA_POR_NIVEL));
-  if (!confirm('Começar uma nova época?\n\nPerdes moedas e upgrades, mas ganhas ' + ganhas +
-      ' estrelas permanentes (+' + Math.round(ganhas * CONFIG.EPOCA_ESTRELA * 100) + '% de valor).')) return;
+  const pctBonus = Math.round(ganhas * CONFIG.EPOCA_ESTRELA * 100);
+  if (!confirm(tf('confirmarPrestigio', { g: ganhas, p: pctBonus }))) return;
 
   state.estrelas = (state.estrelas || 0) + ganhas;
   state.epoca = (state.epoca || 1) + 1;
@@ -2780,7 +3062,7 @@ function prestigiar() {
   bip(660, .1);
   setTimeout(function () { bip(990, .12); }, 100);
   setTimeout(function () { bip(1320, .16); }, 210);
-  toast('Nova época! +' + ganhas + ' estrelas');
+  toast(tf('novaEpoca', { g: ganhas }));
   track('prestigio', { estrelas: ganhas });
   guardar();
   renderUpgrades();
@@ -2803,7 +3085,7 @@ function escolherIsca(id) {
   state.isca = id;
   renderIscas();
   guardar();
-  toast('Isca ' + CONFIG.ISCAS[id].nome + ' selecionada.');
+  toast(tf('iscaSelecionada', { n: nomeIsca(id) }));
   bip(620, .06);
 }
 
@@ -2939,17 +3221,17 @@ function atualizarChefeUI() {
     ico.appendChild(spritePeixe(peixe, 2));
     ico.setAttribute('data-bicho', c.id);
   }
-  $('chefeNome').textContent = peixe.nome;
+  $('chefeNome').textContent = nomePeixe(peixe);
   const est = $('chefeEstado');
   if (c.feito) {
     bar.classList.add('done');
-    est.textContent = 'Apanhado hoje! Amanhã há outro.';
+    est.textContent = t('chefeApanhadoHoje');
   } else {
     bar.classList.remove('done');
     const falta = Math.max(0, (c.prox || CONFIG.CHEFE_APOS) - state.hoje.peixes);
     est.textContent = falta > 0
-      ? 'Aparece daqui a ' + falta + ' peixe' + (falta === 1 ? '' : 's') + ' · bónus ×' + CONFIG.CHEFE_BONUS
-      : 'Está à vista! Lança a cana · bónus ×' + CONFIG.CHEFE_BONUS;
+      ? (falta === 1 ? tf('chefeAparece1', {}) : tf('chefeApareceN', { n: falta }))
+      : t('chefeAVista');
   }
 }
 
@@ -2958,6 +3240,8 @@ function atualizarBotaoSom() {
   const b = $('btnSom');
   b.innerHTML = '';
   b.appendChild(spriteIcone(state.som ? 'som' : 'som_off', 2));
+  b.title = t('som');
+  b.setAttribute('aria-label', t('som'));
 }
 
 /* --- Registo de uma captura (normal ou chefe) --- */
@@ -2971,7 +3255,7 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
   if (novo) state.descobertos.push(peixe.id);
   const depois = raridadesCompletas();
   if (depois > antes) {
-    toast('Raridade completa! +' + Math.round(CONFIG.COLECAO_BONUS * 100) + '% de valor permanente.');
+    toast(tf('raridadeCompleta', { p: Math.round(CONFIG.COLECAO_BONUS * 100) }));
     bip(760, .1);
   }
 
@@ -3089,34 +3373,32 @@ function abrirFimDia() {
     big.appendChild(spritePeixe(peixe, 3));
     fb.appendChild(big);
     const txt = document.createElement('div');
-    txt.innerHTML = 'Melhor: <b style="color:' + RARIDADES[m.r].cor + '">' + m.nome + '</b> (' +
-      RARIDADES[m.r].nome + ')<br>' + fmt(m.valor) + ' moedas' +
-      (m.peso ? ' · ' + m.peso.toFixed(2).replace('.', ',') + ' kg' : '') +
-      (m.perfeito ? ' · perfeito' : '');
+    txt.innerHTML = t('melhorLabel') + ' <b style="color:' + RARIDADES[m.r].cor + '">' + nomePeixe(peixe) + '</b> (' +
+      nomeRaridade(m.r) + ')<br>' + fmt(m.valor) + ' ' + t('moedasUnit') +
+      (m.peso ? ' · ' + num(m.peso, 2) + ' kg' : '') +
+      (m.perfeito ? ' · ' + t('perfeitoMin') : '');
     fb.appendChild(txt);
   } else {
     const big = document.createElement('div');
     big.className = 'big';
     big.appendChild(spriteIcone('cana', 3));
     fb.appendChild(big);
-    fb.appendChild(document.createTextNode('Nenhuma captura hoje. Amanhã há mais!'));
+    fb.appendChild(document.createTextNode(t('nenhumaCaptura')));
   }
 
-  /* Chefe do dia */
   const c = state.hoje.chefe;
   const fc = $('fimChefe');
   if (c && c.feito) {
-    fc.textContent = 'Chefe do dia apanhado! Grande trabalho.';
+    fc.textContent = t('chefeFimOk');
     fc.style.display = '';
   } else if (c) {
     const p = peixePorId(c.id);
-    fc.textContent = 'O chefe de hoje (' + (p ? p.nome : '?') + ') escapou. Amanhã há outro.';
+    fc.textContent = tf('chefeFimEscapou', { n: p ? nomePeixe(p) : '?' });
     fc.style.display = '';
   } else {
     fc.style.display = 'none';
   }
 
-  /* Pré-visualização do evento de amanhã (gancho para voltar) */
   const amanha = new Date();
   amanha.setDate(amanha.getDate() + 1);
   const kAmanha = amanha.getFullYear() + '-' + pad2(amanha.getMonth() + 1) + '-' + pad2(amanha.getDate());
@@ -3124,7 +3406,7 @@ function abrirFimDia() {
   const icoA = $('amanhaIco');
   icoA.innerHTML = '';
   icoA.appendChild(spriteEvento(evAmanha.id, 2));
-  $('amanhaTxt').textContent = evAmanha.nome + ' — ' + evAmanha.desc;
+  $('amanhaTxt').textContent = nomeEvento(evAmanha) + ' — ' + descEvento(evAmanha);
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
@@ -3155,11 +3437,11 @@ function textoPartilha() {
   const ev = eventoAtual();
   const m = state.hoje.melhor;
   const rarEmoji = m ? RARIDADES[m.r].emoji : '⚪';
-  return '🎣 Pesca Lendária #' + state.numeroDia + '\n' +
-         ev.emoji + ' ' + ev.nome + '\n' +
-         '🐟 ' + state.hoje.peixes + ' peixes | 💰 ' + fmt(state.hoje.moedas) + '\n' +
-         '🏆 Melhor captura: ' + rarEmoji + '\n' +
-         '🔥 Streak: ' + state.streak;
+  return tf('partilhaTitulo', { n: state.numeroDia }) + '\n' +
+    ev.emoji + ' ' + nomeEvento(ev) + '\n' +
+    tf('partilhaPeixes', { p: state.hoje.peixes, m: fmt(state.hoje.moedas) }) + '\n' +
+    tf('partilhaMelhor', { r: rarEmoji }) + '\n' +
+    tf('partilhaStreak', { s: state.streak });
 }
 
 async function partilhar() {
@@ -3173,7 +3455,7 @@ async function partilhar() {
   // 2) fallback: área de transferência
   try {
     await navigator.clipboard.writeText(txt);
-    toast('Resultado copiado!');
+    toast(t('copiado'));
     return;
   } catch (e) {}
   try {
@@ -3185,8 +3467,8 @@ async function partilhar() {
     ta.select();
     document.execCommand('copy');
     ta.remove();
-    toast('Resultado copiado!');
-  } catch (e) { toast('Não foi possível copiar.'); }
+    toast(t('copiado'));
+  } catch (e) { toast(t('naoCopiado')); }
 }
 
 /** Anúncio recompensado — SIMULADO.
@@ -3262,19 +3544,19 @@ function pedirRewardedGD(cb) {
 
 /** Anúncio simulado (sem rede) — mantém o jogo testável. */
 function simularAnuncio(cb) {
-  alert('[Simulação de anúncio]\n\nAqui entraria o anúncio recompensado real (GameDistribution).\n+60 segundos de pesca!');
+  alert(t('anuncioSimulado'));
   cb(true);
 }
 
 /** Botão "Ver anúncio: +60s". */
 function verAnuncio() {
   if (state.anuncios >= CONFIG.ANUNCIO_MAX_DIA) {
-    toast('Já viste os anúncios de hoje. Volta amanhã!');
+    toast(t('jaVisteAnuncios'));
     return;
   }
   const aplicar = function (visto) {
     if (visto !== true) {
-      toast('Anúncio indisponível. Tenta outra vez.');
+      toast(t('anuncioIndisponivel'));
       return;
     }
     state.anuncios += 1;
@@ -3283,7 +3565,7 @@ function verAnuncio() {
   };
   if (ADS.modo === 'gamedistribution') {
     if (!window.gdsdk) {
-      toast('Anúncio indisponível. Tenta outra vez.');
+      toast(t('anuncioIndisponivel'));
       return;
     }
     pedirRewardedGD(aplicar);
@@ -3297,7 +3579,7 @@ function concederTempo() {
   state.tempoTotal += CONFIG.ANUNCIO_SEGUNDOS;
   if (fase === 'ended') { fecharFimDia(); fase = 'idle'; }
   bip(660, .08); setTimeout(() => bip(990, .12), 90);
-  toast(' +' + CONFIG.ANUNCIO_SEGUNDOS + ' segundos de pesca!');
+  toast(t('segundosExtra'));
   cancelarPesca();
   atualizarHUD();
   guardar();
@@ -3326,7 +3608,7 @@ function recolherOffline() {
   offlinePendente = 0;
   $('offlineModal').classList.add('hidden');
   bip(880, .1); setTimeout(() => bip(1180, .12), 90);
-  toast('Moedas recolhidas!');
+  toast(t('recolhido'));
   atualizarHUD();
   renderUpgradesSeVisivel();
   guardar();
@@ -3342,7 +3624,7 @@ function primeiraVez() {
   if ((state.up[id] || 0) < 1) {
     state.up[id] = 1;
     const u = UPGRADES_DADOS.find(function (x) { return x.id === id; });
-    setTimeout(function () { toast('Primeiro upgrade grátis: ' + u.nome + ' nível 1!'); }, 400);
+    setTimeout(function () { toast(tf('primeiroUpgrade', { n: nomeUpgrade(u) })); }, 400);
   }
 }
 
@@ -3360,6 +3642,61 @@ function toqueNoMar(ev) {
   resolverBarra($('marker').style.left ? parseFloat($('marker').style.left) / 100 : 0);
 }
 
+function aplicarIdioma() {
+  try {
+    if (document.documentElement) {
+      document.documentElement.lang = idiomaAtual() === 'en' ? 'en' : 'pt-PT';
+    }
+    document.title = t('tituloJogo');
+
+    const nos = document.querySelectorAll('[data-i18n]');
+    for (let i = 0; i < nos.length; i++) {
+      const chave = nos[i].getAttribute('data-i18n');
+      if (chave) nos[i].textContent = t(chave);
+    }
+
+    const b = $('btnIdioma');
+    if (b) {
+      b.textContent = idiomaAtual() === 'en' ? 'PT' : 'EN';
+      const titulo = t(idiomaAtual() === 'en' ? 'idiomaParaPT' : 'idiomaParaEN');
+      b.title = titulo;
+      b.setAttribute('aria-label', titulo);
+    }
+
+    atualizarBotaoSom();
+    mostrarSeloEvento();
+    atualizarHUD();
+    atualizarChefeUI();
+    renderUpgrades();
+    renderLivro();
+    renderIscas();
+    botaoLancar();
+
+    if (fase === 'waiting') {
+      setStatus((bossAtual ? t('statusAproxima') : t('statusLancar')) +
+        '<span class="dots"><span>.</span><span>.</span><span>.</span></span>');
+    } else if (fase === 'bar') {
+      setStatus('<span class="bite">' + (bossAtual ? t('statusChefeMordida') : t('statusMordida')) + '</span>');
+    } else if (fase === 'idle') {
+      setStatus(t('statusPronto'));
+    }
+
+    const ev = eventoAtual();
+    $('evTitle').textContent = nomeEvento(ev);
+    $('evDesc').textContent = descEvento(ev);
+
+    if (!$('fimModal').classList.contains('hidden')) abrirFimDia();
+    guardar();
+  } catch (e) {}
+}
+
+function alternarIdioma() {
+  state.idioma = idiomaAtual() === 'en' ? 'pt' : 'en';
+  aplicarIdioma();
+  toast(idiomaAtual() === 'en' ? 'Language: English' : 'Idioma: Português');
+  bip(620, .06);
+}
+
 function iniciar() {
   /* --- Estado já carregado; primeiro a viragem de dia e o offline --- */
   const mudouDia = verificarNovoDia();
@@ -3373,14 +3710,8 @@ function iniciar() {
   iniciarAnalytics();
   criarFavicon();
   aplicarHora();
-  atualizarBotaoSom();
-  mostrarSeloEvento();
   hidratarSprites(document);
-  atualizarHUD();
-  renderUpgrades();
-  renderLivro();
-  renderIscas();
-  atualizarChefeUI();
+  aplicarIdioma();
   cancelarPesca();
   guardar();
 
@@ -3390,7 +3721,7 @@ function iniciar() {
   /* --- Evento do dia (cartão de 2s na primeira abertura do dia) --- */
   if (!state.eventoVisto && state.tempo > 0) setTimeout(mostrarEvento, 350);
 
-  if (mudouDia) toast('Novo dia! Tempo reposto.');
+  if (mudouDia) toast(t('novoDia'));
 
   /* --- Separadores --- */
   document.querySelectorAll('.tab').forEach(function (b) {
@@ -3426,6 +3757,7 @@ function iniciar() {
   /* --- Evento / som --- */
   $('evClose').addEventListener('click', fecharEvento);
   $('btnSom').addEventListener('click', alternarSom);
+  $('btnIdioma').addEventListener('click', alternarIdioma);
 
   /* --- Fim do dia / partilha / anúncios --- */
   $('btnPartilhar').addEventListener('click', partilhar);
