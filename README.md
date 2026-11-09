@@ -112,19 +112,16 @@ O jogo suporta dois caminhos, configurados em `const ADS` no topo do `<script>`.
 
 ### AdSense no teu site (recomendado para o Vercel)
 
-1. Cria conta em <https://adsense.com>, adiciona o site e espera pela aprovação.
-2. No AdSense cria **duas unidades** de 320×100 (uma para o jogo, outra para o fim do dia).
-3. Preenche:
+O publisher ID `ca-pub-5123386402594330` já está no `index.html` e no `ads.txt`.
+
+1. No AdSense cria **duas unidades** de 320×100 (uma para o jogo, outra para o fim do dia).
+2. Preenche os slots:
    ```js
-   ADS.modo = 'adsense';
-   ADS.adsense = {
-     client: 'ca-pub-0000000000000000',
-     slotMain: '1234567890',
-     slotEnd: '0987654321'
-   };
+   ADS.adsense.slotMain = '1234567890';
+   ADS.adsense.slotEnd  = '0987654321';
    ```
-4. Substitui o publisher ID em `ads.txt`.
-5. Ativa a mensagem de consentimento RGPD no AdSense (**Privacy & messaging**) e faz deploy.
+3. Ativa a mensagem de consentimento RGPD no AdSense (**Privacy & messaging**) e faz deploy.
+4. Sem slots configurados só funcionam os **Auto ads** (se os ativares no AdSense); com slots, os dois espaços manuais enchem.
 
 O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Os slots ficam escondidos enquanto não houver IDs configurados. O botão de rewarded (+60s) desaparece no modo AdSense, porque o AdSense não tem anúncios recompensados.
 

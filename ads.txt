@@ -1,4 +1,4 @@
 # ads.txt — Pesca Lendária
-# Substitui o publisher ID (pub-0000000000000000) pelo teu, depois de o AdSense estar aprovado.
+# Publisher ID configurado: pub-5123386402594330
 # O Google usa este ficheiro para verificar que vendes o teu inventário de forma autorizada.
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-5123386402594330, DIRECT, f08c47fec0942fa0
