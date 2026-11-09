@@ -123,7 +123,20 @@ O publisher ID `ca-pub-5123386402594330` já está no `index.html` e no `ads.txt
 3. Ativa a mensagem de consentimento RGPD no AdSense (**Privacy & messaging**) e faz deploy.
 4. Sem slots configurados só funcionam os **Auto ads** (se os ativares no AdSense); com slots, os dois espaços manuais enchem.
 
-O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Os slots ficam escondidos enquanto não houver IDs configurados. O botão de rewarded (+60s) desaparece no modo AdSense, porque o AdSense não tem anúncios recompensados.
+O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Os slots ficam escondidos enquanto não houver IDs configurados.
+
+### Rewarded (+60s)
+
+O botão "Ver anúncio: +60s" usa a **Ad Placement API / H5 Games Ads** do Google (a mesma conta AdSense), que é o formato permitido para recompensas:
+
+- `adConfig({ preloadAdBreaks: 'on', sound: 'on' })`
+- `adBreak({ type: 'reward' })`
+- a recompensa só é dada com `breakStatus === 'viewed'`
+- o relógio de pesca pausa durante o anúncio
+- se a API não estiver habilitada na conta, o botão diz "anúncio indisponível" e **não dá tempo** (não há recompensa sem anúncio)
+- para testar sem rede: `ADS.rewarded = 'simulado'`
+
+Se a H5 Games Ads não estiver disponível na tua conta, a alternativa com rewarded real é um SDK de portal (GameDistribution/CrazyGames) ou uma rede de rewarded.
 
 Páginas de apoio para a aprovação: `privacidade.html` e `sobre.html` (ligadas no rodapé).
 
