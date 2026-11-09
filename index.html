@@ -870,7 +870,7 @@ body{
         <button class="ev-close" id="evClose" aria-label="Fechar">X</button>
       </div>
 
-      <div class="hint" data-i18n="dica">Tens 3 minutos por dia. Pesca!</div>
+      <div class="hint" data-i18n="dica">Tens 3 minutos a cada 12 horas. Pesca!</div>
 
       <!-- Chefe do dia: o motivo para voltar amanhã -->
       <div class="chefe" id="chefeBar">
@@ -991,11 +991,11 @@ body{
 <!-- ======================= MODAL: FIM DO DIA ======================= -->
 <div class="modal hidden" id="fimModal">
   <div class="modal-card">
-    <h2 data-i18n="fimTitulo">Fim do Dia</h2>
-    <p data-i18n="fimTexto">O negócio continua a render. Volta amanhã!</p>
+    <h2 data-i18n="fimTitulo">Fim da Sessão</h2>
+    <p data-i18n="fimTexto">O negócio continua a render. Volta daqui a algumas horas!</p>
 
     <div class="fim-grid">
-      <div><b id="fimMoedas">0</b><span data-i18n="moedasHoje">moedas hoje</span></div>
+      <div><b id="fimMoedas">0</b><span data-i18n="moedasHoje">moedas na sessão</span></div>
       <div><b id="fimPeixes">0</b><span data-i18n="peixesLabel">peixes</span></div>
     </div>
 
@@ -1011,7 +1011,7 @@ body{
 
     <button class="btn gold" id="btnPartilhar"><span class="spr-slot" data-sprite="partilhar"></span> <span data-i18n="partilhar">Partilhar</span></button>
 
-    <div class="nextday"><span data-i18n="proximoDia">Próximo dia em</span> <span id="nextDay">00:00:00</span></div>
+    <div class="nextday"><span data-i18n="proximoDia">Próxima sessão em</span> <span id="nextDay">00:00:00</span></div>
 
     <!-- ======== ESPAÇO RESERVADO PARA ANÚNCIO (320x100) ========
          LIGAR SDK REAL MAIS TARDE: substituir o conteúdo deste div
@@ -1709,7 +1709,8 @@ function hidratarSprites(raiz) {
    ========================================================================== */
 const CONFIG = {
   /* --- Tempo de jogo --- */
-  DIA_SEGUNDOS: 180,          // tempo de pesca por dia
+  DIA_SEGUNDOS: 180,          // tempo de pesca por sessão
+  INTERVALO_SESSAO_HORAS: 12, // horas entre sessões (2 por dia)
   ANUNCIO_SEGUNDOS: 60,       // segundos ganhos por anúncio
   ANUNCIO_MAX_DIA: 2,         // anúncios máximos por dia
   OFFLINE_CAP_HORAS: 24,      // cap do rendimento offline
@@ -1845,7 +1846,7 @@ const TEXTOS = {
     abaPesca: "Pesca",
     abaUpgrades: "Upgrades",
     abaLivro: "Livro",
-    dica: "Tens 3 minutos por dia. Pesca!",
+    dica: "Tens 3 minutos a cada 12 horas. Pesca!",
     chefeTitulo: "Chefe do dia",
     chefeCalculando: "A calcular…",
     iscaComum: "Comum",
@@ -1904,9 +1905,9 @@ const TEXTOS = {
     offlineAntes: "Enquanto estiveste fora, os teus pescadores ganharam",
     offlineDepois: "moedas.",
     recolher: "Recolher",
-    fimTitulo: "Fim do Dia",
-    fimTexto: "O negócio continua a render. Volta amanhã!",
-    moedasHoje: "moedas hoje",
+    fimTitulo: "Fim da Sessão",
+    fimTexto: "O negócio continua a render. Volta daqui a algumas horas!",
+    moedasHoje: "moedas na sessão",
     peixesLabel: "peixes",
     melhorLabel: "Melhor:",
     nenhumaCaptura: "Nenhuma captura hoje. Amanhã há mais!",
@@ -1916,7 +1917,7 @@ const TEXTOS = {
     chefeFimEscapou: "O chefe de hoje ({n}) escapou. Amanhã há outro.",
     partilhar: "Partilhar",
     amanhaLabel: "Amanhã",
-    proximoDia: "Próximo dia em",
+    proximoDia: "Próxima sessão em",
     anuncio: "Anúncio",
     verAnuncio: "Ver anúncio: +60s de pesca",
     fechar: "Fechar",
@@ -1929,7 +1930,8 @@ const TEXTOS = {
     copiado: "Resultado copiado!",
     naoCopiado: "Não foi possível copiar.",
     recolhido: "Moedas recolhidas!",
-    novoDia: "Novo dia! Tempo reposto.",
+    novoDia: "Novo dia! Novo evento e nova missão.",
+    novaSessao: "Nova sessão! Tempo reposto.",
     upgradeNivel: "{n} → nível {l}",
     moedasUnit: "moedas",
     perfeitoMin: "perfeito",
@@ -1962,7 +1964,7 @@ const TEXTOS = {
     abaPesca: "Fishing",
     abaUpgrades: "Upgrades",
     abaLivro: "Book",
-    dica: "You get 3 minutes a day. Fish!",
+    dica: "You get 3 minutes every 12 hours. Fish!",
     chefeTitulo: "Daily boss",
     chefeCalculando: "Calculating…",
     iscaComum: "Common",
@@ -2021,9 +2023,9 @@ const TEXTOS = {
     offlineAntes: "While you were away, your fishermen earned",
     offlineDepois: "coins.",
     recolher: "Collect",
-    fimTitulo: "End of Day",
-    fimTexto: "The business keeps earning. Come back tomorrow!",
-    moedasHoje: "coins today",
+    fimTitulo: "Session Over",
+    fimTexto: "The business keeps earning. Come back in a few hours!",
+    moedasHoje: "coins this session",
     peixesLabel: "fish",
     melhorLabel: "Best:",
     nenhumaCaptura: "No catches today. More tomorrow!",
@@ -2033,7 +2035,7 @@ const TEXTOS = {
     chefeFimEscapou: "The daily boss ({n}) got away. Another one tomorrow.",
     partilhar: "Share",
     amanhaLabel: "Tomorrow",
-    proximoDia: "Next day in",
+    proximoDia: "Next session in",
     anuncio: "Ad",
     verAnuncio: "Watch ad: +60s of fishing",
     fechar: "Close",
@@ -2046,7 +2048,8 @@ const TEXTOS = {
     copiado: "Result copied!",
     naoCopiado: "Could not copy.",
     recolhido: "Coins collected!",
-    novoDia: "New day! Time restored.",
+    novoDia: "New day! New event and mission.",
+    novaSessao: "New session! Time restored.",
     upgradeNivel: "{n} → level {l}",
     moedasUnit: "coins",
     perfeitoMin: "perfect",
@@ -2227,6 +2230,8 @@ function estadoPorDefeito() {
     dataDia: k,             // data do dia de jogo atual
     tempo: CONFIG.DIA_SEGUNDOS,
     tempoTotal: CONFIG.DIA_SEGUNDOS,
+    proximoRefill: Date.now() + CONFIG.INTERVALO_SESSAO_HORAS * 3600000,
+    sessao: { moedas:0, peixes:0, melhor:null },
     evento: eventoDaData(k).id,
     eventoVisto: false,
     streak: 1,
@@ -2280,6 +2285,15 @@ function carregar() {
   out.estrelas = Math.max(0, Math.floor(Number(out.estrelas) || 0));
   out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
   if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
+  out.sessao = Object.assign({ moedas:0, peixes:0, melhor:null },
+    (s.sessao && typeof s.sessao === 'object') ? s.sessao : {});
+  if (!s.proximoRefill || typeof out.proximoRefill !== 'number' || !isFinite(out.proximoRefill)) {
+    out.proximoRefill = Date.now() + CONFIG.INTERVALO_SESSAO_HORAS * 3600000;
+    if (out.tempo <= 0) {
+      out.tempo = CONFIG.DIA_SEGUNDOS;
+      out.tempoTotal = CONFIG.DIA_SEGUNDOS;
+    }
+  }
   return out;
 }
 
@@ -2353,8 +2367,6 @@ function verificarNovoDia() {
 
   state.dataDia = k;
   state.numeroDia += 1;
-  state.tempo = CONFIG.DIA_SEGUNDOS;
-  state.tempoTotal = CONFIG.DIA_SEGUNDOS;
   state.evento = eventoDaData(k).id;
   state.eventoVisto = false;
   state.anuncios = 0;
@@ -2375,6 +2387,29 @@ function verificarNovoDia() {
 
 /** Modificadores ativos (evento do dia + primeiro dia). */
 /** Modificadores ativos (evento do dia + Isco + primeiro dia). */
+/* Renova a sessão a cada INTERVALO_SESSAO_HORAS (12h por defeito). */
+function verificarRefill() {
+  const agora = Date.now();
+  if (typeof state.proximoRefill !== 'number' || !isFinite(state.proximoRefill)) {
+    state.proximoRefill = agora + CONFIG.INTERVALO_SESSAO_HORAS * 3600000;
+    return false;
+  }
+  if (agora < state.proximoRefill) return false;
+
+  state.tempo = CONFIG.DIA_SEGUNDOS;
+  state.tempoTotal = CONFIG.DIA_SEGUNDOS;
+  state.sessao = { moedas:0, peixes:0, melhor:null };
+  state.combo = 0;
+  while (state.proximoRefill <= agora) {
+    state.proximoRefill += CONFIG.INTERVALO_SESSAO_HORAS * 3600000;
+  }
+  if (fase === 'ended') { fecharFimDia(); fase = 'idle'; }
+  cancelarPesca();
+  toast(t('novaSessao'));
+  guardar();
+  return true;
+}
+
 function mods() {
   const ev = eventoAtual();
   const fx = ev.fx || {};
@@ -3310,6 +3345,8 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
   state.moedas += valor;
   state.hoje.moedas += valor;
   state.hoje.peixes += 1;
+  state.sessao.moedas += valor;
+  state.sessao.peixes += 1;
 
   const novo = state.descobertos.indexOf(peixe.id) === -1;
   const antes = raridadesCompletas();
@@ -3322,6 +3359,12 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
 
   if (!state.hoje.melhor || valor >= state.hoje.melhor.valor) {
     state.hoje.melhor = {
+      nome: peixe.nome, emoji: peixe.emoji, id: peixe.id,
+      r: rIdx, valor: valor, perfeito: perfeito, peso: peso
+    };
+  }
+  if (!state.sessao.melhor || valor >= state.sessao.melhor.valor) {
+    state.sessao.melhor = {
       nome: peixe.nome, emoji: peixe.emoji, id: peixe.id,
       r: rIdx, valor: valor, perfeito: perfeito, peso: peso
     };
@@ -3352,6 +3395,7 @@ function loop() {
   if (dt < 0) dt = 0;
 
   verificarNovoDia();
+  verificarRefill();
 
   if (agora - ultimaHoraChk > 60000) {
     ultimaHoraChk = agora;
@@ -3421,10 +3465,10 @@ function encerrarDia() {
 }
 
 function abrirFimDia() {
-  $('fimMoedas').textContent = fmt(state.hoje.moedas);
-  $('fimPeixes').textContent = String(state.hoje.peixes);
+  $('fimMoedas').textContent = fmt(state.sessao.moedas);
+  $('fimPeixes').textContent = String(state.sessao.peixes);
 
-  const m = state.hoje.melhor;
+  const m = state.sessao.melhor;
   const fb = $('fimMelhor');
   fb.innerHTML = '';
   if (m) {
@@ -3487,21 +3531,19 @@ function fecharFimDia() {
 
 /** Contador "Próximo dia em HH:MM:SS" (meia-noite local). */
 function atualizarProximoDia() {
-  const agora = new Date();
-  const meiaNoite = new Date(agora);
-  meiaNoite.setHours(24, 0, 0, 0);
-  const s = Math.max(0, Math.floor((meiaNoite - agora) / 1000));
+  const alvo = (typeof state.proximoRefill === 'number') ? state.proximoRefill : Date.now();
+  const s = Math.max(0, Math.floor((alvo - Date.now()) / 1000));
   $('nextDay').textContent = pad2(Math.floor(s / 3600)) + ':' + pad2(Math.floor(s / 60) % 60) + ':' + pad2(s % 60);
 }
 
 /** Texto de partilha SEM spoilers (só o emoji da raridade). */
 function textoPartilha() {
   const ev = eventoAtual();
-  const m = state.hoje.melhor;
+  const m = state.sessao.melhor;
   const rarEmoji = m ? RARIDADES[m.r].emoji : '⚪';
   return tf('partilhaTitulo', { n: state.numeroDia }) + '\n' +
     ev.emoji + ' ' + nomeEvento(ev) + '\n' +
-    tf('partilhaPeixes', { p: state.hoje.peixes, m: fmt(state.hoje.moedas) }) + '\n' +
+    tf('partilhaPeixes', { p: state.sessao.peixes, m: fmt(state.sessao.moedas) }) + '\n' +
     tf('partilhaMelhor', { r: rarEmoji }) + '\n' +
     tf('partilhaStreak', { s: state.streak });
 }
@@ -3892,6 +3934,7 @@ function alternarIdioma() {
 function iniciar() {
   /* --- Estado já carregado; primeiro a viragem de dia e o offline --- */
   const mudouDia = verificarNovoDia();
+  verificarRefill();
   if (!state.hoje.missao) state.hoje.missao = gerarMissao(state.dataDia);
   if (!state.hoje.chefe) state.hoje.chefe = gerarChefe(state.dataDia);
   calcularOffline();

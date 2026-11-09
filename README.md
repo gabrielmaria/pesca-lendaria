@@ -1,6 +1,6 @@
 # 🎣 Pesca Lendária — Pixel Edition
 
-Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos por dia**.
+Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos a cada 12 horas** (duas sessões por dia).
 
 Um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas.
 Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
@@ -26,12 +26,12 @@ python3 -m http.server 8080
 - **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
 - **Livro de Pesca**: 30 espécies; cada raridade completa dá **+5% de valor permanente** (até +30%).
 - **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro e o streak ficam.
-- **Fim do dia** mostra o resumo e **o evento de amanhã** — para saberes o que te espera.
-- Pescadores rendem moedas offline (até 24h); o dia reinicia à meia-noite local; o tempo só desconta com o separador visível (Page Visibility API).
+- **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.
+- Pescadores rendem moedas offline (até 24h). A sessão renova a cada **12h**; o evento, a missão e o chefe são **diários**. O tempo só desconta com o separador visível (Page Visibility API).
 
 ## Equilíbrio
 
-Economia simulada: maxar os 5 upgrades leva **~3 semanas** de jogo diário (antes maximizava-se em 3 minutos). A primeira sessão dá poucos níveis.
+Economia simulada: maxar os 5 upgrades leva **~3 semanas** de jogo (duas sessões de 3 minutos por dia). A primeira sessão dá poucos níveis.
 
 Princípios:
 
