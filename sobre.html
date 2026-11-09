@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2242">
+<title>Sobre — Pesca Lendária</title>
+<style>
+  :root{--bg:#081a33;--ink:#f7ead0;--muted:#b9cbe3;--gold:#ffcf4d;--aqua:#2ee6d6;--line:rgba(46,230,214,.25)}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(900px 400px at 50% -10%,#123a66,transparent 60%),var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.65;font-size:15px}
+  main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
+  a{color:var(--aqua)}
+  h1{font-size:26px;color:var(--gold);margin:18px 0 6px;letter-spacing:.5px}
+  h2{font-size:17px;color:var(--gold);margin:26px 0 6px}
+  p,li{color:var(--muted)}
+  .back{display:inline-block;margin-bottom:10px;color:var(--aqua);text-decoration:none;border:2px solid var(--line);padding:6px 10px}
+  .card{border:2px solid var(--line);padding:14px;margin:18px 0;background:rgba(4,16,31,.35)}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="/">← Voltar ao jogo</a>
+  <h1>Sobre o Pesca Lendária</h1>
+  <p>Um tycoon de pesca em pixel art para browser, feito por um developer solo. A regra central é simples: <strong>só podes pescar 180 segundos por dia</strong>. Depois fechas o jogo e voltas amanhã.</p>
+
+  <div class="card">
+    <p><strong>O que torna o jogo diferente</strong></p>
+    <ul>
+      <li>Um limite diário rígido, pensado para ser um ritual de 3 minutos e não um vício de horas.</li>
+      <li>30 espécies de peixes, 6 raridades e um Livro de Pesca para completar.</li>
+      <li>Um chefe diferente todos os dias e um evento diário igual para todos.</li>
+      <li>Upgrades que continuam a render enquanto estás offline.</li>
+      <li>Pixel art desenhada em código, sem imagens externas.</li>
+    </ul>
+  </div>
+
+  <h2>Como jogar</h2>
+  <ul>
+    <li>Toca em <strong>LANÇAR</strong> e espera pela mordida.</li>
+    <li>Toca quando o marcador estiver na zona verde. Um acerto perfeito dá +50% e sobe o combo.</li>
+    <li>Compra upgrades (Cana, Isco, Barco, Pescador, Geleira) entre pescarias.</li>
+    <li>Volta no dia seguinte: o tempo renova à meia-noite local.</li>
+  </ul>
+
+  <h2>Tecnologia</h2>
+  <p>HTML, CSS e JavaScript puro num único ficheiro <code>index.html</code>. Os sprites são desenhados pixel a pixel em <code>&lt;canvas&gt;</code>. O progresso fica no <code>localStorage</code> do browser. Sem login, sem base de dados de utilizadores.</p>
+
+  <h2>Idiomas</h2>
+  <p>Português e inglês. O jogo deteta o idioma do browser e podes trocar no botão EN/PT do cabeçalho.</p>
+
+  <h2>Contacto</h2>
+  <p>Dúvidas, bugs ou ideias: <a href="https://github.com/gabrielmaria" rel="noopener">github.com/gabrielmaria</a>.</p>
+
+  <a class="back" href="/">← Voltar ao jogo</a>
+</main>
+</body>
+</html>

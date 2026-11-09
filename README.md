@@ -106,33 +106,46 @@ O Vercel Analytics é servido do teu domínio (`/_vercel/insights/script.js`), p
 
 O jogo **não tem botão para apagar o progresso** (para os jogadores não perderem tudo por engano). Para testar do zero: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`, ou usar uma janela anónima.
 
-## Anúncios (GameDistribution)
+## Anúncios
 
-O jogo já traz um adaptador de anúncios. Por defeito está em **modo simulado** (não envia nada para a rede).
+O jogo suporta dois caminhos, configurados em `const ADS` no topo do `<script>`.
 
-Para ligar a **GameDistribution**:
+### AdSense no teu site (recomendado para o Vercel)
 
-1. Cria conta e regista o jogo em <https://gamedistribution.com>.
-2. Publica o `index.html` no portal.
-3. No topo do `<script>`, muda `ADS.modo` para `'gamedistribution'`.
-4. Opcional: `ADS.intersticialFimDia = true` para um interstitial quando o dia acaba.
-5. Enquanto o SDK não carregar, o botão "+60s" mostra "anúncio indisponível" (não dá recompensa sem anúncio).
+1. Cria conta em <https://adsense.com>, adiciona o site e espera pela aprovação.
+2. No AdSense cria **duas unidades** de 320×100 (uma para o jogo, outra para o fim do dia).
+3. Preenche:
+   ```js
+   ADS.modo = 'adsense';
+   ADS.adsense = {
+     client: 'ca-pub-0000000000000000',
+     slotMain: '1234567890',
+     slotEnd: '0987654321'
+   };
+   ```
+4. Substitui o publisher ID em `ads.txt`.
+5. Ativa a mensagem de consentimento RGPD no AdSense (**Privacy & messaging**) e faz deploy.
 
-O SDK pausa o relógio de pesca durante o anúncio (`SDK_GAME_PAUSE` / `SDK_GAME_START`), para não perderes tempo.
+O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Os slots ficam escondidos enquanto não houver IDs configurados. O botão de rewarded (+60s) desaparece no modo AdSense, porque o AdSense não tem anúncios recompensados.
 
-O `#ad-banner` (320×100) continua reservado para uma futura integração AdSense no teu site.
+Páginas de apoio para a aprovação: `privacidade.html` e `sobre.html` (ligadas no rodapé).
 
-## Habilitar anúncios reais
+### GameDistribution (portal)
 
-Tudo está em `const ADS` no topo do script:
+Para publicar o jogo no portal da GameDistribution:
 
 ```js
-const ADS = {
-  modo: 'simulado',            // 'simulado' | 'gamedistribution'
-  sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
-  intersticialFimDia: false
-};
+ADS.modo = 'gamedistribution';
 ```
+
+O SDK trata de rewarded e interstitials, mas **só faz sentido quando o jogo é servido no portal** (com o game ID associado). No teu domínio, usa AdSense.
+
+### Notas
+
+- O `#ad-banner` (320×100) continua reservado no fim do dia.
+- O consentimento é guardado em `pescaLendariaConsent.v1`.
+- Sem consentimento não há pedidos ao Google.
+- Para rewarded no teu domínio seria preciso o **H5 Games Ads** (Ad Placement API) ou um SDK de portal.
 
 ## Publicar (GitHub Pages)
 
