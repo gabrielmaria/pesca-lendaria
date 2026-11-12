@@ -2,7 +2,7 @@
 
 Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos a cada 12 horas** (duas sessões por dia).
 
-Site estático **sem build**: HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas. Os ficheiros de estilos e lógica vivem em `assets/`; o `index.html` é só a estrutura da interface.
+Site estático **sem build**: HTML, CSS e JavaScript puro, sem frameworks ou bibliotecas. O jogo não usa imagens externas; o único asset estático é o favicon em `assets/img/`. Os ficheiros de estilos e lógica vivem em `assets/`; o `index.html` é só a estrutura da interface.
 Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
 
 ## Estrutura do projeto
@@ -22,6 +22,10 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
     ├── css/
     │   ├── styles.css      # todo o CSS do jogo
     │   └── legal.css       # CSS partilhado por sobre/privacidade
+    ├── img/
+    │   ├── favicon-32.png
+    │   ├── favicon-64.png
+    │   └── apple-touch-icon.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
         ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS, CONQUISTAS, LEGADO
@@ -34,7 +38,7 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
 Regras de organização:
 
 - **Raiz = apenas pontos de entrada e ficheiros de plataforma.** `ads.txt` e `vercel.json` têm de estar na raiz; as páginas legais ficam na raiz para os URLs públicos não mudarem.
-- **Assets em `assets/`**, separados por tipo (`css/`, `js/`). Não há passo de build: o browser carrega os ficheiros tal como estão.
+- **Assets em `assets/`**, separados por tipo (`css/`, `js/`, `img/`). Não há passo de build: o browser carrega os ficheiros tal como estão.
 - **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `updates.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
 - **Configuração primeiro, conteúdo depois.** Para equilibrar o jogo mexe em `assets/js/config.js`; para trocar peixes/eventos mexe em `assets/js/data.js`; para desenhar sprites em `assets/js/sprites.js`.
 - **Páginas legais** usam `assets/css/legal.css`; não dupliques estilos entre elas.

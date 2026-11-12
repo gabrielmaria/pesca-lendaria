@@ -105,7 +105,6 @@ function iniciar() {
   /* --- Interface --- */
   iniciarAnuncios();
   iniciarAnalytics();
-  criarFavicon();
   aplicarHora();
   hidratarSprites(document);
   aplicarIdioma();

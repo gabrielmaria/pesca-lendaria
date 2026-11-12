@@ -611,52 +611,6 @@ function spriteCenario(nome, escala) {
 /**
  * Preenche todos os espaços [data-sprite] (uma única vez por elemento).
  */
-/**
- * Desenha o favicon pixel (peixe num quadro azul) e aplica-o na aba.
- * Tudo em canvas, sem ficheiros externos.
- */
-function criarFavicon() {
-  try {
-    if (!document.head) return;
-
-    const g = novoGrid(32, 32);
-    rectPx(g, 0, 0, 32, 32, '#0b2242');
-
-    /* peixe dourado, simples e grande (lê-se bem a 16px) */
-    triPx(g, 4, 16, 0, 8, 0, 24, '#c08a12');        // cauda
-    elipsePx(g, 16, 16, 10, 6.6, '#f2b632');        // corpo
-    elipsePx(g, 16, 19.5, 8, 2.3, '#ffe08a');       // barriga
-    triPx(g, 13, 9.5, 16, 3.5, 19, 9.5, '#c08a12'); // dorsal
-    rectPx(g, 21, 12, 3, 3, '#ffffff');             // olho
-    px(g, 23, 13, '#0b1220');
-    px(g, 12, 12, '#fff6c0');                       // brilho
-    px(g, 27, 17, '#7a4a00');                       // boca
-    contorno(g, '#241608');
-
-    const base = gridParaCanvas(g, 1);
-    if (!base.toDataURL) return;
-    const url = base.toDataURL('image/png');
-
-    let appleUrl = url;
-    try {
-      const big = document.createElement('canvas');
-      big.width = 180; big.height = 180;
-      const ctx = big.getContext ? big.getContext('2d') : null;
-      if (ctx) {
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(base, 0, 0, 180, 180);
-        appleUrl = big.toDataURL('image/png');
-      }
-    } catch (e2) {}
-
-    const apple = document.createElement('link');
-    apple.rel = 'apple-touch-icon';
-    apple.sizes = '180x180';
-    apple.href = appleUrl;
-    document.head.appendChild(apple);
-  } catch (e) {}
-}
-
 function hidratarSprites(raiz) {
   const alvo = raiz || document;
   if (!alvo.querySelectorAll) return;
