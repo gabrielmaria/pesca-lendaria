@@ -109,6 +109,7 @@ function estadoPorDefeito() {
     estrelas: 0,            // estrelas de prestígio
     epoca: 1,
     abissoVisto: false,     // já viu o aviso de desbloqueio do Mar Profundo
+    versaoVista: '',        // última versão cujas novidades foram vistas
     modo: 'superficie',     // 'superficie' | 'abisso' (pesca no Mar Profundo)
     perolas: 0,             // moeda do Legado
     conquistas: {},         // id -> true
@@ -148,6 +149,7 @@ function carregar() {
   });
   if (!CONFIG.ISCAS[out.isca]) out.isca = 'comum';
   if (!out.abissoVisto) out.abissoVisto = false;
+  if (typeof out.versaoVista !== 'string') out.versaoVista = '';
   if (out.idioma !== 'en' && out.idioma !== 'pt') out.idioma = d.idioma;
   out.estrelas = Math.max(0, Math.floor(Number(out.estrelas) || 0));
   out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
@@ -865,6 +867,72 @@ function renderLoja() {
   wrap.querySelectorAll('.buy').forEach(function (b) {
     b.addEventListener('click', function () { comprarLegado(b.dataset.legado); });
   });
+}
+
+/* ==========================================================================
+   9.c) NOVIDADES / CHANGELOG
+   ========================================================================== */
+function renderNovidades() {
+  const wrap = $('novidadesLista');
+  if (!wrap) return;
+  const en = idiomaAtual() === 'en';
+  const novo = state.versaoVista !== APP_VERSION;
+  wrap.innerHTML = '';
+  ATUALIZACOES.forEach(function (u, idx) {
+    const titulo = (en && u.tituloEn) ? u.tituloEn : u.titulo;
+    const itens = (en && u.itensEn) ? u.itensEn : u.itens;
+    const item = document.createElement('div');
+    item.className = 'nov-item';
+    item.innerHTML =
+      '<div class="nov-head"><span class="nov-versao">v' + u.versao + '</span>' +
+      '<span class="nov-data">' + u.data + '</span></div>' +
+      '<div class="nov-titulo">' + titulo +
+        (idx === 0 && novo ? ' <span class="nov-badge">' + t('novidadesNovo') + '</span>' : '') +
+      '</div>' +
+      '<ul class="nov-itens">' + itens.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+    wrap.appendChild(item);
+  });
+}
+function renderNovidadesLink() {
+  const b = $('btnNovidades');
+  if (!b) return;
+  b.classList.toggle('tem-novo', state.versaoVista !== APP_VERSION);
+}
+function abrirNovidades() {
+  renderNovidades();
+  const m = $('novidadesModal');
+  if (!m) return;
+  novidadesPausado = true;
+  m.classList.remove('hidden');
+  bip(620, .06);
+}
+function fecharNovidades() {
+  const m = $('novidadesModal');
+  if (m) m.classList.add('hidden');
+  novidadesPausado = false;
+  ultimoAgora = Date.now();
+  state.versaoVista = APP_VERSION;
+  renderNovidadesLink();
+  guardar();
+}
+function verificarNovidades() {
+  if (state.versaoVista === APP_VERSION) return false;
+  if (!state.versaoVista && (state.numeroDia || 1) <= 1) return false;
+  if (state.tempo <= 0) return false;
+  // Não interromper um lançamento; tenta outra vez quando estiver livre.
+  if (typeof fase !== 'undefined' && fase !== 'idle') {
+    setTimeout(verificarNovidades, 1500);
+    return false;
+  }
+  const off = $('offlineModal');
+  if (off && !off.classList.contains('hidden')) {
+    setTimeout(verificarNovidades, 1800);
+    return false;
+  }
+  const fim = $('fimModal');
+  if (fim && !fim.classList.contains('hidden')) return false;
+  abrirNovidades();
+  return true;
 }
 
 /* ==========================================================================
@@ -1694,6 +1762,7 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
    ========================================================================== */
 let ultimoAgora = Date.now();
 let adPausado = false;
+let novidadesPausado = false;
 let ultimaHoraChk = 0;
 let guardaAcc = 0;
 
@@ -1703,7 +1772,7 @@ function loop() {
   ultimoAgora = agora;
 
   // Page Visibility API: com o separador oculto não se desconta tempo nem se avança
-  if (document.hidden || adPausado) return;
+  if (document.hidden || adPausado || novidadesPausado) return;
   if (dt > 2000) dt = 2000; // após throttling do navegador, limita o salto
   if (dt < 0) dt = 0;
 

@@ -451,6 +451,24 @@ h1{
 .ach-reward canvas{width:16px !important;height:16px !important;}
 .catch-pearl{font-size:11px;font-weight:900;color:#0e7f8c;margin-top:3px;}
 
+/* ---------- Novidades / changelog ---------- */
+.novidades-card{max-height:calc(100vh - 44px);overflow-y:auto;text-align:left;}
+.novidades-card h2{text-align:center;}
+.nov-sub{font-size:11px;color:#7a6248;text-align:center;margin:0 0 10px;}
+.nov-item{border-top:2px dashed rgba(90,66,48,.3);padding:9px 0;}
+.nov-item:first-child{border-top:0;padding-top:0;}
+.nov-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.nov-versao{font-size:12px;font-weight:900;text-transform:uppercase;color:#2a1a0e;}
+.nov-data{font-size:9px;font-weight:800;color:#7a6248;}
+.nov-titulo{font-size:11px;font-weight:900;color:#1f6fb2;margin:2px 0 3px;}
+.nov-badge{display:inline-block;font-size:8px;font-weight:900;background:var(--green);color:#fff;padding:1px 5px;border:2px solid var(--wood-dd);vertical-align:1px;}
+.nov-itens{margin:0 0 0 15px;padding:0;font-size:11px;color:#5a4230;line-height:1.35;}
+.novidades-link{position:relative;display:inline-block;}
+.novidades-link.tem-novo::after{
+  content:'';position:absolute;top:-3px;right:-7px;width:7px;height:7px;
+  background:var(--gold-l);border:2px solid var(--ink);border-radius:50%;
+}
+
 /* ---------- Modais ---------- */
 .modal{
   position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
@@ -813,6 +831,94 @@ body[data-modo="abisso"] .seal{
   border-color:#041820;
   box-shadow:inset 0 0 0 2px rgba(120,230,230,.18), 0 3px 0 rgba(0,0,0,.35);
 }
+
+/* Controlos com tema abissal */
+body[data-modo="abisso"] .tab{
+  color:#cfeef2;
+  background:linear-gradient(180deg,#0b3040,#061c28);
+  border-color:#041820;
+  box-shadow:inset 0 2px 0 rgba(120,230,230,.18);
+}
+body[data-modo="abisso"] .tab.active{
+  color:#04222a;
+  background:linear-gradient(180deg,#e6ffff,#a9e7ee);
+  box-shadow:inset 0 3px 0 #fffdf5;
+}
+body[data-modo="abisso"] .icon-btn{
+  color:#dffcff;
+  background:linear-gradient(180deg,#0d3b47,#082a33);
+  border-color:#041820;
+  box-shadow:inset -2px -2px 0 #061c28, inset 2px 2px 0 #17707c, 0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .btn{
+  background:linear-gradient(180deg,#dffcff,#a9e7ee);
+  color:#062a33;
+  border-color:#041820;
+  box-shadow:inset -3px -3px 0 #7fbec7, inset 3px 3px 0 #f2ffff, 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .btn.gold{
+  background:linear-gradient(180deg,#7ff2e6,#2ee6d6);
+  box-shadow:inset -3px -3px 0 #0e7f8c, inset 3px 3px 0 #d8fffa, 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .btn.ghost{
+  background:linear-gradient(180deg,#0d3b47,#082a33);
+  color:#cfeef2;
+  box-shadow:inset -3px -3px 0 #061c28, inset 3px 3px 0 #17707c, 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .btn.ad{
+  background:linear-gradient(180deg,#8fb4ff,#3f7ab0);
+  box-shadow:inset -3px -3px 0 #285580, inset 3px 3px 0 #dbe7ff, 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .big-btn{
+  color:#04222a;
+  background:linear-gradient(180deg,#b8fff6 0%,#2ee6d6 70%,#0e7f8c 100%);
+  border-color:#041820;
+  box-shadow:inset -4px -4px 0 #0e7f8c, inset 4px 4px 0 #e6ffff, 0 6px 0 #041820, 0 9px 0 rgba(0,0,0,.25);
+}
+body[data-modo="abisso"] .big-btn.hot{
+  background:linear-gradient(180deg,#e6ffff 0%,#7ff2e6 70%,#2ee6d6 100%);
+  box-shadow:inset -4px -4px 0 #2ee6d6, inset 4px 4px 0 #ffffff, 0 6px 0 #0b4a55, 0 9px 0 rgba(0,0,0,.25);
+}
+body[data-modo="abisso"] .isca{
+  background:linear-gradient(180deg,#0d3b47,#082a33);
+  border-color:#041820;
+  color:#cfeef2;
+  box-shadow:0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .isca small{color:#8fc6cf;}
+body[data-modo="abisso"] .isca.ativa{
+  background:linear-gradient(180deg,#e6ffff,#a9e7ee);
+  border-color:#2ee6d6;
+  color:#062a33;
+  box-shadow:inset 0 0 0 2px #7ff2e6, 0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .isca.ativa small{color:#0e7f8c;}
+body[data-modo="abisso"] .book-tab{
+  background:linear-gradient(180deg,#0d3b47,#082a33);
+  border-color:#041820;
+  color:#cfeef2;
+}
+body[data-modo="abisso"] .book-tab small{color:#8fc6cf;}
+body[data-modo="abisso"] .book-tab.active{
+  background:linear-gradient(180deg,#e6ffff,#a9e7ee);
+  border-color:#2ee6d6;
+  color:#062a33;
+  box-shadow:inset 0 0 0 2px #7ff2e6, 0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .book-tab.active small{color:#0e7f8c;}
+body[data-modo="abisso"] .ev-close{
+  background:#0d3b47;
+  border-color:#041820;
+  color:#dffcff;
+}
+body[data-modo="abisso"] .pip.on{background:#2ee6d6;}
+body[data-modo="abisso"] .ach-fill{background:#2ee6d6;}
+body[data-modo="abisso"] .seal-badge{
+  background:#dffcff;
+  border-color:#041820;
+  color:#0e7f8c;
+}
+body[data-modo="abisso"] .seal-badge.miss{background:#8fb4b8;color:#041820;}
 
 /* Estrelas, lua e feixe do farol */
 .estrelas{

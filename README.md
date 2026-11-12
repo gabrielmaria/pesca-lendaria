@@ -24,6 +24,7 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
         ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS, CONQUISTAS, LEGADO
+        ├── updates.js      # versão atual e changelog (PT/EN)
         ├── sprites.js      # motor de pixel art em canvas
         ├── game.js         # estado, regras, render e ciclo de pesca
         └── main.js         # arranque, eventos globais e loop
@@ -33,7 +34,7 @@ Regras de organização:
 
 - **Raiz = apenas pontos de entrada e ficheiros de plataforma.** `ads.txt` e `vercel.json` têm de estar na raiz; as páginas legais ficam na raiz para os URLs públicos não mudarem.
 - **Assets em `assets/`**, separados por tipo (`css/`, `js/`). Não há passo de build: o browser carrega os ficheiros tal como estão.
-- **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
+- **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `updates.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
 - **Configuração primeiro, conteúdo depois.** Para equilibrar o jogo mexe em `assets/js/config.js`; para trocar peixes/eventos mexe em `assets/js/data.js`; para desenhar sprites em `assets/js/sprites.js`.
 - **Páginas legais** usam `assets/css/legal.css`; não dupliques estilos entre elas.
 
@@ -42,6 +43,14 @@ Regras de organização:
 O jogo deteta o idioma do browser (português → PT, resto → EN) e tem um botão **EN/PT** no cabeçalho. A escolha fica guardada.
 
 Para forçar num link de divulgação: `?lang=en` ou `?lang=pt`.
+
+## Novidades (changelog)
+
+O histórico vive em `assets/js/updates.js` (`APP_VERSION` + `ATUALIZACOES`). O jogo mostra o modal **uma vez por versão** e tem o link **Novidades** no rodapé. Para anunciar uma alteração:
+
+1. Acrescenta uma entrada nova no início de `ATUALIZACOES` (PT e EN).
+2. Sobe `APP_VERSION`.
+3. Faz deploy. Quem já tinha visto a versão anterior recebe o aviso automaticamente.
 
 ## Como jogar
 
@@ -57,7 +66,7 @@ python3 -m http.server 8080
 - **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares. A cada 4 dias o chefe é **abissal** (×6).
 - **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
 - **Livro de Pesca**: 30 espécies de superfície; cada raridade completa dá **+5% de valor permanente** (até +30%).
-- **Mar Profundo (endgame)**: abre na **Época 3**. No topo da pesca escolhes **Superfície** ou **Mar Profundo**; no fundo o cenário e o fundo da página mudam (água escura, plâncton, bolhas) e só lá aparecem as **15 espécies abissais**. Tem a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Escolher uma isca abissal desce automaticamente. Completar a raridade abissal dá mais **+5%** (total +35%).
+- **Mar Profundo (endgame)**: abre na **Época 3**. No topo da pesca escolhes **Superfície** ou **Mar Profundo**; no fundo o cenário, o fundo da página e os controlos mudam (água escura, plâncton, bolhas, botões em tons abissais) e só lá aparecem as **15 espécies abissais**. Tem a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Escolher uma isca abissal desce automaticamente. Completar a raridade abissal dá mais **+5%** (total +35%).
 - **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro, o Mar Profundo e o streak ficam.
 - **Legado (conquistas + Pérolas)**: 37 conquistas de longo prazo dão **Pérolas**; gastas em 9 melhorias permanentes (tempo de sessão, sorte abissal, offline, anúncios, valor, combo, chefe, bónus de livro e nível inicial na época). Cada chefe apanhado também dá 1 Pérola (2 se for abissal).
 - **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.

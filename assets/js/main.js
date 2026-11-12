@@ -64,6 +64,8 @@ function aplicarIdioma() {
     renderIscas();
     renderModo();
     renderLegado();
+    renderNovidades();
+    renderNovidadesLink();
     botaoLancar();
 
     if (fase === 'waiting') {
@@ -145,6 +147,15 @@ function iniciar() {
 
   /* --- Conquistas já alcançadas (inclui saves antigos) --- */
   setTimeout(agendarConquistas, 1500);
+
+  /* --- Novidades / changelog --- */
+  renderNovidadesLink();
+  $('btnNovidades').addEventListener('click', function (e) {
+    e.preventDefault();
+    abrirNovidades();
+  });
+  $('btnFecharNovidades').addEventListener('click', fecharNovidades);
+  setTimeout(verificarNovidades, 2600);
 
   /* --- Pesca --- */
   $('castBtn').addEventListener('click', function () {

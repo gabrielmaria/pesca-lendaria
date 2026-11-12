@@ -207,7 +207,19 @@
     <a href="/privacidade.html" data-i18n="privacidade">Privacidade</a>
     <span>·</span>
     <a href="/sobre.html" data-i18n="sobre">Sobre</a>
+    <span>·</span>
+    <a href="#" id="btnNovidades" class="novidades-link" data-i18n="novidades">Novidades</a>
   </footer>
+</div>
+
+<!-- ======================= MODAL: NOVIDADES ======================= -->
+<div class="modal hidden" id="novidadesModal">
+  <div class="modal-card novidades-card">
+    <h2 data-i18n="novidadesTitulo">Novidades</h2>
+    <p class="nov-sub" data-i18n="novidadesSub">O que mudou no jogo</p>
+    <div id="novidadesLista"></div>
+    <button class="btn gold" id="btnFecharNovidades" data-i18n="fechar">Fechar</button>
+  </div>
 </div>
 
 <!-- ======================= MODAL: OFFLINE ======================= -->
@@ -274,6 +286,7 @@
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/updates.js"></script>
 <script src="assets/js/sprites.js"></script>
 <script src="assets/js/game.js"></script>
 <script src="assets/js/main.js"></script>
