@@ -25,7 +25,7 @@ const PEIXES = [
   /* Comuns */
   { id:'sardinha_sem_nocao',   nome:'Sardinha Despistada', en:'Clueless Sardine',           emoji:'🐟', r:0, base:8 },
   { id:'carapau_perdido',      nome:'Carapau Perdido', en:'Lost Mackerel',              emoji:'🐠', r:0, base:9 },
-  { id:'golo_apressado',       nome:'Golo Apressado', en:'Hasty Goal',               emoji:'🐟', r:0, base:10 },
+  { id:'golo_apressado',       nome:'Pargo Apressado', en:'Hasty Porgy',               emoji:'🐟', r:0, base:10 },
   { id:'tainha_fria',          nome:'Tainha Quase Fria', en:'Almost Cold Mullet',            emoji:'🐟', r:0, base:11 },
   { id:'sargo_improvisado',    nome:'Sargo Improvisado', en:'Improvised Bream',            emoji:'🐠', r:0, base:12 },
   { id:'anchova_reservada',    nome:'Anchova Reservada', en:'Reserved Anchovy',            emoji:'🐟', r:0, base:13 },

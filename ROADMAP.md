@@ -39,7 +39,7 @@ Manter o nome parvo é parte da identidade do jogo.
 - Nomes curtos, com sonoridade engraçada e que caibam no cartão do livro.
 - **Nunca mudar os `id` dos peixes** — o `id` é a chave do save; o nome visível pode mudar.
 - Exceções assumidas: **Kraken**, **Cetus** e **Dragão** são criaturas míticas, não espécies reais.
-- Pendente: **“Golo Apressado”** usa “golo” (futebol), não um animal. Se quisermos uma base real, trocar por algo como **“Pargo Apressado”**, mantendo o `id` `golo_apressado`.
+- Resolvido: **“Golo Apressado”** passou a **“Pargo Apressado”** (EN “Hasty Porgy”), mantendo o `id` `golo_apressado` para não quebrar saves.
 
 ## Backlog de outras ideias
 
