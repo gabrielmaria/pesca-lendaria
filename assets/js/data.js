@@ -23,14 +23,14 @@ const RARIDADES = [
 /* --- 30 espécies de superfície: 8 comuns, 7 incomuns, 6 raras, 4 épicas, 3 lendárias, 2 míticas --- */
 const PEIXES = [
   /* Comuns */
-  { id:'sardinha_sem_nocao',   nome:'Sardinha Sem Noção', en:'Clueless Sardine',           emoji:'🐟', r:0, base:8 },
+  { id:'sardinha_sem_nocao',   nome:'Sardinha Despistada', en:'Clueless Sardine',           emoji:'🐟', r:0, base:8 },
   { id:'carapau_perdido',      nome:'Carapau Perdido', en:'Lost Mackerel',              emoji:'🐠', r:0, base:9 },
   { id:'golo_apressado',       nome:'Golo Apressado', en:'Hasty Goal',               emoji:'🐟', r:0, base:10 },
   { id:'tainha_fria',          nome:'Tainha Quase Fria', en:'Almost Cold Mullet',            emoji:'🐟', r:0, base:11 },
   { id:'sargo_improvisado',    nome:'Sargo Improvisado', en:'Improvised Bream',            emoji:'🐠', r:0, base:12 },
   { id:'anchova_reservada',    nome:'Anchova Reservada', en:'Reserved Anchovy',            emoji:'🐟', r:0, base:13 },
-  { id:'baiacu_inflado',       nome:'Baiacu Inflado', en:'Puffed Pufferfish',               emoji:'🐡', r:0, base:14 },
-  { id:'peixe_voador_parque',  nome:'Peixe Voador de Parque', en:'Park Flying Fish',       emoji:'🐟', r:0, base:15 },
+  { id:'baiacu_inflado',       nome:'Peixe-Balão Inflado', en:'Puffed Pufferfish',               emoji:'🐡', r:0, base:14 },
+  { id:'peixe_voador_parque',  nome:'Peixe-Voador de Parque', en:'Park Flying Fish',       emoji:'🐟', r:0, base:15 },
   /* Incomuns */
   { id:'caranguejo_dedicado',  nome:'Caranguejo Dedicado', en:'Dedicated Crab',          emoji:'🦀', r:1, base:10 },
   { id:'polvo_reformado',      nome:'Polvo Reformado', en:'Retired Octopus',              emoji:'🐙', r:1, base:11 },
@@ -48,7 +48,7 @@ const PEIXES = [
   { id:'kraken_iniciante',     nome:'Kraken Iniciante', en:'Beginner Kraken',             emoji:'🐙', r:2, base:19 },
   /* Épicas */
   { id:'tubarao_estimacao',    nome:'Tubarão de Estimação', en:'Pet Shark',         emoji:'🦈', r:3, base:18 },
-  { id:'baiacu_nuclear',       nome:'Baiacu Nuclear', en:'Nuclear Pufferfish',               emoji:'☢️🐡', r:3, base:20 },
+  { id:'baiacu_nuclear',       nome:'Peixe-Balão Nuclear', en:'Nuclear Pufferfish',               emoji:'☢️🐡', r:3, base:20 },
   { id:'baleia_fiscal',        nome:'Baleia Fiscal', en:'Tax Whale',                emoji:'🐋', r:3, base:22 },
   { id:'kraken_de_feira',      nome:'Kraken de Feira', en:'Fairground Kraken',              emoji:'🐙', r:3, base:24 },
   /* Lendárias */
@@ -65,8 +65,8 @@ const PEIXES = [
   { id:'lula_vampira',         nome:'Lula Vampira', en:'Vampire Squid',                     emoji:'🦑', r:6, base:48 },
   { id:'polvo_do_vazio',       nome:'Polvo do Vazio', en:'Void Octopus',                    emoji:'🐙', r:6, base:50 },
   { id:'tubarao_gelido',       nome:'Tubarão Glacial', en:'Glacial Shark',                   emoji:'🦈', r:6, base:52 },
-  { id:'baiacu_pressao',       nome:'Baiacu de Pressão', en:'Pressure Pufferfish',           emoji:'🐡', r:6, base:54 },
-  { id:'arraia_fantasma',      nome:'Arraia Fantasma', en:'Ghost Ray',                       emoji:'🐟', r:6, base:56 },
+  { id:'baiacu_pressao',       nome:'Peixe-Balão de Pressão', en:'Pressure Pufferfish',           emoji:'🐡', r:6, base:54 },
+  { id:'arraia_fantasma',      nome:'Raia Fantasma', en:'Ghost Ray',                       emoji:'🐟', r:6, base:56 },
   { id:'celacanto_centenario', nome:'Celacanto Centenário', en:'Centenarian Coelacanth',     emoji:'🐟', r:6, base:58 },
   { id:'caranguejo_yeti',      nome:'Caranguejo Yeti', en:'Yeti Crab',                       emoji:'🦀', r:6, base:60 },
   { id:'medusa_do_abismo',     nome:'Medusa do Abismo', en:'Abyss Jellyfish',                emoji:'🐙', r:6, base:62 },

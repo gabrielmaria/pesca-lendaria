@@ -106,7 +106,7 @@ Tudo ajustável no `CONFIG` em `assets/js/config.js`:
 
 ## Trocar o tema
 
-- **Peixes:** array `PEIXES` em `assets/js/data.js` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Peixes:** array `PEIXES` em `assets/js/data.js` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 peixe-balão, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
 - **Eventos:** `EVENTOS` em `assets/js/data.js` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)` em `assets/js/sprites.js` (adiciona um `case` para eventos novos).
 - **Upgrades:** `UPGRADES_DADOS` em `assets/js/data.js` + `SPRITE_UP` + `efeitoTexto()` em `assets/js/game.js`.
 - **Cores:** variáveis CSS em `:root`, em `assets/css/styles.css`.
