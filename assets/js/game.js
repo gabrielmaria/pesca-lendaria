@@ -1153,8 +1153,10 @@ function renderModo() {
   const a = $('modoTabAbismo');
   if (s) s.classList.toggle('active', !ab);
   if (a) a.classList.toggle('active', ab);
+  if (document.body) document.body.setAttribute('data-modo', ab ? 'abisso' : 'superficie');
   const sea = $('sea');
   if (sea) sea.setAttribute('data-fundo', ab ? 'abisso' : 'superficie');
+  aplicarHora();
 }
 
 function aplicarModo(m, aviso) {
@@ -1293,7 +1295,7 @@ function aplicarHora() {
     const modo = (h >= 20 || h < 6) ? 'noite' : (h >= 18 ? 'tarde' : 'dia');
     if (document.body) document.body.setAttribute('data-hora', modo);
     const meta = document.querySelector ? document.querySelector('meta[name="theme-color"]') : null;
-    if (meta) meta.setAttribute('content', modo === 'noite' ? '#0a1730' : '#3b2416');
+    if (meta) meta.setAttribute('content', modoAbismo() ? '#020a14' : (modo === 'noite' ? '#0a1730' : '#3b2416'));
   } catch (e) {}
 }
 
