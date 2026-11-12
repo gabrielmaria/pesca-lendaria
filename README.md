@@ -17,6 +17,7 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
 ├── .editorconfig           # convenções de edição
 ├── .gitignore
 ├── README.md
+├── ROADMAP.md              # ideias e camadas futuras
 └── assets/
     ├── css/
     │   ├── styles.css      # todo o CSS do jogo
@@ -37,6 +38,7 @@ Regras de organização:
 - **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `updates.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
 - **Configuração primeiro, conteúdo depois.** Para equilibrar o jogo mexe em `assets/js/config.js`; para trocar peixes/eventos mexe em `assets/js/data.js`; para desenhar sprites em `assets/js/sprites.js`.
 - **Páginas legais** usam `assets/css/legal.css`; não dupliques estilos entre elas.
+- **Planeamento**: `ROADMAP.md` guarda as camadas futuras, regras de nomes e checklist de implementação.
 
 ## Idiomas (PT / EN)
 
