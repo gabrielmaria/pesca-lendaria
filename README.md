@@ -2,8 +2,40 @@
 
 Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos a cada 12 horas** (duas sessões por dia).
 
-Um único ficheiro `index.html` — HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas.
+Site estático **sem build**: HTML, CSS e JavaScript puro, sem frameworks, bibliotecas ou imagens externas. Os ficheiros de estilos e lógica vivem em `assets/`; o `index.html` é só a estrutura da interface.
 Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
+
+## Estrutura do projeto
+
+```text
+/
+├── index.html              # entrada do jogo (só markup)
+├── sobre.html              # página institucional
+├── privacidade.html        # política de privacidade
+├── ads.txt                 # verificação do AdSense (tem de ficar na raiz)
+├── vercel.json             # proxies first-party de analytics
+├── .editorconfig           # convenções de edição
+├── .gitignore
+├── README.md
+└── assets/
+    ├── css/
+    │   ├── styles.css      # todo o CSS do jogo
+    │   └── legal.css       # CSS partilhado por sobre/privacidade
+    └── js/
+        ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
+        ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS
+        ├── sprites.js      # motor de pixel art em canvas
+        ├── game.js         # estado, regras, render e ciclo de pesca
+        └── main.js         # arranque, eventos globais e loop
+```
+
+Regras de organização:
+
+- **Raiz = apenas pontos de entrada e ficheiros de plataforma.** `ads.txt` e `vercel.json` têm de estar na raiz; as páginas legais ficam na raiz para os URLs públicos não mudarem.
+- **Assets em `assets/`**, separados por tipo (`css/`, `js/`). Não há passo de build: o browser carrega os ficheiros tal como estão.
+- **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
+- **Configuração primeiro, conteúdo depois.** Para equilibrar o jogo mexe em `assets/js/config.js`; para trocar peixes/eventos mexe em `assets/js/data.js`; para desenhar sprites em `assets/js/sprites.js`.
+- **Páginas legais** usam `assets/css/legal.css`; não dupliques estilos entre elas.
 
 ## Idiomas (PT / EN)
 
@@ -36,13 +68,13 @@ Economia simulada: maxar os 5 upgrades leva **~3 semanas** de jogo (duas sessõe
 
 Princípios:
 
-- Valores base dos peixes **planos por raridade** (8–44); quem escala é o multiplicador de raridade (1× a 1000×).
+- Valores base dos peixes **planos por raridade** (8–44 na superfície, 42–72 no Mar Profundo); quem escala é o multiplicador de raridade (1× a 5000×).
 - Custos a crescer **×2 por nível** (base 300–1000 → 4,1M no total).
-- Isco com multiplicadores **por escalão** (Incomum+ → Mítico).
+- Isco com multiplicadores **por escalão** (Incomum+ → Mítico, mais Abissal).
 - Pescador com rendimento quadrático suave e cap offline.
 - Chefe diário e bónus de coleção adicionam receita, mas exigem jogar.
 
-Tudo ajustável no `CONFIG` no topo do `<script>`:
+Tudo ajustável no `CONFIG` em `assets/js/config.js`:
 
 | Quero… | Variável |
 |---|---|
@@ -63,10 +95,10 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 
 ## Trocar o tema
 
-- **Peixes:** array `PEIXES` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
-- **Eventos:** `EVENTOS` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)` (adiciona um `case` para eventos novos).
-- **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` + `efeitoTexto()`.
-- **Cores:** variáveis CSS em `:root`.
+- **Peixes:** array `PEIXES` em `assets/js/data.js` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 baiacu, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Eventos:** `EVENTOS` em `assets/js/data.js` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)` em `assets/js/sprites.js` (adiciona um `case` para eventos novos).
+- **Upgrades:** `UPGRADES_DADOS` em `assets/js/data.js` + `SPRITE_UP` + `efeitoTexto()` em `assets/js/game.js`.
+- **Cores:** variáveis CSS em `:root`, em `assets/css/styles.css`.
 
 ## Analytics (visitas e origens)
 
@@ -75,7 +107,7 @@ O jogo usa **GoatCounter** através de um **proxy first-party no Vercel** (`verc
 - `/count` → `https://pescalendaria.goatcounter.com/count`
 - `/count.js` → `https://gc.zgo.at/count.js`
 
-No topo do `<script>`:
+No topo de `assets/js/config.js`:
 
 ```js
 const ANALYTICS = {
@@ -110,7 +142,7 @@ O jogo **não tem botão para apagar o progresso** (para os jogadores não perde
 
 ## Anúncios
 
-O jogo suporta dois caminhos, configurados em `const ADS` no topo do `<script>`.
+O jogo suporta dois caminhos, configurados em `const ADS` em `assets/js/config.js`.
 
 ### AdSense no teu site (recomendado para o Vercel)
 
