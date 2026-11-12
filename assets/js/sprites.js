@@ -608,6 +608,50 @@ function spriteCenario(nome, escala) {
   return spriteIcone(nome, escala);
 }
 
+/* --- Sprites pixel art para a transição de ambiente --- */
+function spriteArvore(escala) {
+  const g = novoGrid(12, 20);
+  rectPx(g, 5, 14, 2, 6, '#3b2a1e');
+  px(g, 6, 14, '#5c3a1c');
+  triPx(g, 6, 0, 3, 8, 9, 8, '#1d5a4a');
+  triPx(g, 6, 4, 1, 13, 11, 13, '#145243');
+  triPx(g, 6, 8, 0, 19, 12, 19, '#0f463a');
+  px(g, 5, 6, '#2b7a5f'); px(g, 4, 10, '#2b7a5f'); px(g, 3, 15, '#1d5a4a');
+  px(g, 8, 7, '#0b3a2e'); px(g, 9, 12, '#0b3a2e'); px(g, 10, 17, '#0b3a2e');
+  contorno(g, '#041820');
+  return gridParaCanvas(g, escala);
+}
+
+function spriteMedusa(escala) {
+  const g = novoGrid(14, 18);
+  elipsePx(g, 7, 6, 6, 4, '#0e7f8c');
+  elipsePx(g, 7, 5.5, 5, 3, '#2ee6d6');
+  elipsePx(g, 7, 5, 3.4, 2, '#7ff2e6');
+  rectPx(g, 2, 8, 10, 1, '#2ee6d6');
+  const xs = [2, 4, 7, 10, 12];
+  for (let i = 0; i < xs.length; i++) {
+    const len = 5 + (i % 2) * 3;
+    for (let y = 0; y < len; y++) {
+      const xx = xs[i] + Math.round(Math.sin((y + i) * 0.9));
+      px(g, xx, 9 + y, i % 2 ? '#7ff2e6' : '#2ee6d6');
+    }
+  }
+  px(g, 5, 4, '#ffffff'); px(g, 9, 5, '#dffcff');
+  contorno(g, '#041820');
+  return gridParaCanvas(g, escala);
+}
+
+function spriteRocha(escala) {
+  const g = novoGrid(16, 24);
+  triPx(g, 8, 0, 1, 23, 15, 23, '#0b3040');
+  triPx(g, 4, 9, 0, 23, 9, 23, '#082635');
+  triPx(g, 10, 5, 4, 23, 14, 23, '#041820');
+  px(g, 7, 6, '#17707c'); px(g, 6, 9, '#17707c'); px(g, 5, 13, '#0e7f8c');
+  px(g, 9, 10, '#061c28'); px(g, 10, 15, '#061c28');
+  contorno(g, '#020a14');
+  return gridParaCanvas(g, escala);
+}
+
 /**
  * Preenche todos os espaços [data-sprite] (uma única vez por elemento).
  */

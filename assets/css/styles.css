@@ -708,31 +708,16 @@ h1{
 }
 .descida.ativa:not(.volta) .descida-fundo{opacity:1;}
 .descida-rocha{
-  position:absolute;bottom:-6px;display:block;
-  background:linear-gradient(180deg,#0b3040,#041820);
-  clip-path:polygon(50% 0,64% 22%,58% 22%,74% 48%,66% 48%,84% 74%,72% 74%,100% 100%,0 100%,22% 78%,12% 78%,30% 50%,22% 50%,38% 24%,32% 24%);
-  opacity:.92;
+  position:absolute;bottom:-6px;display:block;opacity:.92;
 }
+.descida-rocha canvas{display:block;}
 .descida-medusa{
-  position:absolute;display:block;opacity:.75;
+  position:absolute;display:block;opacity:.8;
   filter:drop-shadow(0 0 10px rgba(46,230,214,.75));
   animation:medusaFlutua var(--mdur,1.4s) steps(4) infinite alternate;
   animation-delay:var(--mdelay,0s);
 }
-.descida-medusa::before{
-  content:'';position:absolute;left:0;right:0;top:0;height:42%;
-  background:radial-gradient(ellipse at 50% 100%,#7ff2e6 0%,#2ee6d6 45%,#0e7f8c 100%);
-  border-radius:50% 50% 22% 22%;
-  box-shadow:inset 0 -5px 0 rgba(4,24,32,.45);
-}
-.descida-medusa::after{
-  content:'';position:absolute;left:14%;right:14%;top:38%;height:62%;
-  background:linear-gradient(90deg,
-    transparent 0 6%, rgba(46,230,214,.8) 6% 10%,
-    transparent 10% 28%, rgba(46,230,214,.65) 28% 32%,
-    transparent 32% 54%, rgba(46,230,214,.75) 54% 58%,
-    transparent 58% 76%, rgba(46,230,214,.55) 76% 80%, transparent 80%);
-}
+.descida-medusa canvas{display:block;}
 @keyframes medusaFlutua{from{transform:translateY(-6px);}to{transform:translateY(8px);}}
 .descida-peixes{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
 .descida-peixe{
@@ -758,18 +743,13 @@ h1{
   border-top:4px solid #1d5a4a;
 }
 .descida-morro{
-  position:absolute;bottom:26px;display:block;border-radius:50% 50% 0 0;
-  background:#0e3b33;opacity:.9;
+  position:absolute;bottom:26px;display:block;opacity:.9;
 }
+.descida-morro canvas{display:block;}
 .descida-arvore{
-  position:absolute;bottom:28px;display:block;background:#145243;
-  clip-path:polygon(50% 0,56% 16%,52% 16%,64% 34%,58% 34%,72% 55%,64% 55%,80% 78%,58% 78%,58% 100%,42% 100%,42% 78%,20% 78%,36% 55%,28% 55%,42% 34%,36% 34%,48% 16%,44% 16%);
-  box-shadow:inset 0 0 0 2px rgba(46,230,214,.08);
+  position:absolute;bottom:28px;display:block;
 }
-.descida-arvore::after{
-  content:'';position:absolute;left:50%;bottom:-16px;width:4px;height:18px;
-  transform:translateX(-50%);background:#3b2a1e;
-}
+.descida-arvore canvas{display:block;}
 .descida-farol{
   position:absolute;right:9%;bottom:26px;display:block;
   filter:drop-shadow(0 0 8px rgba(255,224,138,.4));

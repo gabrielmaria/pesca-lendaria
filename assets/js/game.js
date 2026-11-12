@@ -1558,8 +1558,7 @@ function animarDescida(m, comTexto) {
         const r = document.createElement('span');
         r.className = 'descida-rocha';
         r.style.left = (i * 18 - 5 + Math.random() * 8) + '%';
-        r.style.width = (80 + Math.random() * 90) + 'px';
-        r.style.height = (60 + Math.random() * 130) + 'px';
+        r.appendChild(spriteRocha(i % 2 ? 3 : 4));
         fundo.appendChild(r);
       }
       for (let i = 0; i < 3; i++) {
@@ -1567,8 +1566,7 @@ function animarDescida(m, comTexto) {
         j.className = 'descida-medusa';
         j.style.left = (8 + Math.random() * 78) + '%';
         j.style.top = (18 + Math.random() * 55) + '%';
-        j.style.width = (34 + Math.random() * 28) + 'px';
-        j.style.height = (50 + Math.random() * 32) + 'px';
+        j.appendChild(spriteMedusa(i % 2 ? 4 : 5));
         j.style.setProperty('--mdur', (1.2 + Math.random() * 0.6).toFixed(2) + 's');
         j.style.setProperty('--mdelay', (Math.random() * 0.5).toFixed(2) + 's');
         fundo.appendChild(j);
@@ -1585,17 +1583,14 @@ function animarDescida(m, comTexto) {
         const h = document.createElement('span');
         h.className = 'descida-morro';
         h.style.left = (i * 31 - 6 + Math.random() * 4) + '%';
-        h.style.width = (130 + Math.random() * 90) + 'px';
-        h.style.height = (60 + Math.random() * 40) + 'px';
+        h.appendChild(spriteCenario('morros', 4));
         arvores.appendChild(h);
       }
       for (let i = 0; i < 9; i++) {
         const a = document.createElement('span');
         a.className = 'descida-arvore';
         a.style.left = (i * 10.5 + 2 + (Math.random() * 3 - 1.5)) + '%';
-        a.style.width = (26 + Math.random() * 20) + 'px';
-        a.style.height = (46 + Math.random() * 44) + 'px';
-        a.style.background = i % 2 ? '#145243' : '#0f463a';
+        a.appendChild(spriteArvore(i % 3 === 0 ? 4 : 3));
         arvores.appendChild(a);
       }
       const farol = document.createElement('span');
