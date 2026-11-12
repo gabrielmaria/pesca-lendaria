@@ -1066,3 +1066,249 @@ body{
   .catch-fish{height:74px;}
   .fish-cell{min-height:98px;}
 }
+
+/* ==========================================================================
+   MAR PROFUNDO — superfícies e cartões sem bege/castanho
+   ========================================================================== */
+.catch-info{color:#7a6248;}
+.fish-cell.unknown .fc-rar{color:#5a4a33;}
+
+body[data-modo="abisso"] .modal{background:rgba(2,8,14,.78);}
+body[data-modo="abisso"] .muted{color:#8fc6cf;text-shadow:none;}
+
+/* Placas do HUD */
+body[data-modo="abisso"] .plate{
+  background:
+    repeating-linear-gradient(90deg, rgba(120,230,230,.06) 0 3px, transparent 3px 9px),
+    linear-gradient(180deg,#0d3b47 0%,#082a33 55%,#041820 100%);
+  border-color:#041820;
+  box-shadow:inset 0 0 0 2px rgba(120,230,230,.18), 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .plate-lbl{background:#041820;color:#b9f3f7;}
+body[data-modo="abisso"] #timer{color:#dffcff;text-shadow:3px 3px 0 #041820;}
+body[data-modo="abisso"] #coinVal{color:#dffcff;text-shadow:2px 2px 0 #041820;}
+body[data-modo="abisso"] h1{text-shadow:2px 2px 0 #041820, 4px 4px 0 rgba(0,0,0,.25);}
+body[data-modo="abisso"] .timebar{
+  background:#041820;
+  border-color:#041820;
+  box-shadow:inset 0 0 0 2px #0b3040;
+}
+body[data-modo="abisso"] .timing{
+  background:#041820;
+  border-color:#041820;
+  box-shadow:inset 0 0 0 2px #0b3040;
+}
+
+/* Cartões genéricos (upgrades, loja, época) */
+body[data-modo="abisso"] .card{
+  background:linear-gradient(180deg,#0b3040,#061c28);
+  border-color:#041820;
+  box-shadow:inset -3px -3px 0 #041820, inset 3px 3px 0 #17707c, 0 4px 0 rgba(0,0,0,.4);
+  color:#dffcff;
+}
+body[data-modo="abisso"] .card::before,
+body[data-modo="abisso"] .card::after,
+body[data-modo="abisso"] .modal-card::before,
+body[data-modo="abisso"] .modal-card::after{
+  background:#2ee6d6;
+  box-shadow:inset 0 0 0 1px #041820;
+}
+body[data-modo="abisso"] .up-ico{
+  background:#0d3b47;
+  border-color:#041820;
+  box-shadow:inset 0 0 0 2px #17707c;
+}
+body[data-modo="abisso"] .up-name{color:#e6ffff;}
+body[data-modo="abisso"] .lvl{color:#8fc6cf;}
+body[data-modo="abisso"] .up-desc{color:#b9d9df;}
+body[data-modo="abisso"] .up-eff{color:#cfeef2;}
+body[data-modo="abisso"] .up-eff b{color:#7ff2e6;}
+body[data-modo="abisso"] .up-eff.muted{color:#8fc6cf;}
+body[data-modo="abisso"] .up-eff.muted b{color:#7ff2e6;}
+body[data-modo="abisso"] .pip{background:#0d3b47;border-color:#041820;}
+body[data-modo="abisso"] .pip.on{background:#2ee6d6;}
+
+body[data-modo="abisso"] .epoca-card{
+  background:linear-gradient(180deg,#0b3040,#061c28);
+  border-color:#041820;
+  color:#dffcff;
+  box-shadow:inset 0 0 0 2px rgba(120,230,230,.15), 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .epoca-card .up-name{color:#7ff2e6;}
+body[data-modo="abisso"] .epoca-card .lvl{color:#b9d9df;}
+body[data-modo="abisso"] .epoca-card .up-desc{color:#b9d9df;}
+body[data-modo="abisso"] .epoca-card .up-eff{color:#cfeef2;}
+body[data-modo="abisso"] .epoca-card .up-eff b{color:#7ff2e6;}
+body[data-modo="abisso"] .epoca-card .up-ico{background:#0d3b47;border-color:#041820;}
+body[data-modo="abisso"] .epoca-card .pip{background:#0d3b47;border-color:#041820;}
+body[data-modo="abisso"] .epoca-card .pip.on{background:#7ff2e6;}
+
+/* Chefe do dia */
+body[data-modo="abisso"] .chefe{
+  background:linear-gradient(180deg,#0d3b47,#082a33);
+  border-color:#041820;
+  color:#dffcff;
+  box-shadow:inset 0 0 0 2px rgba(120,230,230,.18), 0 4px 0 rgba(0,0,0,.45);
+}
+body[data-modo="abisso"] .chefe.done{background:linear-gradient(180deg,#0d4a48,#0a3330);}
+body[data-modo="abisso"] .chefe-nome{color:#7ff2e6;}
+body[data-modo="abisso"] .chefe-estado{color:#b9d9df;}
+
+/* Livro */
+body[data-modo="abisso"] .hint,
+body[data-modo="abisso"] .book-top,
+body[data-modo="abisso"] .book-bonus,
+body[data-modo="abisso"] .legado-top .muted,
+body[data-modo="abisso"] .ach-cat,
+body[data-modo="abisso"] .nota-dev,
+body[data-modo="abisso"] .site-footer{
+  color:#dffcff;
+  text-shadow:2px 2px 0 #041820;
+}
+body[data-modo="abisso"] .book-top .muted{color:#8fc6cf;text-shadow:2px 2px 0 #041820;}
+body[data-modo="abisso"] .seal-badge{
+  background:#dffcff;border-color:#041820;color:#0e7f8c;
+  box-shadow:0 2px 0 rgba(0,0,0,.35);
+}
+body[data-modo="abisso"] .seal-badge.miss{background:#8fb4b8;color:#041820;}
+body[data-modo="abisso"] .fish-cell{
+  background:linear-gradient(180deg,#0b3040,#08202c);
+  border-color:#041820;
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #17707c;
+}
+body[data-modo="abisso"] .fish-cell .fc-name{color:#dffcff;}
+body[data-modo="abisso"] .fish-cell .fc-rar{color:#7ff2e6;}
+body[data-modo="abisso"] .fish-cell .fc-val{color:#7ff2e6;}
+body[data-modo="abisso"] .fish-cell.unknown{
+  background:linear-gradient(180deg,#08202c,#061820);
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #0d3b47;
+}
+body[data-modo="abisso"] .fish-cell.unknown .fc-emoji{color:#7ff2e6;}
+body[data-modo="abisso"] .fish-cell.unknown .fc-name{color:#8fc6cf;}
+body[data-modo="abisso"] .fish-cell.unknown .fc-rar{color:#8fc6cf;}
+body[data-modo="abisso"] .fish-cell.abissal{
+  background:linear-gradient(180deg,#0b3040,#0e4a52);
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #2ee6d6;
+}
+body[data-modo="abisso"] .fish-cell.abissal.unknown{
+  background:linear-gradient(180deg,#08202c,#0b3a40);
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #0e7f8c;
+}
+
+/* Conquistas + Loja */
+body[data-modo="abisso"] .perola-badge{border-color:#041820;box-shadow:0 2px 0 rgba(0,0,0,.4);}
+body[data-modo="abisso"] .ach-card{
+  background:linear-gradient(180deg,#0b3040,#08202c);
+  border-color:#041820;
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #17707c;
+}
+body[data-modo="abisso"] .ach-card.done{background:linear-gradient(180deg,#0d4a48,#0a3330);}
+body[data-modo="abisso"] .ach-name{color:#e6ffff;}
+body[data-modo="abisso"] .ach-desc{color:#b9d9df;}
+body[data-modo="abisso"] .ach-bar{background:#041820;border-color:#041820;}
+body[data-modo="abisso"] .ach-fill{background:#2ee6d6;}
+body[data-modo="abisso"] .ach-prog{color:#8fc6cf;}
+body[data-modo="abisso"] .ach-reward{color:#7ff2e6;}
+
+/* Modais */
+body[data-modo="abisso"] .modal-card{
+  background:linear-gradient(180deg,#0b3040,#061c28);
+  border-color:#041820;
+  box-shadow:inset 0 0 0 3px #17707c, 8px 8px 0 rgba(0,0,0,.55);
+  color:#dffcff;
+}
+body[data-modo="abisso"] .modal-card h2{color:#7ff2e6;text-shadow:2px 2px 0 #041820;}
+body[data-modo="abisso"] .modal-card p{color:#b9d9df;}
+body[data-modo="abisso"] .fim-grid div{
+  background:linear-gradient(180deg,#0b3040,#08202c);
+  border-color:#041820;
+  box-shadow:inset -2px -2px 0 #041820, inset 2px 2px 0 #17707c;
+}
+body[data-modo="abisso"] .fim-grid b{color:#7ff2e6;text-shadow:2px 2px 0 #041820;}
+body[data-modo="abisso"] .fim-grid span{color:#8fc6cf;}
+body[data-modo="abisso"] .fim-best{
+  background:#0b3040;border-color:#041820;box-shadow:inset 0 0 0 2px #17707c;color:#dffcff;
+}
+body[data-modo="abisso"] .fim-best b{color:#7ff2e6;}
+body[data-modo="abisso"] .streak{
+  background:#0d3b47;border-color:#041820;color:#dffcff;
+  box-shadow:inset 0 0 0 2px #17707c;
+}
+body[data-modo="abisso"] .streak b{color:#7ff2e6;}
+body[data-modo="abisso"] .nextday{color:#b9d9df;}
+body[data-modo="abisso"] .nextday span{color:#7ff2e6;}
+body[data-modo="abisso"] .amanha{
+  background:#0b3040;border-color:#041820;color:#dffcff;
+  box-shadow:inset 0 0 0 2px #17707c;
+}
+body[data-modo="abisso"] .amanha b{color:#7ff2e6;}
+body[data-modo="abisso"] .fim-chefe{
+  background:#0b3040;border-color:#041820;color:#dffcff;
+  box-shadow:inset 0 0 0 2px #17707c;
+}
+body[data-modo="abisso"] #ad-banner{
+  background:repeating-linear-gradient(45deg,#0b3040 0 8px,#082a33 8px 16px);
+  border-color:#17707c;
+  color:#8fc6cf;
+}
+body[data-modo="abisso"] #offlineVal{color:#7ff2e6 !important;}
+body[data-modo="abisso"] .consent{border-top-color:#2ee6d6;}
+
+/* Cartão de evento, missão e combo */
+body[data-modo="abisso"] .event-card{
+  background:linear-gradient(180deg,#0b3040,#08202c);
+  border-color:#041820;
+  box-shadow:inset 0 0 0 2px #17707c, 4px 4px 0 rgba(0,0,0,.45);
+  color:#dffcff;
+}
+body[data-modo="abisso"] .ev-title{color:#e6ffff;}
+body[data-modo="abisso"] .ev-desc{color:#b9d9df;}
+body[data-modo="abisso"] .combo{
+  background:linear-gradient(180deg,#0b3040,#0e4a52);
+  border-color:#041820;
+  color:#dffcff;
+  box-shadow:inset 0 0 0 2px rgba(120,230,230,.18), 0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .combo.hot{
+  background:linear-gradient(180deg,#7ff2e6,#2ee6d6);
+  color:#04222a;
+}
+body[data-modo="abisso"] .missao{
+  background:linear-gradient(180deg,#0b3040,#08202c);
+  border-color:#041820;
+  color:#dffcff;
+  box-shadow:inset 0 0 0 2px rgba(120,230,230,.18), 0 3px 0 rgba(0,0,0,.4);
+}
+body[data-modo="abisso"] .missao.ok{
+  background:linear-gradient(180deg,#1f6b46,#134a2f);
+  color:#dffcff;
+}
+body[data-modo="abisso"] #toast{
+  background:#041820;border-color:#0b3040;color:#dffcff;
+}
+
+/* Resultado da captura */
+body[data-modo="abisso"] .catch{
+  background:#071f2b;
+  box-shadow:inset 0 0 0 5px #0b3040, inset 0 0 0 8px #17707c;
+}
+body[data-modo="abisso"] .catch-name{color:#e6ffff;}
+body[data-modo="abisso"] .catch-val{color:#7ff2e6;text-shadow:2px 2px 0 #041820;}
+body[data-modo="abisso"] .catch-info{color:#8fc6cf;}
+body[data-modo="abisso"] .catch-pearl{color:#7ff2e6;}
+body[data-modo="abisso"] .catch-flag{border-color:#041820;}
+body[data-modo="abisso"] #marker{box-shadow:0 0 0 2px #041820;}
+body[data-modo="abisso"] .boia{border-color:#041820;}
+
+/* Novidades */
+body[data-modo="abisso"] .nov-sub,
+body[data-modo="abisso"] .nov-data,
+body[data-modo="abisso"] .nov-itens{color:#b9d9df;}
+body[data-modo="abisso"] .nov-versao{color:#e6ffff;}
+body[data-modo="abisso"] .nov-titulo{color:#7ff2e6;}
+body[data-modo="abisso"] .nov-item{border-top-color:rgba(120,230,230,.25);}
+
+/* Detalhes do cenário sem castanhos */
+.scene[data-fundo="abisso"] .poste{display:none;}
+.scene[data-fundo="abisso"] .cana-spr{filter:brightness(.75) saturate(.25) hue-rotate(140deg);}
+.scene[data-fundo="abisso"][data-clima] .clima{opacity:.22;filter:hue-rotate(150deg) saturate(.6);}

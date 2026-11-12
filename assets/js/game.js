@@ -747,7 +747,7 @@ function renderLivro() {
 
     const rar = document.createElement('div');
     rar.className = 'fc-rar';
-    rar.style.color = desc ? r.cor : '#5a4a33';
+    if (desc) rar.style.color = r.cor;
     rar.textContent = desc ? nomeRaridade(p.r) : '—';
 
     cell.appendChild(ico);
@@ -1152,8 +1152,7 @@ function mostrarCaptura(res) {
     titulo.textContent = res.chefe ? t('chefeTituloCatch') : t('escapou');
     box.appendChild(titulo);
     const sub = document.createElement('div');
-    sub.className = 'catch-rar';
-    sub.style.color = '#7a6248';
+    sub.className = 'catch-rar catch-info';
     sub.textContent = res.chefe ? t('tentaOutraBreve') : t('tentaOutra');
     box.appendChild(sub);
     box.classList.remove('hidden');
@@ -1199,8 +1198,7 @@ function mostrarCaptura(res) {
   box.appendChild(rar);
 
   const info = document.createElement('div');
-  info.className = 'catch-rar';
-  info.style.color = '#7a6248';
+  info.className = 'catch-rar catch-info';
   info.textContent = num(res.peso || 1, 2) + ' kg' +
     (res.perfeito ? ' · ' + t('perfeito') : '') +
     (res.chefe ? ' · ' + tf('bonusChefeN', { n: res.bonus || (res.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS) }) : '');
