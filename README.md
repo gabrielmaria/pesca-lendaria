@@ -25,7 +25,7 @@ python3 -m http.server 8080
 - **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares. A cada 4 dias o chefe é **abissal** (×6).
 - **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
 - **Livro de Pesca**: 30 espécies de superfície; cada raridade completa dá **+5% de valor permanente** (até +30%).
-- **Mar Profundo (endgame)**: abre na **Época 3**. Tem **15 espécies abissais**, a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Completar a raridade abissal dá mais **+5%** (total +35%).
+- **Mar Profundo (endgame)**: abre na **Época 3**. No topo da pesca escolhes **Superfície** ou **Mar Profundo**; no fundo o cenário muda (água escura, plâncton, bolhas) e só lá aparecem as **15 espécies abissais**. Tem a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Escolher uma isca abissal desce automaticamente. Completar a raridade abissal dá mais **+5%** (total +35%).
 - **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro, o Mar Profundo e o streak ficam.
 - **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.
 - Pescadores rendem moedas offline (até 24h). A sessão renova a cada **12h**; o evento, a missão e o chefe são **diários**. O tempo só desconta com o separador visível (Page Visibility API).

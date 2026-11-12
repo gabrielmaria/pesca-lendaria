@@ -538,6 +538,85 @@ h1{
 .scene[data-clima="dourado"] .clima{opacity:1;background:linear-gradient(180deg, rgba(255,215,90,.35), rgba(255,170,40,.12));}
 .scene[data-clima="polvos"] .clima{opacity:1;background:radial-gradient(circle at 20% 70%, rgba(120,60,160,.35), transparent 55%);}
 
+/* ---------- Mar Profundo: cenário ---------- */
+.abismo{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .7s steps(4);}
+.scene[data-fundo="abisso"] .abismo{opacity:1;}
+.abismo-luz{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(102deg, transparent 32%, rgba(120,230,230,.10) 33%, rgba(120,230,230,.10) 41%, transparent 42%),
+    linear-gradient(78deg, transparent 57%, rgba(120,230,230,.07) 58%, rgba(120,230,230,.07) 66%, transparent 67%);
+  animation:feixeAbismo 10s steps(20) infinite alternate;
+}
+.abismo-plankton{
+  position:absolute;inset:0;opacity:.65;
+  background-image:
+    radial-gradient(circle, rgba(46,230,214,.9) 1px, transparent 2px),
+    radial-gradient(circle, rgba(160,255,240,.7) 1px, transparent 2px);
+  background-size:87px 67px, 53px 89px;
+  background-position:13px 21px, 37px 9px;
+  animation:planktonPisca 3.4s steps(2) infinite;
+}
+.abismo-bolhas{
+  position:absolute;inset:-20% 0 0;opacity:.5;
+  background-image:
+    radial-gradient(circle, rgba(190,255,250,.8) 1px, transparent 2px),
+    radial-gradient(circle, rgba(140,230,255,.55) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(200,255,245,.45) 1px, transparent 2px);
+  background-size:64px 96px, 101px 137px, 43px 71px;
+  background-position:0 0, 22px 40px, 11px 17px;
+  animation:bolhasSobem 7s linear infinite;
+}
+.abismo-vinheta{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%, transparent 42%, rgba(0,6,12,.62) 100%);}
+@keyframes feixeAbismo{0%{transform:translateX(-8px);opacity:.65;}100%{transform:translateX(10px);opacity:1;}}
+@keyframes planktonPisca{50%{opacity:.18;}}
+@keyframes bolhasSobem{
+  from{background-position:0 0,22px 40px,11px 17px;}
+  to{background-position:8px -192px,-14px -274px,5px -142px;}
+}
+
+.scene[data-fundo="abisso"]{
+  background:linear-gradient(180deg,#02101c 0%,#041d2c 46%,#06283a 100%);
+  box-shadow:inset 0 0 0 3px rgba(46,230,214,.18), 0 6px 0 rgba(43,27,18,.35);
+}
+.scene[data-fundo="abisso"] .ceu{background:linear-gradient(180deg,#020d18,#06202e);}
+.scene[data-fundo="abisso"] .agua{
+  background:
+    repeating-linear-gradient(180deg, rgba(120,220,230,.05) 0 3px, transparent 3px 18px),
+    linear-gradient(180deg,#06283a,#020a14);
+}
+.scene[data-fundo="abisso"] .ondas{opacity:.12;animation-duration:6.4s;}
+.scene[data-fundo="abisso"] .estrelas{opacity:.12;}
+.scene[data-fundo="abisso"] .sol,
+.scene[data-fundo="abisso"] .lua-noite,
+.scene[data-fundo="abisso"] .nuvem,
+.scene[data-fundo="abisso"] .passaro,
+.scene[data-fundo="abisso"] .farol,
+.scene[data-fundo="abisso"] .feixe,
+.scene[data-fundo="abisso"] .peixe-salta{opacity:0 !important;}
+.scene[data-fundo="abisso"] .morro{opacity:.32;filter:hue-rotate(120deg) brightness(.55);}
+.scene[data-fundo="abisso"] .cais{
+  background:repeating-linear-gradient(90deg,#1b3a42 0 30px,#122a30 30px 34px),#1b3a42;
+  border-top-color:#08161c;
+  box-shadow:inset 0 4px 0 rgba(120,230,230,.10);
+}
+.scene[data-fundo="abisso"] .poste{opacity:.3;}
+.scene[data-fundo="abisso"] .barco-spr{opacity:0;}
+.scene[data-fundo="abisso"] .personagem{filter:brightness(.78) saturate(.7) hue-rotate(140deg);}
+.scene[data-fundo="abisso"] .cana-spr{filter:brightness(.8) saturate(.6);}
+.scene[data-fundo="abisso"] .linha{background:repeating-linear-gradient(180deg,#b8fff6 0 3px,rgba(184,255,246,0) 3px 7px);}
+.scene[data-fundo="abisso"] .boia{
+  background:linear-gradient(180deg,#d8fffa 0 52%,#0e7f8c 52% 100%);
+  box-shadow:0 0 8px rgba(46,230,214,.9);
+}
+.scene[data-fundo="abisso"] .status{text-shadow:2px 2px 0 #020a14,-1px 2px 0 #020a14;}
+.scene[data-fundo="abisso"][data-clima] .clima{opacity:.35;}
+.scene.a-descer::after{
+  content:'';position:absolute;inset:0;z-index:30;pointer-events:none;
+  background:#020a14;animation:descerFundo .75s steps(5) forwards;
+}
+@keyframes descerFundo{0%{opacity:0;}35%{opacity:1;}100%{opacity:0;}}
+
 /* ---------- Animações ---------- */
 @keyframes blink{50%{opacity:.4;}}
 @keyframes solPulsa{50%{transform:scale(1.06);}}
@@ -647,6 +726,11 @@ a.btn{color:var(--ink);}
 }
 .book-tab.locked{opacity:.65;filter:grayscale(.35);}
 .book-tab:active{transform:translateY(2px);box-shadow:none;}
+.book-tab small{display:block;font-size:8px;line-height:1.1;letter-spacing:0;text-transform:none;font-weight:800;color:#7a6248;}
+.book-tab.active small{color:#2f6b2f;}
+/* Modo de pesca: Superfície / Mar Profundo */
+.modo-switch{display:flex;gap:5px;margin:0 0 8px;}
+.modo-switch .book-tab{padding:5px 4px;}
 
 /* ---------- Amanhã (fim do dia) ---------- */
 .amanha{
@@ -900,6 +984,17 @@ body{
         </div>
       </div>
 
+      <!-- Superfície / Mar Profundo (abre na Época 3) -->
+      <div class="modo-switch hidden" id="modoSwitch">
+        <button class="book-tab modo-tab active" data-modo="superficie" id="modoTabSuperficie">
+          <span data-i18n="livroSuperficie">Superfície</span>
+        </button>
+        <button class="book-tab modo-tab" data-modo="abisso" id="modoTabAbismo">
+          <span data-i18n="livroAbismo">Mar Profundo</span>
+          <small data-i18n="modoAbismoSub">raridade abissal</small>
+        </button>
+      </div>
+
       <!-- Cena pixel: céu, mar, cais, barco e cana -->
       <div class="scene" id="sea" data-clima="calmo">
         <div class="ceu">
@@ -917,6 +1012,12 @@ body{
         </div>
         <div class="agua"><div class="ondas"></div><span class="spr-slot peixe-salta" data-sprite="peixinho"></span></div>
         <div class="clima"></div>
+        <div class="abismo">
+          <div class="abismo-luz"></div>
+          <div class="abismo-plankton"></div>
+          <div class="abismo-bolhas"></div>
+          <div class="abismo-vinheta"></div>
+        </div>
         <div class="cais"></div>
         <span class="poste poste1"></span>
         <span class="poste poste2"></span>
@@ -1909,6 +2010,10 @@ const TEXTOS = {
     iscaAbissalSub: "abissais ×30 · -10% valor",
     iscaReliquia: "Relíquia",
     iscaReliquiaSub: "abissais ×12 · +60% valor",
+    modoAbismoSub: "raridade abissal",
+    modoAbismoOn: "A descer ao Mar Profundo…",
+    modoSuperficieOn: "De volta à superfície.",
+    modoOcupado: "Espera pela captura para mudar de fundo.",
     lancar: "LANÇAR",
     esperar: "… A ESPERAR",
     agora: "AGORA!",
@@ -1966,7 +2071,7 @@ const TEXTOS = {
     livroAbismo: "Mar Profundo",
     livroAbismoBloqueado: "Mar Profundo · Época {e}",
     livroDicaAbismo: "usa a isca Abissal para os encontrar",
-    abissoDesbloqueado: "Mar Profundo desbloqueado! Vê o novo livro.",
+    abissoDesbloqueado: "Mar Profundo desbloqueado! Escolhe o modo acima da cena.",
     abissoBloqueado: "Desbloqueia na Época {e}.",
     efeitoAbissal: "abissal ×{a}",
     offlineTitulo: "Equipa a trabalhar",
@@ -2045,6 +2150,10 @@ const TEXTOS = {
     iscaAbissalSub: "abyssal ×30 · -10% value",
     iscaReliquia: "Relic",
     iscaReliquiaSub: "abyssal ×12 · +60% value",
+    modoAbismoSub: "abyssal rarity",
+    modoAbismoOn: "Descending to the Deep Sea…",
+    modoSuperficieOn: "Back to the surface.",
+    modoOcupado: "Wait for the catch to change depth.",
     lancar: "CAST",
     esperar: "… WAITING",
     agora: "NOW!",
@@ -2102,7 +2211,7 @@ const TEXTOS = {
     livroAbismo: "Deep Sea",
     livroAbismoBloqueado: "Deep Sea · Season {e}",
     livroDicaAbismo: "use Abyssal bait to find them",
-    abissoDesbloqueado: "Deep Sea unlocked! Check the new book.",
+    abissoDesbloqueado: "Deep Sea unlocked! Pick the mode above the scene.",
     abissoBloqueado: "Unlocks in Season {e}.",
     efeitoAbissal: "abyssal ×{a}",
     offlineTitulo: "Crew at work",
@@ -2356,6 +2465,7 @@ function estadoPorDefeito() {
     estrelas: 0,            // estrelas de prestígio
     epoca: 1,
     abissoVisto: false,     // já viu o aviso de desbloqueio do Mar Profundo
+    modo: 'superficie',     // 'superficie' | 'abisso' (pesca no Mar Profundo)
     som: true,
     ultimoVisto: Date.now(),
     novato: true            // primeiro dia: boost de raridades + upgrade grátis
@@ -2391,6 +2501,8 @@ function carregar() {
   out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
   if ((out.isca === 'abissal' || out.isca === 'reliquia') &&
       out.epoca < CONFIG.ABISMO_EPOCA) out.isca = 'comum';
+  if (out.modo !== 'abisso' && out.modo !== 'superficie') out.modo = 'superficie';
+  if (out.epoca < CONFIG.ABISMO_EPOCA) out.modo = 'superficie';
   if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
   out.sessao = Object.assign({ moedas:0, peixes:0, melhor:null },
     (s.sessao && typeof s.sessao === 'object') ? s.sessao : {});
@@ -2539,7 +2651,7 @@ function mods() {
   const isc = (iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual();
   if (isc && isc.raro !== 1) for (let i = 1; i < tier.length; i++) tier[i] *= isc.raro;
   // Iscas abissais empurram a raridade do fundo (só depois de desbloqueado)
-  if (isc && isc.abisso && abissoAtivo()) tier[6] *= isc.abisso;
+  if (isc && isc.abisso && modoAbismo()) tier[6] *= isc.abisso;
 
   // Primeiro dia: ajuda extra nas raridades altas
   if (state.novato) for (let i = 1; i < tier.length; i++) tier[i] *= CONFIG.PRIMEIRO_DIA_RARIDADE;
@@ -2548,8 +2660,8 @@ function mods() {
   if (fx.raro) for (let i = 2; i < tier.length; i++) tier[i] *= fx.raro;
   if (fx.mitico) tier[5] *= fx.mitico;
   if (fx.abisso) tier[6] *= fx.abisso;
-  // Abissal só existe depois de abrir o Mar Profundo
-  if (!abissoAtivo()) tier[6] = 0;
+  // A raridade abissal só existe enquanto estás no Mar Profundo
+  if (!modoAbismo()) tier[6] = 0;
 
   return {
     espera: fx.espera || 1,
@@ -2563,7 +2675,7 @@ function mods() {
 /** Sorteia o índice da raridade respeitando pesos + efeitos. */
 function sortearRaridade(m) {
   const pesos = RARIDADES.map(function (r, i) {
-    if (i === 6 && !abissoAtivo()) return 0;
+    if (i === 6 && !modoAbismo()) return 0;
     const base = i === 6 ? CONFIG.ABISMO_PESO : r.peso;
     return base * m.tier[i];
   });
@@ -3289,6 +3401,10 @@ function bonusEstrelas() {
 function abissoAtivo() {
   return (state.epoca || 1) >= CONFIG.ABISMO_EPOCA;
 }
+/** O jogador está efetivamente a pescar no Mar Profundo. */
+function modoAbismo() {
+  return abissoAtivo() && state.modo === 'abisso';
+}
 /** Aviso único quando o Mar Profundo fica disponível. */
 function verificarAbismo() {
   if (!abissoAtivo() || state.abissoVisto) return false;
@@ -3300,6 +3416,7 @@ function verificarAbismo() {
   setTimeout(function () { bip(1320, .16); }, 210);
   track('abisso', {});
   renderIscas();
+  renderModo();
   renderLivro();
   guardar();
   return true;
@@ -3347,6 +3464,7 @@ function prestigiar() {
   guardar();
   renderUpgrades();
   renderIscas();
+  renderModo();
   atualizarHUD();
 }
 
@@ -3369,12 +3487,62 @@ function escolherIsca(id) {
     toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
     return;
   }
+  // Escolher uma isca abissal leva-te automaticamente ao fundo.
+  if ((id === 'abissal' || id === 'reliquia') && !modoAbismo()) {
+    if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return; }
+    aplicarModo('abisso', false);
+  }
   state.isca = id;
   renderIscas();
   guardar();
   toast(tf('iscaSelecionada', { n: nomeIsca(id) }));
   bip(620, .06);
 }
+
+/* --- Modo de pesca: Superfície / Mar Profundo --- */
+function renderModo() {
+  const bar = $('modoSwitch');
+  if (!bar) return;
+  bar.classList.toggle('hidden', !abissoAtivo());
+  const ab = modoAbismo();
+  const s = $('modoTabSuperficie');
+  const a = $('modoTabAbismo');
+  if (s) s.classList.toggle('active', !ab);
+  if (a) a.classList.toggle('active', ab);
+  const sea = $('sea');
+  if (sea) sea.setAttribute('data-fundo', ab ? 'abisso' : 'superficie');
+}
+
+function aplicarModo(m, aviso) {
+  if (m !== 'abisso' && m !== 'superficie') return false;
+  if (m === 'abisso' && !abissoAtivo()) {
+    toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
+    return false;
+  }
+  if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return false; }
+  if (state.modo === m) return true;
+  state.modo = m;
+  // Ao voltar à superfície, iscas abissais deixam de fazer sentido.
+  if (m === 'superficie' && (state.isca === 'abissal' || state.isca === 'reliquia')) {
+    state.isca = 'comum';
+    renderIscas();
+  }
+  renderModo();
+  const sea = $('sea');
+  if (sea) {
+    sea.classList.remove('a-descer');
+    void sea.offsetWidth;
+    sea.classList.add('a-descer');
+    setTimeout(function () { sea.classList.remove('a-descer'); }, 800);
+  }
+  if (aviso) {
+    toast(t(m === 'abisso' ? 'modoAbismoOn' : 'modoSuperficieOn'));
+    bip(m === 'abisso' ? 420 : 720, .08);
+  }
+  guardar();
+  return true;
+}
+function escolherModo(m) { aplicarModo(m, true); }
 
 /* --- Analytics: visitas, origem e eventos --- */
 let origemVisita = 'direto';
@@ -4100,6 +4268,7 @@ function aplicarIdioma() {
     renderUpgrades();
     renderLivro();
     renderIscas();
+    renderModo();
     botaoLancar();
 
     if (fase === 'waiting') {
@@ -4183,6 +4352,11 @@ function iniciar() {
   /* --- Iscas --- */
   document.querySelectorAll('.isca').forEach(function (b) {
     b.addEventListener('click', function () { escolherIsca(b.dataset.isca); });
+  });
+
+  /* --- Modo: Superfície / Mar Profundo --- */
+  document.querySelectorAll('.modo-tab').forEach(function (b) {
+    b.addEventListener('click', function () { escolherModo(b.dataset.modo); });
   });
 
   /* --- Prestígio --- */
