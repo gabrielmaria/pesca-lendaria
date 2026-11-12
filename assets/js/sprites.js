@@ -1,7 +1,7 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — sprites.js
+   Pesca Lendária: sprites.js
    Motor de pixel art: desenha todos os sprites em <canvas>.
    Carregado depois de data.js.
    ========================================================================== */

@@ -1,7 +1,7 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — game.js
+   Pesca Lendária: game.js
    Estado, persistência, regras, render e ciclo de pesca.
    Carregado depois de sprites.js.
    ========================================================================== */
@@ -10,7 +10,7 @@
    ========================================================================== */
 const $ = (id) => document.getElementById(id);
 
-/** Formata moedas com K, M, B, T — função única para todo o jogo. */
+/** Formata moedas com K, M, B, T: função única para todo o jogo. */
 function fmt(n) {
   n = Math.floor(Number(n) || 0);
   const neg = n < 0;
@@ -76,7 +76,7 @@ function reduzMovimento() {
    4) ESTADO + PERSISTÊNCIA (tudo em try/catch com valores por defeito)
    ========================================================================== */
 
-/** Estado por defeito — usado se o localStorage falhar ou estiver corrompido. */
+/** Estado por defeito: usado se o localStorage falhar ou estiver corrompido. */
 function estadoPorDefeito() {
   const k = hojeKey();
   return {
@@ -182,7 +182,7 @@ function carregar() {
   return out;
 }
 
-/** Grava o estado — nunca lança erro. */
+/** Grava o estado: nunca lança erro. */
 function guardar() {
   try {
     state.ultimoVisto = Date.now();
@@ -433,7 +433,7 @@ function bip(freq, dur, tipo) {
     o.connect(g); g.connect(audioCtx.destination);
     o.start();
     o.stop(audioCtx.currentTime + (dur || 0.1) + 0.02);
-  } catch (e) { /* áudio bloqueado — ignorar */ }
+  } catch (e) { /* áudio bloqueado: ignorar */ }
 }
 
 function sonsDoResultado(tipo) {
@@ -529,7 +529,7 @@ function atualizarHUD() {
   const mt = $('missaoTxt');
   const m = state.hoje && state.hoje.missao;
   if (!m) {
-    mt.textContent = '—';
+    mt.textContent = '-';
     mb.classList.remove('ok');
   } else if (m.ok) {
     mt.textContent = tf('missaoFeita', { v: fmt(m.premio) });
@@ -748,7 +748,7 @@ function renderLivro() {
     const rar = document.createElement('div');
     rar.className = 'fc-rar';
     if (desc) rar.style.color = r.cor;
-    rar.textContent = desc ? nomeRaridade(p.r) : '—';
+    rar.textContent = desc ? nomeRaridade(p.r) : '-';
 
     cell.appendChild(ico);
     cell.appendChild(nome);
@@ -1993,7 +1993,7 @@ function abrirFimDia() {
   const icoA = $('amanhaIco');
   icoA.innerHTML = '';
   icoA.appendChild(spriteEvento(evAmanha.id, 2));
-  $('amanhaTxt').textContent = nomeEvento(evAmanha) + ' — ' + descEvento(evAmanha);
+  $('amanhaTxt').textContent = nomeEvento(evAmanha) + ': ' + descEvento(evAmanha);
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
@@ -2057,7 +2057,7 @@ async function partilhar() {
   } catch (e) { toast(t('naoCopiado')); }
 }
 
-/** Anúncio recompensado — SIMULADO.
+/** Anúncio recompensado: SIMULADO.
  *  LIGAR SDK REAL MAIS TARDE: substituir o corpo desta função por
  *  rewardedAd.show() e chamar concederTempo() apenas se o anúncio
  *  terminou (ex.: if (resultado === 'completed') concederTempo()). */
@@ -2211,7 +2211,7 @@ function pedirRewardedGD(cb) {
   }
 }
 
-/** Anúncio simulado (sem rede) — mantém o jogo testável. */
+/** Anúncio simulado (sem rede): mantém o jogo testável. */
 function simularAnuncio(cb) {
   alert(t('anuncioSimulado'));
   cb(true);

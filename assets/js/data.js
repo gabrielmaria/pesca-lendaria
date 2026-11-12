@@ -1,7 +1,7 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — data.js
+   Pesca Lendária: data.js
    Conteúdo do jogo: raridades, peixes, upgrades e eventos.
    Carregado depois de config.js.
    ========================================================================== */
@@ -58,7 +58,7 @@ const PEIXES = [
   /* Míticas */
   { id:'cetus',                nome:'Cetus, o Come-Mundos', en:'Cetus, the World-Eater',         emoji:'🐋', r:5, base:38 },
   { id:'dragao_marinho',       nome:'Dragão-Marinho Ancestral', en:'Ancestral Sea Dragon',     emoji:'🐉', r:5, base:44 },
-  /* Abissais (Mar Profundo — desbloqueia na Época 3) */
+  /* Abissais (Mar Profundo: desbloqueia na Época 3) */
   { id:'enguia_abissal',       nome:'Enguia das Fendas', en:'Trench Eel',                    emoji:'🐟', r:6, base:42 },
   { id:'peixe_lanterna',       nome:'Peixe-Lanterna Nervoso', en:'Nervous Lanternfish',      emoji:'🐠', r:6, base:44 },
   { id:'camarao_cego',         nome:'Camarão Cego', en:'Blind Shrimp',                      emoji:'🦀', r:6, base:46 },
@@ -85,7 +85,7 @@ const UPGRADES_DADOS = [
   { id:'freezer', nome:'Geleira',              emoji:'🧊', desc:'Aumenta o valor de venda dos peixes raros ou superiores.', nomeEn:'Freezer', descEn:'Increases the value of rare or better fish.' }
 ];
 
-/* --- Eventos do dia (8) — efeitos aplicados ao calcular cada lance --- */
+/* --- Eventos do dia (8): efeitos aplicados ao calcular cada lance --- */
 const EVENTOS = [
   { id:'chuva',   emoji:'☔', nome:'Dia de Chuva',       desc:'+30% de peixes raros ou superiores.', nomeEn:'Rainy Day', descEn:'+30% chance of rare or better fish.',   fx:{ raro:1.3 } },
   { id:'nevoeiro',emoji:'🌫️', nome:'Nevoeiro',           desc:'Espera +50%, mas valor +40%.', nomeEn:'Fog', descEn:'+50% wait, +40% value.',           fx:{ espera:1.5, valor:1.4 } },
@@ -98,7 +98,7 @@ const EVENTOS = [
 ];
 
 /* ==========================================================================
-   CONQUISTAS — metas de longo prazo que dão Pérolas
+   CONQUISTAS: metas de longo prazo que dão Pérolas
    ========================================================================== */
 const CONQUISTAS_CATS = [
   { id:'pesca',     nome:'Pesca',                 nomeEn:'Fishing' },
@@ -158,7 +158,7 @@ const CONQUISTAS = [
 ];
 
 /* ==========================================================================
-   LEGADO — melhorias permanentes compradas com Pérolas
+   LEGADO: melhorias permanentes compradas com Pérolas
    ========================================================================== */
 const LEGADO = [
   { id:'tempo',    max:4, custo:[3,5,7,9],       efeito:15,   icone:'ampulheta', nome:'Maré Longa',       nomeEn:'Long Tide',        desc:'+{v}s em cada sessão de pesca.',                  descEn:'+{v}s in each fishing session.' },

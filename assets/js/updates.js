@@ -1,7 +1,7 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — updates.js
+   Pesca Lendária: updates.js
    Versão atual e histórico de novidades (PT/EN).
    Carregado depois de data.js.
    ========================================================================== */

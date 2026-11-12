@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <img src="assets/img/screenshot-surface.png" alt="Pesca Lendária — Superfície" width="260">
-  <img src="assets/img/screenshot-abyss.png" alt="Pesca Lendária — Mar Profundo" width="260">
+  <img src="assets/img/screenshot-surface.png" alt="Pesca Lendária: Superfície" width="260">
+  <img src="assets/img/screenshot-abyss.png" alt="Pesca Lendária: Mar Profundo" width="260">
 </p>
 
 <p align="center">
@@ -28,16 +28,16 @@
 
 ## Funcionalidades
 
-- **180 segundos a cada 12 horas** — o tempo só desconta com o separador visível.
-- **45 espécies e 7 raridades** — 30 de superfície e 15 abissais, com nomes propositadamente parvos.
+- **180 segundos a cada 12 horas**: o tempo só desconta com o separador visível.
+- **45 espécies e 7 raridades**: 30 de superfície e 15 abissais, com nomes propositadamente parvos.
 - **Dois biomas**: Superfície e **Mar Profundo**, com cenário, fundo de página, botões próprios e transição de água com peixes, medusas, rochas, colinas e farol.
-- **Chefe, evento e missão diários** — o chefe abissal aparece a cada 4 dias e dá bónus ×6.
-- **Livro de Pesca** — completa raridades para ganhar bónus permanentes de valor.
+- **Chefe, evento e missão diários**: o chefe abissal aparece a cada 4 dias e dá bónus ×6.
+- **Livro de Pesca**: completa raridades para ganhar bónus permanentes de valor.
 - **5 upgrades** (Cana, Isco, Barco, Pescador e Geleira) e **prestígio** com estrelas permanentes.
-- **Legado** — 37 conquistas dão **Pérolas** para 9 melhorias permanentes.
-- **Pescadores offline** — a equipa continua a render até 24 horas (ou mais, com Legado).
-- **PT / EN** — deteta o idioma do browser e permite trocar no cabeçalho.
-- **Pixel art 100% desenhada em código** — peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon; as capturas em `assets/img/` são só para o README.
+- **Legado**: 37 conquistas dão **Pérolas** para 9 melhorias permanentes.
+- **Pescadores offline**: a equipa continua a render até 24 horas (ou mais, com Legado).
+- **PT / EN**: deteta o idioma do browser e permite trocar no cabeçalho.
+- **Pixel art 100% desenhada em código**: peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon; as capturas em `assets/img/` são só para o README.
 
 ## Jogar
 
@@ -256,6 +256,6 @@ Em qualquer um dos casos, `ads.txt` tem de continuar na raiz do domínio.
 
 ## Contacto
 
-Feito por **Gabriel Maria** — [github.com/gabrielmaria](https://github.com/gabrielmaria).
+Feito por **Gabriel Maria**: [github.com/gabrielmaria](https://github.com/gabrielmaria).
 
 Dúvidas, bugs ou ideias? Abre uma issue no repositório.

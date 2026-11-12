@@ -1,7 +1,7 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — main.js
+   Pesca Lendária: main.js
    Arranque do jogo, eventos globais e loop de integração.
    Carregado por último; chama iniciar().
    ========================================================================== */

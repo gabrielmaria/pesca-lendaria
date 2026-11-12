@@ -1,12 +1,12 @@
 "use strict";
 
 /* ==========================================================================
-   Pesca Lendária — config.js
+   Pesca Lendária: config.js
    Configuração, textos PT/EN, anúncios e analytics.
    Carregado primeiro.
    ========================================================================== */
 /* ==========================================================================
-   1) CONFIG — TODOS OS NÚMEROS DE EQUILÍBRIO (ajusta aqui)
+   1) CONFIG: TODOS OS NÚMEROS DE EQUILÍBRIO (ajusta aqui)
    ========================================================================== */
 const CONFIG = {
   /* --- Tempo de jogo --- */
@@ -97,7 +97,7 @@ const CONFIG = {
 };
 
 /* ==========================================================================
-   1.b) ANÚNCIOS — GameDistribution (rewarded)
+   1.b) ANÚNCIOS: GameDistribution (rewarded)
    --------------------------------------------------------------------------
    COMO LIGAR:
    1. Cria conta em https://gamedistribution.com e regista o jogo.
@@ -122,7 +122,7 @@ const ADS = {
 };
 
 /* ==========================================================================
-   1.c) ANALYTICS (opcional) — visitas e origens
+   1.c) ANALYTICS (opcional): visitas e origens
    --------------------------------------------------------------------------
    Recomendado: GoatCounter (grátis, sem cookies, dashboard simples).
    1. Cria conta em https://www.goatcounter.com e adiciona o site.
@@ -205,7 +205,7 @@ const TEXTOS = {
     bonusChefeAbismo: "BÓNUS ×6",
     bonusChefeN: "BÓNUS ×{n}",
     missaoFeita: "Feita +{v}",
-    upgradesDica: "Compras rápidas — não gastam tempo de pesca.",
+    upgradesDica: "Compras rápidas: não gastam tempo de pesca.",
     epocaNome: "Nova Época",
     epocaDesc: "Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo.",
     epocaLabel: "Época",
@@ -371,7 +371,7 @@ const TEXTOS = {
     bonusChefeAbismo: "×6 BONUS",
     bonusChefeN: "×{n} BONUS",
     missaoFeita: "Done +{v}",
-    upgradesDica: "Quick buys — they do not use fishing time.",
+    upgradesDica: "Quick buys: they do not use fishing time.",
     epocaNome: "New Season",
     epocaDesc: "You reset coins and upgrades and earn permanent stars (+8% value each). Your Book, streak and day stay. Season 3 opens the Deep Sea.",
     epocaLabel: "Season",

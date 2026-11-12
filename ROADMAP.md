@@ -1,4 +1,4 @@
-# ROADMAP — Pesca Lendária
+# ROADMAP: Pesca Lendária
 
 > Nota de ideias para não perder o fio. O jogo fica **congelado por agora**; isto é o plano para expansões futuras, não uma promessa de datas.
 
@@ -8,9 +8,9 @@
 
 Cada camada nova deve trazer:
 
-- 10–15 peixes novos
+- 10-15 peixes novos
 - 1 raridade nova
-- 1–2 iscas próprias
+- 1-2 iscas próprias
 - 1 chefe da zona
 - cenário, fundo da página e botões com paleta própria
 - **1 mecânica simples e diferente** (não só multiplicadores maiores)
@@ -21,7 +21,7 @@ Cada camada nova deve trazer:
 | **Fontes Hidrotermais** | Calor: a barra acelera, mas os peixes valem mais | Negro, laranja e vapor |
 | **Inferno** | Fumo/cinza: eventos tapam partes da zona; iscas limpam | Vermelho, brasas e fumo |
 
-Ideia de desbloqueio: seguir a lógica atual — uma camada nova abre com época/livro da camada anterior completo, para não atropelar quem ainda está a começar.
+Ideia de desbloqueio: seguir a lógica atual, uma camada nova abre com época/livro da camada anterior completo, para não atropelar quem ainda está a começar.
 
 ## Regras dos nomes
 
@@ -37,7 +37,7 @@ Manter o nome parvo é parte da identidade do jogo.
   - Inferno: condomínio, recursos humanos, papelada eterna, fogo.
 - **PT-PT primeiro.** O inglês deve ser adaptado, não traduzido à letra.
 - Nomes curtos, com sonoridade engraçada e que caibam no cartão do livro.
-- **Nunca mudar os `id` dos peixes** — o `id` é a chave do save; o nome visível pode mudar.
+- **Nunca mudar os `id` dos peixes**: o `id` é a chave do save; o nome visível pode mudar.
 - Exceções assumidas: **Kraken**, **Cetus** e **Dragão** são criaturas míticas, não espécies reais.
 - Resolvido: **“Golo Apressado”** passou a **“Pargo Apressado”** (EN “Hasty Porgy”), mantendo o `id` `golo_apressado` para não quebrar saves.
 
@@ -56,7 +56,7 @@ Ainda por decidir; não é obrigatório implementar tudo.
 ## Checklist para adicionar uma camada
 
 - [ ] Definir o tema e a mecânica da camada
-- [ ] Adicionar 10–15 peixes em `assets/js/data.js` (PT-PT + EN)
+- [ ] Adicionar 10-15 peixes em `assets/js/data.js` (PT-PT + EN)
 - [ ] Adicionar raridade nova e cor em `styles.css` / `data.js`
 - [ ] Adicionar iscas e chefe da zona
 - [ ] Criar cenário, fundo da página e tema dos botões
