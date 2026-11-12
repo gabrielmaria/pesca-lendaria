@@ -23,6 +23,7 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
     │   ├── styles.css      # todo o CSS do jogo
     │   └── legal.css       # CSS partilhado por sobre/privacidade
     ├── img/
+    │   ├── logo.png
     │   ├── favicon-32.png
     │   ├── favicon-64.png
     │   └── apple-touch-icon.png
