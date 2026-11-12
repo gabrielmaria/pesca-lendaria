@@ -1,9 +1,81 @@
-# 🎣 Pesca Lendária — Pixel Edition
+<p align="center">
+  <img src="assets/img/logo.png" alt="Pesca Lendária" width="88">
+</p>
 
-Tycoon de pesca para browser com uma regra central: **só podes pescar 180 segundos a cada 12 horas** (duas sessões por dia).
+<h1 align="center">Pesca Lendária</h1>
 
-Site estático **sem build**: HTML, CSS e JavaScript puro, sem frameworks ou bibliotecas. O jogo não usa imagens externas; o único asset estático é o favicon em `assets/img/`. Os ficheiros de estilos e lógica vivem em `assets/`; o `index.html` é só a estrutura da interface.
-Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pixel em `<canvas>` pelo próprio código** — peixes, chefe do dia, farol, morros, pescador, ícones e eventos. Não há um único emoji na interface.
+<p align="center">
+  <strong>Tycoon de pesca pixel art. 180 segundos a cada 12 horas.</strong>
+</p>
+
+<p align="center">
+  <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
+  <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
+  <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
+  <img alt="Versão 1.5.0" src="https://img.shields.io/badge/vers%C3%A3o-1.5.0-0e7f8c?style=flat-square">
+</p>
+
+<p align="center">
+  <img src="assets/img/screenshot-surface.png" alt="Pesca Lendária — Superfície" width="260">
+  <img src="assets/img/screenshot-abyss.png" alt="Pesca Lendária — Mar Profundo" width="260">
+</p>
+
+<p align="center">
+  <sub>Superfície · Mar Profundo</sub>
+</p>
+
+> Um jogo de browser feito para ser um ritual curto: entras, pescas durante 3 minutos, fechas e voltas 12 horas depois. Sem conta, sem backend e sem pressa.
+
+## Funcionalidades
+
+- **180 segundos a cada 12 horas** — o tempo só desconta com o separador visível.
+- **45 espécies e 7 raridades** — 30 de superfície e 15 abissais, com nomes propositadamente parvos.
+- **Dois biomas**: Superfície e **Mar Profundo**, com cenário, fundo de página e botões próprios.
+- **Chefe, evento e missão diários** — o chefe abissal aparece a cada 4 dias e dá bónus ×6.
+- **Livro de Pesca** — completa raridades para ganhar bónus permanentes de valor.
+- **5 upgrades** (Cana, Isco, Barco, Pescador e Geleira) e **prestígio** com estrelas permanentes.
+- **Legado** — 37 conquistas dão **Pérolas** para 9 melhorias permanentes.
+- **Pescadores offline** — a equipa continua a render até 24 horas (ou mais, com Legado).
+- **PT / EN** — deteta o idioma do browser e permite trocar no cabeçalho.
+- **Pixel art 100% desenhada em código** — peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon; as capturas em `assets/img/` são só para o README.
+
+## Jogar
+
+O projeto é estático. Não há build, `npm install` nem bundler.
+
+```bash
+python3 -m http.server 8080
+# abre http://localhost:8080
+```
+
+Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Publicar](#publicar)).
+
+## O ciclo
+
+1. Escolhes o isco e carregas em **LANÇAR**.
+2. Esperas pela mordida e tocas quando o marcador estiver na zona verde.
+3. Um acerto **perfeito** dá +50% e sobe o combo; falhar zera.
+4. Gastas as moedas em upgrades, completas o livro e, aos 30 níveis, podes prestigiar.
+5. Na Época 3 abre o **Mar Profundo**; a partir daí a coleção e o Legado continuam a crescer.
+
+## Progressão
+
+| Sistema | O que faz |
+|---|---|
+| **Upgrades** | Cana (espera/zona), Isco (raridade), Barco (valor), Pescador (offline) e Geleira (Raro+). |
+| **Livro** | Cada raridade completa dá +5% de valor permanente; há um livro de superfície e outro abissal. |
+| **Prestígio** | Aos 30 níveis podes recomeçar upgrades por estrelas permanentes (+8% de valor cada). |
+| **Mar Profundo** | Modo de pesca separado, raridade Abissal (×5000), iscas Abissal/Relíquia e chefe abissal. |
+| **Legado** | Conquistas dão Pérolas; gastas em tempo de sessão, sorte, offline, anúncios, valor, combo e mais. |
+
+## Capturas
+
+<details>
+<summary>Ver a captura da versão inicial (10/11/2026)</summary>
+<p align="center">
+  <img src="assets/img/screenshot-2026-11-10.png" alt="Captura inicial do Pesca Lendária" width="320">
+</p>
+</details>
 
 ## Estrutura do projeto
 
@@ -26,7 +98,10 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
     │   ├── logo.png
     │   ├── favicon-32.png
     │   ├── favicon-64.png
-    │   └── apple-touch-icon.png
+    │   ├── apple-touch-icon.png
+    │   ├── screenshot-surface.png
+    │   ├── screenshot-abyss.png
+    │   └── screenshot-2026-11-10.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
         ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS, CONQUISTAS, LEGADO
@@ -38,64 +113,21 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
 
 Regras de organização:
 
-- **Raiz = apenas pontos de entrada e ficheiros de plataforma.** `ads.txt` e `vercel.json` têm de estar na raiz; as páginas legais ficam na raiz para os URLs públicos não mudarem.
-- **Assets em `assets/`**, separados por tipo (`css/`, `js/`, `img/`). Não há passo de build: o browser carrega os ficheiros tal como estão.
-- **Ordem de carregamento dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `updates.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
-- **Configuração primeiro, conteúdo depois.** Para equilibrar o jogo mexe em `assets/js/config.js`; para trocar peixes/eventos mexe em `assets/js/data.js`; para desenhar sprites em `assets/js/sprites.js`.
-- **Páginas legais** usam `assets/css/legal.css`; não dupliques estilos entre elas.
-- **Planeamento**: `ROADMAP.md` guarda as camadas futuras, regras de nomes e checklist de implementação.
+- **Raiz = pontos de entrada e ficheiros de plataforma.** `ads.txt` e `vercel.json` têm de ficar na raiz; as páginas legais também, para os URLs públicos não mudarem.
+- **Assets em `assets/`**, separados por tipo (`css/`, `js/`, `img/`). O browser carrega tudo tal como está.
+- **Ordem dos scripts** (clássicos, partilham o mesmo escopo global): `config.js` → `data.js` → `updates.js` → `sprites.js` → `game.js` → `main.js`. O `main.js` chama `iniciar()` no fim.
+- **Configuração primeiro, conteúdo depois**: equilíbrio em `config.js`; peixes/eventos/conquistas em `data.js`; sprites em `sprites.js`.
+- **Planeamento** em [ROADMAP.md](ROADMAP.md).
 
-## Idiomas (PT / EN)
+## Configuração e equilíbrio
 
-O jogo deteta o idioma do browser (português → PT, resto → EN) e tem um botão **EN/PT** no cabeçalho. A escolha fica guardada.
+A economia foi pensada para ~3 semanas de jogo até maximizar os 5 upgrades. Os valores base dos peixes são planos por raridade; quem escala é o multiplicador de raridade (1× a 5000×), os eventos e o combo.
 
-Para forçar num link de divulgação: `?lang=en` ou `?lang=pt`.
-
-## Novidades (changelog)
-
-O histórico vive em `assets/js/updates.js` (`APP_VERSION` + `ATUALIZACOES`). O jogo mostra o modal **uma vez por versão** e tem o link **Novidades** no rodapé. Para anunciar uma alteração:
-
-1. Acrescenta uma entrada nova no início de `ATUALIZACOES` (PT e EN).
-2. Sobe `APP_VERSION`.
-3. Faz deploy. Quem já tinha visto a versão anterior recebe o aviso automaticamente.
-
-## Como jogar
-
-```bash
-python3 -m http.server 8080
-# abre http://localhost:8080
-```
-
-- **LANÇAR** → espera → **MORDE!** → toca na zona verde.
-- **Perfeito** dá +50% e sobe o **combo** (até ×2,2); falhar zera. A barra **acelera** com o combo.
-- Cada peixe tem **peso aleatório** (0,85×–1,35× no valor).
-- **Escolhe o isco antes de lançar**: Comum (equilíbrio), Rápida (−35% espera, −15% valor), Funda (+50% raros, +35% espera) e, a partir da Época 3, **Abissal** e **Relíquia**.
-- **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares. A cada 4 dias o chefe é **abissal** (×6).
-- **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
-- **Livro de Pesca**: 30 espécies de superfície; cada raridade completa dá **+5% de valor permanente** (até +30%).
-- **Mar Profundo (endgame)**: abre na **Época 3**. No topo da pesca escolhes **Superfície** ou **Mar Profundo**; no fundo o cenário, o fundo da página e os controlos mudam (água escura, plâncton, bolhas, botões em tons abissais) e só lá aparecem as **15 espécies abissais**. Tem a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Escolher uma isca abissal desce automaticamente. Completar a raridade abissal dá mais **+5%** (total +35%).
-- **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro, o Mar Profundo e o streak ficam.
-- **Legado (conquistas + Pérolas)**: 37 conquistas de longo prazo dão **Pérolas**; gastas em 9 melhorias permanentes (tempo de sessão, sorte abissal, offline, anúncios, valor, combo, chefe, bónus de livro e nível inicial na época). Cada chefe apanhado também dá 1 Pérola (2 se for abissal).
-- **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.
-- Pescadores rendem moedas offline (até 24h). A sessão renova a cada **12h**; o evento, a missão e o chefe são **diários**. O tempo só desconta com o separador visível (Page Visibility API).
-
-## Equilíbrio
-
-Economia simulada: maxar os 5 upgrades leva **~3 semanas** de jogo (duas sessões de 3 minutos por dia). A primeira sessão dá poucos níveis.
-
-Princípios:
-
-- Valores base dos peixes **planos por raridade** (8–44 na superfície, 42–72 no Mar Profundo); quem escala é o multiplicador de raridade (1× a 5000×).
-- Custos a crescer **×2 por nível** (base 300–1000 → 4,1M no total).
-- Isco com multiplicadores **por escalão** (Incomum+ → Mítico, mais Abissal).
-- Pescador com rendimento quadrático suave e cap offline.
-- Chefe diário e bónus de coleção adicionam receita, mas exigem jogar.
-
-Tudo ajustável no `CONFIG` em `assets/js/config.js`:
+Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 
 | Quero… | Variável |
 |---|---|
-| Tempo diário | `DIA_SEGUNDOS` |
+| Tempo por sessão | `DIA_SEGUNDOS` |
 | Ritmo do ciclo | `ESPERA_MIN_MS`, `ESPERA_MAX_MS`, `BARRA_MS` |
 | Dificuldade do timing | `ZONA_BASE`, `JANELA_PERFEITA` |
 | Combo | `COMBO_MAX`, `COMBO_PASSO`, `BARRA_ACELERA_COMBO` |
@@ -105,27 +137,48 @@ Tudo ajustável no `CONFIG` em `assets/js/config.js`:
 | Chefe do dia | `CHEFE_*` |
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
-| Conquistas / Legado | `CONQUISTAS`, `LEGADO` em `assets/js/data.js` |
 | Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
 
-## Trocar o tema
+Conteúdo (peixes, eventos, conquistas e Legado) está em `assets/js/data.js`. Para trocar o tema:
 
-- **Peixes:** array `PEIXES` em `assets/js/data.js` (`id, nome, emoji, r, base`). O emoji é só a "assinatura" que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 peixe-balão, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
-- **Eventos:** `EVENTOS` em `assets/js/data.js` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)` em `assets/js/sprites.js` (adiciona um `case` para eventos novos).
-- **Upgrades:** `UPGRADES_DADOS` em `assets/js/data.js` + `SPRITE_UP` + `efeitoTexto()` em `assets/js/game.js`.
+- **Peixes:** `PEIXES` (`id, nome, emoji, r, base`). O emoji é a assinatura que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 peixe-balão, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Eventos:** `EVENTOS` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)`.
+- **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` + `efeitoTexto()`.
 - **Cores:** variáveis CSS em `:root`, em `assets/css/styles.css`.
 
-## Analytics (visitas e origens)
+## Desenvolvimento
 
-O jogo usa **GoatCounter** através de um **proxy first-party no Vercel** (`vercel.json`), para reduzir o bloqueio por adblockers:
+### Save e testes
+
+O progresso fica em `localStorage`, na chave `pescaLendaria.v2`. Não há botão para apagar progresso (para evitar acidentes). Para testar do zero:
+
+1. DevTools → Application → Local Storage → apagar `pescaLendaria.v2`.
+2. Ou abrir numa janela anónima.
+
+### Novidades / changelog
+
+O histórico está em `assets/js/updates.js` (`APP_VERSION` + `ATUALIZACOES`). O jogo mostra o modal **uma vez por versão** e tem o link **Novidades** no rodapé. Para anunciar uma alteração:
+
+1. Acrescenta uma entrada nova no topo de `ATUALIZACOES` (PT e EN).
+2. Sobe `APP_VERSION`.
+3. Faz deploy. Quem já tinha visto a versão anterior recebe o aviso.
+
+### Idioma
+
+O jogo deteta o idioma do browser (português → PT, resto → EN) e tem um botão **EN/PT** no cabeçalho. A escolha fica guardada. Para forçar num link: `?lang=en` ou `?lang=pt`.
+
+<details>
+<summary><strong>Analytics (GoatCounter / Vercel)</strong></summary>
+
+O jogo usa **GoatCounter** através de um proxy first-party no Vercel (`vercel.json`), para reduzir o bloqueio por adblockers:
 
 - `/count` → `https://pescalendaria.goatcounter.com/count`
 - `/count.js` → `https://gc.zgo.at/count.js`
 
-No topo de `assets/js/config.js`:
+Em `assets/js/config.js`:
 
 ```js
 const ANALYTICS = {
@@ -135,81 +188,74 @@ const ANALYTICS = {
   script: '/count.js',
   ga4: 'G-XXXXXXXXXX',
   painel: 'https://pescalendaria.goatcounter.com',
-  vercelAtivo: false
+  vercelAtivo: true
 };
 ```
 
-- **Dashboard GoatCounter:** <https://pescalendaria.goatcounter.com>
+- Dashboard: <https://pescalendaria.goatcounter.com>
 - Divulga com `?ref=reddit_incremental`; cada origem aparece como `origem/...`.
-- Abre o site com **`?dono`** para aparecer o botão **Ver estatísticas** no separador Upgrades.
-- O jogo envia eventos `captura`, `chefe`, `prestigio`, `partilha` e `anuncio`.
+- Abre o site com `?dono` para aparecer **Ver estatísticas** no separador Upgrades.
+- Eventos enviados: `captura`, `chefe`, `prestigio`, `partilha`, `anuncio`, `abisso`.
 
-### Vercel Web Analytics (first-party)
+**Vercel Web Analytics:** ativa no painel do Vercel (Project → Analytics) e mantém `vercelAtivo: true`. É servido do teu domínio, por isso sofre menos com adblockers.
 
-1. No painel do Vercel: **Project → Analytics → Enable Web Analytics**.
-2. No código, põe `vercelAtivo: true` em `ANALYTICS`.
-3. Faz deploy. O Vercel passa a mostrar **visitors, page views, páginas, referrers, países e dispositivos**.
+> Nenhum analytics JavaScript conta 100%. Para contagens server-side (incluindo quem bloqueia JS/analytics) só com logs de servidor ou CDN.
 
-O Vercel Analytics é servido do teu domínio (`/_vercel/insights/script.js`), por isso os adblockers têm muito mais dificuldade em bloqueá-lo. Compara os números com o GoatCounter: a diferença é, aproximadamente, a fatia que estava a ser perdida.
+</details>
 
-> Nem o Vercel nem o GoatCounter contam a 100%: são JavaScript. Para contagens server-side (incluindo quem bloqueia JS/analytics) só com logs de servidor ou CDN. O `plano` gratuito do Vercel tem limite mensal de eventos.
+<details>
+<summary><strong>Anúncios (AdSense / rewarded / GameDistribution)</strong></summary>
 
-## Nota para desenvolvimento
+Tudo configurado em `const ADS`, em `assets/js/config.js`.
 
-O jogo **não tem botão para apagar o progresso** (para os jogadores não perderem tudo por engano). Para testar do zero: DevTools → Application → Local Storage → apagar `pescaLendaria.v2`, ou usar uma janela anónima.
+### AdSense no site
 
-## Anúncios
+O publisher ID `ca-pub-5123386402594330` está no `index.html` e no `ads.txt`.
 
-O jogo suporta dois caminhos, configurados em `const ADS` em `assets/js/config.js`.
-
-### AdSense no teu site (recomendado para o Vercel)
-
-O publisher ID `ca-pub-5123386402594330` já está no `index.html` e no `ads.txt`.
-
-1. No AdSense cria **duas unidades** de 320×100 (uma para o jogo, outra para o fim do dia).
-2. Preenche os slots:
-   ```js
-   ADS.adsense.slotMain = '1234567890';
-   ADS.adsense.slotEnd  = '0987654321';
-   ```
+1. Cria duas unidades de 320×100 no AdSense.
+2. Preenche `ADS.adsense.slotMain` e `ADS.adsense.slotEnd`.
 3. Ativa a mensagem de consentimento RGPD no AdSense (**Privacy & messaging**) e faz deploy.
-4. Sem slots configurados só funcionam os **Auto ads** (se os ativares no AdSense); com slots, os dois espaços manuais enchem.
 
-O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Os slots ficam escondidos enquanto não houver IDs configurados.
+O jogo mostra um aviso de consentimento; só carrega anúncios depois de **Aceitar**. Sem slots configurados, só funcionam os Auto ads (se ativados).
 
 ### Rewarded (+60s)
 
-O botão "Ver anúncio: +60s" usa a **Ad Placement API / H5 Games Ads** do Google (a mesma conta AdSense), que é o formato permitido para recompensas:
+O botão “Ver anúncio: +60s” usa a **Ad Placement API / H5 Games Ads** (a mesma conta AdSense):
 
 - `adConfig({ preloadAdBreaks: 'on', sound: 'on' })`
 - `adBreak({ type: 'reward' })`
 - a recompensa só é dada com `breakStatus === 'viewed'`
 - o relógio de pesca pausa durante o anúncio
-- se a API não estiver habilitada na conta, o botão diz "anúncio indisponível" e **não dá tempo** (não há recompensa sem anúncio)
+- se a API não estiver disponível, o botão diz “anúncio indisponível” e **não dá tempo**
 - para testar sem rede: `ADS.rewarded = 'simulado'`
 
-Se a H5 Games Ads não estiver disponível na tua conta, a alternativa com rewarded real é um SDK de portal (GameDistribution/CrazyGames) ou uma rede de rewarded.
+### GameDistribution
 
-Páginas de apoio para a aprovação: `privacidade.html` e `sobre.html` (ligadas no rodapé).
-
-### GameDistribution (portal)
-
-Para publicar o jogo no portal da GameDistribution:
-
-```js
-ADS.modo = 'gamedistribution';
-```
-
-O SDK trata de rewarded e interstitials, mas **só faz sentido quando o jogo é servido no portal** (com o game ID associado). No teu domínio, usa AdSense.
+Para publicar no portal, muda `ADS.modo = 'gamedistribution'`. O SDK trata de rewarded e interstitials, mas só faz sentido quando o jogo é servido no portal com o game ID associado.
 
 ### Notas
 
-- O `#ad-banner` (320×100) continua reservado no fim do dia.
+- O `#ad-banner` (320×100) fica reservado no fim do dia.
 - O consentimento é guardado em `pescaLendariaConsent.v1`.
 - Sem consentimento não há pedidos ao Google.
-- Para rewarded no teu domínio seria preciso o **H5 Games Ads** (Ad Placement API) ou um SDK de portal.
 
-## Publicar (GitHub Pages)
+</details>
+
+## Publicar
+
+### GitHub Pages
 
 1. `git push`
 2. **Settings → Pages** → branch `main`, pasta `/ (root)`.
+
+### Vercel
+
+O `vercel.json` já tem os proxies `/count` e `/count.js`. Para ativar o Vercel Web Analytics, segue os passos no painel e mantém `vercelAtivo: true`.
+
+Em qualquer um dos casos, `ads.txt` tem de continuar na raiz do domínio.
+
+## Contacto
+
+Feito por **Gabriel Maria** — [github.com/gabrielmaria](https://github.com/gabrielmaria).
+
+Dúvidas, bugs ou ideias? Abre uma issue no repositório.
