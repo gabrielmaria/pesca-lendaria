@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.1" src="https://img.shields.io/badge/vers%C3%A3o-1.5.1-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.2" src="https://img.shields.io/badge/vers%C3%A3o-1.5.2-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
@@ -30,7 +30,7 @@
 
 - **180 segundos a cada 12 horas** — o tempo só desconta com o separador visível.
 - **45 espécies e 7 raridades** — 30 de superfície e 15 abissais, com nomes propositadamente parvos.
-- **Dois biomas**: Superfície e **Mar Profundo**, com cenário, fundo de página, botões próprios e transição de água ao trocar de ambiente.
+- **Dois biomas**: Superfície e **Mar Profundo**, com cenário, fundo de página, botões próprios e transição de água com peixes e chegada à superfície.
 - **Chefe, evento e missão diários** — o chefe abissal aparece a cada 4 dias e dá bónus ×6.
 - **Livro de Pesca** — completa raridades para ganhar bónus permanentes de valor.
 - **5 upgrades** (Cana, Isco, Barco, Pescador e Geleira) e **prestígio** com estrelas permanentes.

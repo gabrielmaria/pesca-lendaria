@@ -6,9 +6,23 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.1';
+const APP_VERSION = '1.5.2';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.2',
+    data: '12/11/2026',
+    titulo: 'Vida na transição',
+    tituloEn: 'Life in the transition',
+    itens: [
+      '5 peixes a nadar ao trocar de ambiente.',
+      'Árvores no fim da subida, como se estivesses a chegar à superfície.'
+    ],
+    itensEn: [
+      '5 fish swimming when switching environments.',
+      'Trees at the end of the ascent, as if you were arriving at the surface.'
+    ]
+  },
   {
     versao: '1.5.1',
     data: '12/11/2026',

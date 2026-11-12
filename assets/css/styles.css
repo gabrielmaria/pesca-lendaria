@@ -675,7 +675,7 @@ h1{
     repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 2px, transparent 2px 42px),
     linear-gradient(180deg, rgba(255,255,255,.06), transparent 40%);
 }
-.descida.ativa .descida-agua{animation:aguaSobe 1.15s linear both;}
+.descida.ativa .descida-agua{animation:aguaSobe 1.35s linear both;}
 .descida.volta .descida-agua{animation-name:aguaDesce;}
 @keyframes aguaSobe{from{transform:translateY(18%);}to{transform:translateY(-18%);}}
 @keyframes aguaDesce{from{transform:translateY(-18%);}to{transform:translateY(18%);}}
@@ -688,7 +688,7 @@ h1{
   background-size:64px 96px, 101px 137px, 43px 71px;
   background-position:0 0, 22px 40px, 11px 17px;
 }
-.descida.ativa .descida-bolhas{animation:bolhasSobem 1.15s linear both;}
+.descida.ativa .descida-bolhas{animation:bolhasSobem 1.35s linear both;}
 .descida.volta .descida-bolhas{animation-name:bolhasDescem;}
 @keyframes bolhasSobem{
   from{background-position:0 0, 22px 40px, 11px 17px;}
@@ -702,8 +702,42 @@ h1{
   position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,4,10,.65) 100%);
 }
+.descida-peixes{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
+.descida-peixe{
+  position:absolute;left:0;display:block;opacity:.9;
+  animation:peixeAtravessa var(--dur,1.1s) linear both;
+  animation-delay:var(--delay,0s);
+}
+.descida-peixe canvas{width:100% !important;height:auto !important;display:block;}
+@keyframes peixeAtravessa{
+  from{transform:translate(-20vw,0) scaleX(var(--dir,1));}
+  to{transform:translate(120vw,var(--dy,0px)) scaleX(var(--dir,1));}
+}
+.descida.volta .descida-peixe{opacity:.82;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35));}
+.descida-arvores{
+  position:absolute;left:-2%;right:-2%;bottom:-10px;height:150px;z-index:1;
+  opacity:0;transform:translateY(46px);pointer-events:none;
+  transition:opacity .3s steps(3), transform .4s steps(6);
+}
+.descida.volta.chegada .descida-arvores{opacity:1;transform:translateY(0);}
+.descida-arvores::before{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:34px;
+  background:repeating-linear-gradient(90deg,#0e3b33 0 18px,#12473c 18px 36px);
+  border-top:4px solid #1d5a4a;
+}
+.descida-arvores span{
+  position:absolute;bottom:28px;display:block;
+  background:#145243;
+  clip-path:polygon(50% 0,56% 16%,52% 16%,64% 34%,58% 34%,72% 55%,64% 55%,80% 78%,58% 78%,58% 100%,42% 100%,42% 78%,20% 78%,36% 55%,28% 55%,42% 34%,36% 34%,48% 16%,44% 16%);
+  box-shadow:inset 0 0 0 2px rgba(46,230,214,.08);
+}
+.descida-arvores span::after{
+  content:'';position:absolute;left:50%;bottom:-16px;width:4px;height:18px;
+  transform:translateX(-50%);background:#3b2a1e;
+}
 .descida-texto{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:2;
   font-family:'Silkscreen',var(--font);font-size:14px;font-weight:900;
   text-transform:uppercase;letter-spacing:1px;text-align:center;
   color:#dffcff;text-shadow:2px 2px 0 #041820, 0 0 12px rgba(46,230,214,.6);

@@ -1516,6 +1516,7 @@ function renderModo() {
 }
 
 let descidaTimer = null;
+let chegadaTimer = null;
 function animarDescida(m, comTexto) {
   const el = $('descida');
   if (!el) return;
@@ -1525,16 +1526,66 @@ function animarDescida(m, comTexto) {
       ? t(m === 'abisso' ? 'modoAbismoOn' : 'modoSuperficieOn')
       : '';
   }
+
+  // 5 peixes a atravessar: abissais a descer, de superfície a subir.
+  const peixes = $('descidaPeixes');
+  if (peixes) {
+    peixes.innerHTML = '';
+    const lista = PEIXES.filter(function (p) {
+      return m === 'abisso' ? p.r === 6 : p.r < 6;
+    });
+    for (let i = 0; i < 5; i++) {
+      const p = lista[Math.floor(Math.random() * lista.length)];
+      const f = document.createElement('span');
+      f.className = 'descida-peixe';
+      f.style.top = (8 + Math.random() * 74) + '%';
+      f.style.width = (40 + Math.random() * 30) + 'px';
+      f.style.setProperty('--dur', (0.9 + Math.random() * 0.45).toFixed(2) + 's');
+      f.style.setProperty('--delay', (Math.random() * 0.3).toFixed(2) + 's');
+      f.style.setProperty('--dy', Math.round(Math.random() * 40 - 20) + 'px');
+      f.style.setProperty('--dir', Math.random() < 0.5 ? -1 : 1);
+      f.appendChild(spritePeixe(p, 2));
+      peixes.appendChild(f);
+    }
+  }
+
+  // Ao subir, revela uma linha de árvores no fim da animação.
+  const arvores = $('descidaArvores');
+  if (arvores) {
+    arvores.innerHTML = '';
+    if (m === 'superficie') {
+      for (let i = 0; i < 9; i++) {
+        const a = document.createElement('span');
+        a.style.left = (i * 10.5 + 2 + (Math.random() * 3 - 1.5)) + '%';
+        a.style.width = (26 + Math.random() * 20) + 'px';
+        a.style.height = (46 + Math.random() * 44) + 'px';
+        a.style.background = i % 2 ? '#145243' : '#0f463a';
+        arvores.appendChild(a);
+      }
+    }
+  }
+
   el.classList.toggle('volta', m === 'superficie');
-  el.classList.remove('ativa');
+  el.classList.remove('ativa', 'chegada');
+  if (chegadaTimer) { clearTimeout(chegadaTimer); chegadaTimer = null; }
   void el.offsetWidth;
   el.classList.add('ativa');
+  if (m === 'superficie') {
+    chegadaTimer = setTimeout(function () {
+      chegadaTimer = null;
+      el.classList.add('chegada');
+    }, 480);
+  }
+
   if (descidaTimer) clearTimeout(descidaTimer);
   descidaTimer = setTimeout(function () {
     descidaTimer = null;
-    el.classList.remove('ativa');
+    el.classList.remove('ativa', 'chegada');
+    if (chegadaTimer) { clearTimeout(chegadaTimer); chegadaTimer = null; }
     if (txt) txt.textContent = '';
-  }, 1200);
+    if (peixes) peixes.innerHTML = '';
+    if (arvores) arvores.innerHTML = '';
+  }, 1350);
 }
 
 function aplicarModo(m, aviso) {
