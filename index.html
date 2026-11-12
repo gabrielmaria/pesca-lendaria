@@ -47,6 +47,7 @@
   --r3:#7a3fbf;
   --r4:#a9761a;
   --r5:#b02a2a;
+  --r6:#0e7f8c;
   --font: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -422,6 +423,8 @@ h1{
 .fish-cell.unknown{background:linear-gradient(180deg,#b9a887,#a5916f);box-shadow:inset -2px -2px 0 #8f7d5c, inset 2px 2px 0 #d3c3a2;}
 .fish-cell.unknown .fc-emoji{font-size:26px;font-weight:900;color:#5a4a33;}
 .fish-cell.unknown .fc-name{color:#4a3a26;}
+.fish-cell.abissal{background:linear-gradient(180deg,#d9f2f2,#b6dde2);box-shadow:inset -2px -2px 0 #8bbfc6, inset 2px 2px 0 #f2ffff;}
+.fish-cell.abissal.unknown{background:linear-gradient(180deg,#8fb4b8,#7a9ea2);box-shadow:inset -2px -2px 0 #62868a, inset 2px 2px 0 #a8c9cc;}
 
 /* ---------- Modais ---------- */
 .modal{
@@ -577,9 +580,9 @@ a.btn{color:var(--ink);}
 @keyframes respira{50%{transform:translateY(-2px);}}
 
 /* ---------- Iscas ---------- */
-.iscas{display:flex;gap:5px;margin-top:9px;}
+.iscas{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;}
 .isca{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  flex:1 1 30%;min-width:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   padding:6px 2px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.3px;
   background:linear-gradient(180deg,#e6d6b4,#cbb489);
   border:3px solid var(--wood-dd);color:#4a3324;
@@ -628,6 +631,22 @@ a.btn{color:var(--ink);}
   margin:0 0 8px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;
   color:var(--paper);text-shadow:2px 2px 0 var(--wood-dd);
 }
+/* Separador Superfície / Mar Profundo */
+.book-switch{display:flex;gap:5px;margin:0 0 9px;}
+.book-tab{
+  flex:1;padding:6px 4px;font-family:inherit;cursor:pointer;
+  font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;
+  background:linear-gradient(180deg,#e6d6b4,#cbb489);
+  border:3px solid var(--wood-dd);color:#4a3324;
+  box-shadow:0 3px 0 rgba(43,27,18,.4);
+}
+.book-tab.active{
+  background:linear-gradient(180deg,#fff6e2,#ecd9b4);
+  border-color:var(--green);
+  box-shadow:inset 0 0 0 2px #b9e78f, 0 3px 0 rgba(43,27,18,.4);
+}
+.book-tab.locked{opacity:.65;filter:grayscale(.35);}
+.book-tab:active{transform:translateY(2px);box-shadow:none;}
 
 /* ---------- Amanhã (fim do dia) ---------- */
 .amanha{
@@ -928,6 +947,8 @@ body{
         <button class="isca ativa" data-isca="comum"><span class="spr-slot" data-sprite="isco"></span><span data-i18n="iscaComum">Comum</span><small data-i18n="iscaComumSub">equilíbrio</small></button>
         <button class="isca" data-isca="rapida"><span class="spr-slot" data-sprite="raio"></span><span data-i18n="iscaRapida">Rápida</span><small data-i18n="iscaRapidaSub">-35% espera · -15% valor</small></button>
         <button class="isca" data-isca="funda"><span class="spr-slot" data-sprite="estrela"></span><span data-i18n="iscaFunda">Funda</span><small data-i18n="iscaFundaSub">+50% raros · +35% espera</small></button>
+        <button class="isca hidden" data-isca="abissal"><span class="spr-slot" data-sprite="abismo"></span><span data-i18n="iscaAbissal">Abissal</span><small data-i18n="iscaAbissalSub">abissais ×30 · valor -10%</small></button>
+        <button class="isca hidden" data-isca="reliquia"><span class="spr-slot" data-sprite="reliquia"></span><span data-i18n="iscaReliquia">Relíquia</span><small data-i18n="iscaReliquiaSub">abissais ×12 · +60% valor</small></button>
       </div>
 
       <button class="big-btn" id="castBtn">LANÇAR</button>
@@ -949,7 +970,7 @@ body{
             <div class="lvl" id="epocaInfo">Época 1 · 0 estrelas</div>
           </div>
         </div>
-        <div class="up-desc" data-i18n="epocaDesc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.</div>
+        <div class="up-desc" data-i18n="epocaDesc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo.</div>
         <div class="up-eff" id="epocaProg">Níveis 0/30</div>
         <button class="btn gold" id="btnEpoca" disabled data-i18n="prestigiar">Prestigiar</button>
       </div>
@@ -965,6 +986,10 @@ body{
       <div class="book-top">
         <span id="bookCount">0/30 descobertas</span>
         <span class="muted" id="bookHint" data-i18n="livroDica">? = por descobrir</span>
+      </div>
+      <div class="book-switch">
+        <button class="book-tab active" id="bookTabSuperficie" data-livro="superficie">Superfície</button>
+        <button class="book-tab" id="bookTabAbismo" data-livro="abisso">Mar Profundo</button>
       </div>
       <div class="book-bonus" id="bookBonus">Bónus de coleção: +0%</div>
       <div class="seals" id="bookSeals"></div>
@@ -1320,7 +1345,8 @@ function spritePeixe(f, escala) {
   desenharForma(formaDe(f), g, p, hashStr(f.id));
   contorno(g, p.contorno);
   const cv = gridParaCanvas(g, escala);
-  if (f.r >= 4) cv.style.filter = 'drop-shadow(0 0 6px rgba(255,210,90,.85))';
+  if (f.r >= 6) cv.style.filter = 'drop-shadow(0 0 7px rgba(46,230,214,.95))';
+  else if (f.r >= 4) cv.style.filter = 'drop-shadow(0 0 6px rgba(255,210,90,.85))';
   return cv;
 }
 
@@ -1448,6 +1474,21 @@ function spriteIcone(nome, escala) {
       triPx(g, 1, 8, 8, 5, 8, 11, '#ffe08a');
       triPx(g, 15, 8, 8, 5, 8, 11, '#ffe08a');
       rectPx(g, 7, 7, 2, 2, '#fff6c0');
+      break;
+    case 'abismo':
+      elipsePx(g, 8, 8, 6.4, 6.4, '#0e7f8c');
+      elipsePx(g, 8, 8, 4.8, 4.8, '#0b3a55');
+      elipsePx(g, 8, 8, 3.2, 3.2, '#0e7f8c');
+      elipsePx(g, 8, 8, 1.6, 1.6, '#0b3a55');
+      px(g, 3, 3, '#7ff2e6'); px(g, 12, 2, '#7ff2e6'); px(g, 2, 12, '#7ff2e6');
+      break;
+    case 'reliquia':
+      rectPx(g, 7, 3, 2, 9, '#d8c07a');
+      rectPx(g, 4, 3, 2, 4, '#d8c07a');
+      rectPx(g, 10, 3, 2, 4, '#d8c07a');
+      rectPx(g, 4, 6, 8, 2, '#d8c07a');
+      rectPx(g, 5, 4, 1, 2, '#fff0b0');
+      triPx(g, 8, 14, 5, 11, 11, 11, '#b08a4a');
       break;
     case 'trofeu':
       rectPx(g, 4, 2, 8, 6, '#f2b632');
@@ -1762,11 +1803,20 @@ const CONFIG = {
   EPOCA_POR_NIVEL: 5,         // 1 estrela por cada 5 níveis
   EPOCA_ESTRELA: 0.08,        // +8% de valor permanente por estrela
 
+  /* --- Mar Profundo (endgame) --- */
+  ABISMO_EPOCA: 3,            // época a partir da qual o Mar Profundo abre
+  ABISMO_PESO: 0.10,          // peso base da raridade abissal (só depois de abrir)
+  ISCO_ABISSO: 0.30,          // upgrade Isco: multiplicador abissal por nível
+  CHEFE_BONUS_ABISSO: 6,      // recompensa do chefe abissal = valor normal x6
+  CHEFE_ABISMO_DIAS: 4,       // 1 em cada N dias o chefe é abissal
+
   /* --- Iscas (escolha antes de lançar) --- */
   ISCAS: {
     comum:  { nome: 'Comum',  espera: 1,    valor: 1,    raro: 1   },
     rapida: { nome: 'Rápida', espera: 0.65, valor: 0.85, raro: 1   },
-    funda:  { nome: 'Funda',  espera: 1.35, valor: 1,    raro: 1.5 }
+    funda:  { nome: 'Funda',  espera: 1.35, valor: 1,    raro: 1.5 },
+    abissal:  { nome: 'Abissal',  espera: 1.2, valor: 0.9, raro: 0.7, abisso: 30 },
+    reliquia: { nome: 'Relíquia', espera: 1.5, valor: 1.6, raro: 0.6, abisso: 12 }
   },
 
   /* --- Chefe do dia (gancho de regresso) --- */
@@ -1855,6 +1905,10 @@ const TEXTOS = {
     iscaRapidaSub: "-35% espera · -15% valor",
     iscaFunda: "Funda",
     iscaFundaSub: "+50% raros · +35% espera",
+    iscaAbissal: "Abissal",
+    iscaAbissalSub: "abissais ×30 · -10% valor",
+    iscaReliquia: "Relíquia",
+    iscaReliquiaSub: "abissais ×12 · +60% valor",
     lancar: "LANÇAR",
     esperar: "… A ESPERAR",
     agora: "AGORA!",
@@ -1868,20 +1922,27 @@ const TEXTOS = {
     chefeAparece1: "Aparece daqui a 1 peixe · bónus ×4",
     chefeApareceN: "Aparece daqui a {n} peixes · bónus ×4",
     chefeAVista: "Está à vista! Lança a cana · bónus ×4",
+    chefeAparece1Abismo: "Aparece daqui a 1 peixe · bónus ×6",
+    chefeApareceNAbismo: "Aparece daqui a {n} peixes · bónus ×6",
+    chefeAVistaAbismo: "Está à vista! Lança a cana · bónus ×6",
     chefeEscapou: "O chefe escapou… volta a tentar.",
     chefeApanhado: "Chefe do dia apanhado! Bónus ×4",
+    chefeApanhadoAbismo: "Chefe abissal apanhado! Bónus ×6",
     escapou: "Escapou!",
     chefeTituloCatch: "O chefe escapou!",
     tentaOutra: "Tenta outra vez",
     tentaOutraBreve: "Tenta outra vez daqui a pouco",
     novo: "NOVO!",
     chefeFlag: "CHEFE DO DIA",
+    chefeFlagAbismo: "CHEFE ABISSAL",
+    abissoFlag: "MAR PROFUNDO",
     perfeito: "PERFEITO +50%",
     bonusChefe: "BÓNUS ×4",
+    bonusChefeAbismo: "BÓNUS ×6",
     missaoFeita: "Feita +{v}",
     upgradesDica: "Compras rápidas — não gastam tempo de pesca.",
     epocaNome: "Nova Época",
-    epocaDesc: "Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam.",
+    epocaDesc: "Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo.",
     epocaLabel: "Época",
     estrela: "estrela",
     estrelas: "estrelas",
@@ -1898,9 +1959,16 @@ const TEXTOS = {
     consentTexto: "Usamos armazenamento local para guardar o jogo e, com o teu consentimento, anúncios e estatísticas.",
     consentAceitar: "Aceitar",
     consentEssenciais: "Só essenciais",
-    livroContagem: "{n}/30 descobertas",
+    livroContagem: "{n}/{t} descobertas",
     livroDica: "? = por descobrir",
     livroBonus: "Bónus de coleção: +{p}%",
+    livroSuperficie: "Superfície",
+    livroAbismo: "Mar Profundo",
+    livroAbismoBloqueado: "Mar Profundo · Época {e}",
+    livroDicaAbismo: "usa a isca Abissal para os encontrar",
+    abissoDesbloqueado: "Mar Profundo desbloqueado! Vê o novo livro.",
+    abissoBloqueado: "Desbloqueia na Época {e}.",
+    efeitoAbissal: "abissal ×{a}",
     offlineTitulo: "Equipa a trabalhar",
     offlineAntes: "Enquanto estiveste fora, os teus pescadores ganharam",
     offlineDepois: "moedas.",
@@ -1973,6 +2041,10 @@ const TEXTOS = {
     iscaRapidaSub: "-35% wait · -15% value",
     iscaFunda: "Deep",
     iscaFundaSub: "+50% rare · +35% wait",
+    iscaAbissal: "Abyssal",
+    iscaAbissalSub: "abyssal ×30 · -10% value",
+    iscaReliquia: "Relic",
+    iscaReliquiaSub: "abyssal ×12 · +60% value",
     lancar: "CAST",
     esperar: "… WAITING",
     agora: "NOW!",
@@ -1986,20 +2058,27 @@ const TEXTOS = {
     chefeAparece1: "Appears after 1 more fish · ×4 bonus",
     chefeApareceN: "Appears after {n} more fish · ×4 bonus",
     chefeAVista: "It is here! Cast your rod · ×4 bonus",
+    chefeAparece1Abismo: "Appears after 1 more fish · ×6 bonus",
+    chefeApareceNAbismo: "Appears after {n} more fish · ×6 bonus",
+    chefeAVistaAbismo: "It is here! Cast your rod · ×6 bonus",
     chefeEscapou: "The boss got away… try again.",
     chefeApanhado: "Daily boss caught! ×4 bonus",
+    chefeApanhadoAbismo: "Abyssal boss caught! ×6 bonus",
     escapou: "It got away!",
     chefeTituloCatch: "The boss got away!",
     tentaOutra: "Try again",
     tentaOutraBreve: "Try again in a moment",
     novo: "NEW!",
     chefeFlag: "DAILY BOSS",
+    chefeFlagAbismo: "ABYSSAL BOSS",
+    abissoFlag: "DEEP SEA",
     perfeito: "PERFECT +50%",
     bonusChefe: "×4 BONUS",
+    bonusChefeAbismo: "×6 BONUS",
     missaoFeita: "Done +{v}",
     upgradesDica: "Quick buys — they do not use fishing time.",
     epocaNome: "New Season",
-    epocaDesc: "You reset coins and upgrades and earn permanent stars (+8% value each). Your Book, streak and day stay.",
+    epocaDesc: "You reset coins and upgrades and earn permanent stars (+8% value each). Your Book, streak and day stay. Season 3 opens the Deep Sea.",
     epocaLabel: "Season",
     estrela: "star",
     estrelas: "stars",
@@ -2016,9 +2095,16 @@ const TEXTOS = {
     consentTexto: "We use local storage to save the game and, with your consent, ads and analytics.",
     consentAceitar: "Accept",
     consentEssenciais: "Essentials only",
-    livroContagem: "{n}/30 discovered",
+    livroContagem: "{n}/{t} discovered",
     livroDica: "? = undiscovered",
     livroBonus: "Collection bonus: +{p}%",
+    livroSuperficie: "Surface",
+    livroAbismo: "Deep Sea",
+    livroAbismoBloqueado: "Deep Sea · Season {e}",
+    livroDicaAbismo: "use Abyssal bait to find them",
+    abissoDesbloqueado: "Deep Sea unlocked! Check the new book.",
+    abissoBloqueado: "Unlocks in Season {e}.",
+    efeitoAbissal: "abyssal ×{a}",
     offlineTitulo: "Crew at work",
     offlineAntes: "While you were away, your fishermen earned",
     offlineDepois: "coins.",
@@ -2086,10 +2172,11 @@ const RARIDADES = [
   { id:'raro',     nome:'Raro', en:'Rare',     peso:10,   mult:10,   cor:'var(--r2)', emoji:'🔵' },
   { id:'epico',    nome:'Épico', en:'Epic',    peso:4,    mult:40,   cor:'var(--r3)', emoji:'🟣' },
   { id:'lendario', nome:'Lendário', en:'Legendary', peso:0.9,  mult:200,  cor:'var(--r4)', emoji:'🟡' },
-  { id:'mitico',   nome:'Mítico', en:'Mythic',   peso:0.1,  mult:1000, cor:'var(--r5)', emoji:'🔴' }
+  { id:'mitico',   nome:'Mítico', en:'Mythic',   peso:0.1,  mult:1000, cor:'var(--r5)', emoji:'🔴' },
+  { id:'abissal',  nome:'Abissal', en:'Abyssal', peso:0.10, mult:5000, cor:'var(--r6)', emoji:'🌊' }
 ];
 
-/* --- 30 espécies: 8 comuns, 7 incomuns, 6 raras, 4 épicas, 3 lendárias, 2 míticas --- */
+/* --- 30 espécies de superfície: 8 comuns, 7 incomuns, 6 raras, 4 épicas, 3 lendárias, 2 míticas --- */
 const PEIXES = [
   /* Comuns */
   { id:'sardinha_sem_nocao',   nome:'Sardinha Sem Noção', en:'Clueless Sardine',           emoji:'🐟', r:0, base:8 },
@@ -2126,7 +2213,23 @@ const PEIXES = [
   { id:'polvo_reencarnado',    nome:'Polvo Reencarnado', en:'Reincarnated Octopus',            emoji:'🐙', r:4, base:34 },
   /* Míticas */
   { id:'cetus',                nome:'Cetus, o Come-Mundos', en:'Cetus, the World-Eater',         emoji:'🐋', r:5, base:38 },
-  { id:'dragao_marinho',       nome:'Dragão-Marinho Ancestral', en:'Ancestral Sea Dragon',     emoji:'🐉', r:5, base:44 }
+  { id:'dragao_marinho',       nome:'Dragão-Marinho Ancestral', en:'Ancestral Sea Dragon',     emoji:'🐉', r:5, base:44 },
+  /* Abissais (Mar Profundo — desbloqueia na Época 3) */
+  { id:'enguia_abissal',       nome:'Enguia das Fendas', en:'Trench Eel',                    emoji:'🐟', r:6, base:42 },
+  { id:'peixe_lanterna',       nome:'Peixe-Lanterna Nervoso', en:'Nervous Lanternfish',      emoji:'🐠', r:6, base:44 },
+  { id:'camarao_cego',         nome:'Camarão Cego', en:'Blind Shrimp',                      emoji:'🦀', r:6, base:46 },
+  { id:'lula_vampira',         nome:'Lula Vampira', en:'Vampire Squid',                     emoji:'🦑', r:6, base:48 },
+  { id:'polvo_do_vazio',       nome:'Polvo do Vazio', en:'Void Octopus',                    emoji:'🐙', r:6, base:50 },
+  { id:'tubarao_gelido',       nome:'Tubarão Glacial', en:'Glacial Shark',                   emoji:'🦈', r:6, base:52 },
+  { id:'baiacu_pressao',       nome:'Baiacu de Pressão', en:'Pressure Pufferfish',           emoji:'🐡', r:6, base:54 },
+  { id:'arraia_fantasma',      nome:'Arraia Fantasma', en:'Ghost Ray',                       emoji:'🐟', r:6, base:56 },
+  { id:'celacanto_centenario', nome:'Celacanto Centenário', en:'Centenarian Coelacanth',     emoji:'🐟', r:6, base:58 },
+  { id:'caranguejo_yeti',      nome:'Caranguejo Yeti', en:'Yeti Crab',                       emoji:'🦀', r:6, base:60 },
+  { id:'medusa_do_abismo',     nome:'Medusa do Abismo', en:'Abyss Jellyfish',                emoji:'🐙', r:6, base:62 },
+  { id:'tubarao_duende',       nome:'Tubarão-Duende', en:'Goblin Shark',                     emoji:'🦈', r:6, base:64 },
+  { id:'baleia_ossea',         nome:'Baleia Ossuária', en:'Skeletal Whale',                  emoji:'🐋', r:6, base:66 },
+  { id:'leviata_das_fossas',   nome:'Leviatã das Fossas', en:'Trench Leviathan',             emoji:'🐳', r:6, base:68 },
+  { id:'dragao_do_nucleo',     nome:'Dragão do Núcleo', en:'Core Dragon',                     emoji:'🐉', r:6, base:72 }
 ];
 
 /* --- Upgrades --- */
@@ -2252,6 +2355,7 @@ function estadoPorDefeito() {
     })(),
     estrelas: 0,            // estrelas de prestígio
     epoca: 1,
+    abissoVisto: false,     // já viu o aviso de desbloqueio do Mar Profundo
     som: true,
     ultimoVisto: Date.now(),
     novato: true            // primeiro dia: boost de raridades + upgrade grátis
@@ -2281,9 +2385,12 @@ function carregar() {
     out.up[k] = clamp(Math.floor(Number(out.up[k]) || 0), 0, CONFIG.UPGRADE_MAX);
   });
   if (!CONFIG.ISCAS[out.isca]) out.isca = 'comum';
+  if (!out.abissoVisto) out.abissoVisto = false;
   if (out.idioma !== 'en' && out.idioma !== 'pt') out.idioma = d.idioma;
   out.estrelas = Math.max(0, Math.floor(Number(out.estrelas) || 0));
   out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
+  if ((out.isca === 'abissal' || out.isca === 'reliquia') &&
+      out.epoca < CONFIG.ABISMO_EPOCA) out.isca = 'comum';
   if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
   out.sessao = Object.assign({ moedas:0, peixes:0, melhor:null },
     (s.sessao && typeof s.sessao === 'object') ? s.sessao : {});
@@ -2340,7 +2447,10 @@ function nomeMissao(tipo) {
   return (idiomaAtual() === 'en' && m.nomeEn) ? m.nomeEn : m.nome;
 }
 function nomeIsca(id) {
-  const mapa = { comum: 'iscaComum', rapida: 'iscaRapida', funda: 'iscaFunda' };
+  const mapa = {
+    comum: 'iscaComum', rapida: 'iscaRapida', funda: 'iscaFunda',
+    abissal: 'iscaAbissal', reliquia: 'iscaReliquia'
+  };
   return t(mapa[id] || 'iscaComum');
 }
 function num(v, casas) {
@@ -2422,11 +2532,14 @@ function mods() {
     1 + isco * CONFIG.ISCO_RARO,
     1 + isco * CONFIG.ISCO_EPICO,
     1 + isco * CONFIG.ISCO_LEND,
-    1 + isco * CONFIG.ISCO_MIT
+    1 + isco * CONFIG.ISCO_MIT,
+    1 + isco * CONFIG.ISCO_ABISSO
   ];
   // Isca escolhida antes de lançar (congelada no início do lance)
   const isc = (iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual();
   if (isc && isc.raro !== 1) for (let i = 1; i < tier.length; i++) tier[i] *= isc.raro;
+  // Iscas abissais empurram a raridade do fundo (só depois de desbloqueado)
+  if (isc && isc.abisso && abissoAtivo()) tier[6] *= isc.abisso;
 
   // Primeiro dia: ajuda extra nas raridades altas
   if (state.novato) for (let i = 1; i < tier.length; i++) tier[i] *= CONFIG.PRIMEIRO_DIA_RARIDADE;
@@ -2434,6 +2547,9 @@ function mods() {
   if (fx.naoComum) for (let i = 1; i < tier.length; i++) tier[i] *= fx.naoComum;
   if (fx.raro) for (let i = 2; i < tier.length; i++) tier[i] *= fx.raro;
   if (fx.mitico) tier[5] *= fx.mitico;
+  if (fx.abisso) tier[6] *= fx.abisso;
+  // Abissal só existe depois de abrir o Mar Profundo
+  if (!abissoAtivo()) tier[6] = 0;
 
   return {
     espera: fx.espera || 1,
@@ -2446,7 +2562,11 @@ function mods() {
 
 /** Sorteia o índice da raridade respeitando pesos + efeitos. */
 function sortearRaridade(m) {
-  const pesos = RARIDADES.map(function (r, i) { return r.peso * m.tier[i]; });
+  const pesos = RARIDADES.map(function (r, i) {
+    if (i === 6 && !abissoAtivo()) return 0;
+    const base = i === 6 ? CONFIG.ABISMO_PESO : r.peso;
+    return base * m.tier[i];
+  });
   const total = pesos.reduce(function (a, b) { return a + b; }, 0);
   let x = Math.random() * total;
   for (let i = 0; i < pesos.length; i++) {
@@ -2557,12 +2677,14 @@ function efeitoEspecial(rIdx) {
   if (rIdx < 4) return;
   vibrar([40, 60, 40, 60, 80]);
   const f = $('flashLayer');
-  f.style.background = rIdx === 5
-    ? 'radial-gradient(circle, rgba(255,77,109,.9), rgba(169,123,255,.5))'
-    : 'radial-gradient(circle, rgba(255,201,60,.9), rgba(46,230,214,.4))';
+  f.style.background = rIdx === 6
+    ? 'radial-gradient(circle, rgba(46,230,214,.95), rgba(11,34,66,.6))'
+    : (rIdx === 5
+      ? 'radial-gradient(circle, rgba(255,77,109,.9), rgba(169,123,255,.5))'
+      : 'radial-gradient(circle, rgba(255,201,60,.9), rgba(46,230,214,.4))');
   f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
   setTimeout(() => f.classList.remove('on'), 600);
-  particulas(16);
+  particulas(rIdx >= 6 ? 24 : 16);
 }
 
 function particulas(n) {
@@ -2697,10 +2819,15 @@ function efeitoTexto(u, nivel) {
         z: pct(CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * nivel)
       });
     }
-    case 'bait': return tf('efeitoRaros', {
-      v: num(1 + nivel * CONFIG.ISCO_RARO, 2),
-      m: num(1 + nivel * CONFIG.ISCO_MIT, 2)
-    });
+    case 'bait': {
+      const txt = tf('efeitoRaros', {
+        v: num(1 + nivel * CONFIG.ISCO_RARO, 2),
+        m: num(1 + nivel * CONFIG.ISCO_MIT, 2)
+      });
+      return abissoAtivo()
+        ? txt + ' · ' + tf('efeitoAbissal', { a: num(1 + nivel * CONFIG.ISCO_ABISSO, 2) })
+        : txt;
+    }
     case 'boat': return tf('efeitoValor', { v: num(1 + nivel * CONFIG.BARCO_VALOR_NIVEL, 2) });
     case 'fisher': return tf('efeitoMoedas', {
       v: Math.round(nivel * (1 + nivel * CONFIG.PESCADOR_ESCALA) * CONFIG.PESCADOR_MOEDAS_MIN)
@@ -2768,32 +2895,62 @@ function comprarUpgrade(id) {
 /* ==========================================================================
    9) LIVRO DE PESCA (coleção)
    ========================================================================== */
+let livroVista = 'superficie';   // 'superficie' | 'abisso'
+
+function peixesDaVista(vista) {
+  return vista === 'abisso'
+    ? PEIXES.filter(function (p) { return p.r === 6; })
+    : PEIXES.filter(function (p) { return p.r < 6; });
+}
+
 function renderLivro() {
-  const grid = $('bookGrid');
-  $('bookCount').textContent = tf('livroContagem', { n: state.descobertos.length });
+  const ab = abissoAtivo();
+  if (livroVista === 'abisso' && !ab) livroVista = 'superficie';
+  const vista = livroVista;
+  const lista = peixesDaVista(vista);
+  const achados = lista.filter(function (p) { return state.descobertos.indexOf(p.id) !== -1; }).length;
+
+  $('bookCount').textContent = tf('livroContagem', { n: achados, t: lista.length });
   $('bookBonus').textContent = tf('livroBonus', { p: Math.round(bonusColecao() * 100) });
+  $('bookHint').textContent = vista === 'abisso' ? t('livroDicaAbismo') : t('livroDica');
+
+  const ts = $('bookTabSuperficie');
+  const ta = $('bookTabAbismo');
+  if (ts) {
+    ts.textContent = t('livroSuperficie');
+    ts.classList.toggle('active', vista === 'superficie');
+    ts.classList.remove('locked');
+  }
+  if (ta) {
+    ta.textContent = ab ? t('livroAbismo') : tf('livroAbismoBloqueado', { e: CONFIG.ABISMO_EPOCA });
+    ta.classList.toggle('active', vista === 'abisso');
+    ta.classList.toggle('locked', !ab);
+  }
 
   const seals = $('bookSeals');
   seals.innerHTML = '';
-  RARIDADES.forEach(function (r, i) {
+  const indices = vista === 'abisso' ? [6] : [0, 1, 2, 3, 4, 5];
+  indices.forEach(function (i) {
     const todos = PEIXES.filter(function (p) { return p.r === i; });
-    const achados = todos.filter(function (p) { return state.descobertos.indexOf(p.id) !== -1; }).length;
-    const ok = achados === todos.length;
+    if (!todos.length) return;
+    const feitos = todos.filter(function (p) { return state.descobertos.indexOf(p.id) !== -1; }).length;
+    const ok = feitos === todos.length;
     const b = document.createElement('span');
     b.className = 'seal-badge' + (ok ? '' : ' miss');
     b.appendChild(spriteIcone(ok ? 'medalha' : 'cadeado', 1));
     const bt = document.createElement('span');
-    bt.textContent = ' ' + nomeRaridade(i) + ' ' + achados + '/' + todos.length;
+    bt.textContent = ' ' + nomeRaridade(i) + ' ' + feitos + '/' + todos.length;
     b.appendChild(bt);
     seals.appendChild(b);
   });
 
+  const grid = $('bookGrid');
   grid.innerHTML = '';
-  PEIXES.forEach(function (p) {
+  lista.forEach(function (p) {
     const desc = state.descobertos.indexOf(p.id) !== -1;
     const r = RARIDADES[p.r];
     const cell = document.createElement('div');
-    cell.className = 'fish-cell' + (desc ? '' : ' unknown');
+    cell.className = 'fish-cell' + (desc ? '' : ' unknown') + (p.r === 6 ? ' abissal' : '');
 
     const ico = document.createElement('div');
     ico.className = 'fc-emoji';
@@ -2950,14 +3107,15 @@ function resolverBarra(pos) {
       const chefe = peixePorId(state.hoje.chefe.id) || PEIXES[0];
       const m = mods();
       const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
-      const valor = Math.round(calcValor(chefe, chefe.r, tipo === 'perfeito', m, peso) * CONFIG.CHEFE_BONUS);
+      const bonusChefe = state.hoje.chefe.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS;
+      const valor = Math.round(calcValor(chefe, chefe.r, tipo === 'perfeito', m, peso) * bonusChefe);
       registarCaptura(chefe, chefe.r, tipo === 'perfeito', valor, peso);
       state.hoje.chefe.feito = true;
       if (tipo === 'perfeito') state.combo = (state.combo || 0) + 1;
       sonsDoResultado(tipo);
-      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true });
+      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true, abissal: !!state.hoje.chefe.abissal });
       efeitoEspecial(Math.max(4, chefe.r));
-      toast(t('chefeApanhado'));
+      toast(t(state.hoje.chefe.abissal ? 'chefeApanhadoAbismo' : 'chefeApanhado'));
       track('chefe', { raridade: chefe.r });
       atualizarChefeUI();
     }
@@ -3050,8 +3208,14 @@ function mostrarCaptura(res) {
   if (res.chefe) {
     const f = document.createElement('div');
     f.className = 'catch-flag';
-    f.style.background = 'var(--purple)';
-    f.textContent = t('chefeFlag');
+    f.style.background = res.abissal ? 'var(--r6)' : 'var(--purple)';
+    f.textContent = t(res.abissal ? 'chefeFlagAbismo' : 'chefeFlag');
+    box.appendChild(f);
+  } else if (p.r === 6) {
+    const f = document.createElement('div');
+    f.className = 'catch-flag';
+    f.style.background = 'var(--r6)';
+    f.textContent = t('abissoFlag') + (res.novo ? ' · ' + t('novo') : '');
     box.appendChild(f);
   } else if (res.novo) {
     const f = document.createElement('div');
@@ -3076,7 +3240,7 @@ function mostrarCaptura(res) {
   info.style.color = '#7a6248';
   info.textContent = num(res.peso || 1, 2) + ' kg' +
     (res.perfeito ? ' · ' + t('perfeito') : '') +
-    (res.chefe ? ' · ' + t('bonusChefe') : '');
+    (res.chefe ? ' · ' + t(res.abissal ? 'bonusChefeAbismo' : 'bonusChefe') : '');
   box.appendChild(info);
 
   const val = document.createElement('div');
@@ -3121,6 +3285,25 @@ function bonusColecao() {
 function bonusEstrelas() {
   return 1 + (state.estrelas || 0) * CONFIG.EPOCA_ESTRELA;
 }
+/** O Mar Profundo abre a partir da época configurada (por defeito, 3). */
+function abissoAtivo() {
+  return (state.epoca || 1) >= CONFIG.ABISMO_EPOCA;
+}
+/** Aviso único quando o Mar Profundo fica disponível. */
+function verificarAbismo() {
+  if (!abissoAtivo() || state.abissoVisto) return false;
+  state.abissoVisto = true;
+  toast(t('abissoDesbloqueado'));
+  livroVista = 'abisso';
+  bip(660, .1);
+  setTimeout(function () { bip(990, .12); }, 100);
+  setTimeout(function () { bip(1320, .16); }, 210);
+  track('abisso', {});
+  renderIscas();
+  renderLivro();
+  guardar();
+  return true;
+}
 function totalNiveis() {
   let n = 0;
   ['rod','bait','boat','fisher','freezer'].forEach(function (k) { n += state.up[k] || 0; });
@@ -3160,6 +3343,7 @@ function prestigiar() {
   setTimeout(function () { bip(1320, .16); }, 210);
   toast(tf('novaEpoca', { g: ganhas }));
   track('prestigio', { estrelas: ganhas });
+  setTimeout(verificarAbismo, 2400);
   guardar();
   renderUpgrades();
   renderIscas();
@@ -3173,11 +3357,18 @@ function iscaAtual() {
 function renderIscas() {
   const nos = document.querySelectorAll('.isca');
   for (let i = 0; i < nos.length; i++) {
-    nos[i].classList.toggle('ativa', nos[i].dataset.isca === state.isca);
+    const id = nos[i].dataset.isca;
+    const bloqueada = (id === 'abissal' || id === 'reliquia') && !abissoAtivo();
+    nos[i].classList.toggle('hidden', bloqueada);
+    nos[i].classList.toggle('ativa', id === state.isca);
   }
 }
 function escolherIsca(id) {
   if (!CONFIG.ISCAS[id] || state.isca === id) return;
+  if ((id === 'abissal' || id === 'reliquia') && !abissoAtivo()) {
+    toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
+    return;
+  }
   state.isca = id;
   renderIscas();
   guardar();
@@ -3296,9 +3487,12 @@ function aplicarHora() {
 
 /* --- Chefe do dia --- */
 function gerarChefe(key) {
-  const lista = PEIXES.filter(function (p) { return p.r >= 3; });
+  // De vez em quando (1 em CHEFE_ABISMO_DIAS) o chefe vem do Mar Profundo.
+  const abissal = abissoAtivo() &&
+    (hashStr('chefe-abismo:' + key) % Math.max(2, CONFIG.CHEFE_ABISMO_DIAS) === 0);
+  const lista = PEIXES.filter(function (p) { return abissal ? p.r === 6 : (p.r >= 3 && p.r < 6); });
   const p = lista[hashStr('chefe:' + key) % lista.length];
-  return { id: p.id, feito: false, prox: CONFIG.CHEFE_APOS };
+  return { id: p.id, feito: false, prox: CONFIG.CHEFE_APOS, abissal: abissal };
 }
 function chefePronto() {
   const c = state.hoje && state.hoje.chefe;
@@ -3317,7 +3511,7 @@ function atualizarChefeUI() {
     ico.appendChild(spritePeixe(peixe, 2));
     ico.setAttribute('data-bicho', c.id);
   }
-  $('chefeNome').textContent = nomePeixe(peixe);
+  $('chefeNome').textContent = nomePeixe(peixe) + (c.abissal ? ' · ' + t('livroAbismo') : '');
   const est = $('chefeEstado');
   if (c.feito) {
     bar.classList.add('done');
@@ -3326,8 +3520,10 @@ function atualizarChefeUI() {
     bar.classList.remove('done');
     const falta = Math.max(0, (c.prox || CONFIG.CHEFE_APOS) - state.hoje.peixes);
     est.textContent = falta > 0
-      ? (falta === 1 ? tf('chefeAparece1', {}) : tf('chefeApareceN', { n: falta }))
-      : t('chefeAVista');
+      ? (falta === 1
+          ? tf(c.abissal ? 'chefeAparece1Abismo' : 'chefeAparece1', {})
+          : tf(c.abissal ? 'chefeApareceNAbismo' : 'chefeApareceN', { n: falta }))
+      : t(c.abissal ? 'chefeAVistaAbismo' : 'chefeAVista');
   }
 }
 
@@ -3957,10 +4153,23 @@ function iniciar() {
   if (!state.eventoVisto && state.tempo > 0) setTimeout(mostrarEvento, 350);
 
   if (mudouDia) toast(t('novoDia'));
+  setTimeout(verificarAbismo, 1200);
 
   /* --- Separadores --- */
   document.querySelectorAll('.tab').forEach(function (b) {
     b.addEventListener('click', function () { mudarSeparador(b.dataset.tab); });
+  });
+  document.querySelectorAll('.book-tab').forEach(function (b) {
+    b.addEventListener('click', function () {
+      const v = b.dataset.livro;
+      if (v === 'abisso' && !abissoAtivo()) {
+        toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
+        return;
+      }
+      livroVista = v;
+      renderLivro();
+      bip(620, .06);
+    });
   });
 
   /* --- Pesca --- */

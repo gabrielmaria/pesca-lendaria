@@ -21,11 +21,12 @@ python3 -m http.server 8080
 - **LANÇAR** → espera → **MORDE!** → toca na zona verde.
 - **Perfeito** dá +50% e sobe o **combo** (até ×2,2); falhar zera. A barra **acelera** com o combo.
 - Cada peixe tem **peso aleatório** (0,85×–1,35× no valor).
-- **Escolhe o isco antes de lançar**: Comum (equilíbrio), Rápida (−35% espera, −15% valor) ou Funda (+50% raros, +35% espera).
-- **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares.
+- **Escolhe o isco antes de lançar**: Comum (equilíbrio), Rápida (−35% espera, −15% valor), Funda (+50% raros, +35% espera) e, a partir da Época 3, **Abissal** e **Relíquia**.
+- **Chefe do dia**: um peixe épico+ diferente todos os dias. Aparece após algumas capturas, dá **×4** e muda à meia-noite — é a razão para voltares. A cada 4 dias o chefe é **abissal** (×6).
 - **Missão do dia** (peixes / raros+ / perfeitos) com prémio que escala.
-- **Livro de Pesca**: 30 espécies; cada raridade completa dá **+5% de valor permanente** (até +30%).
-- **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro e o streak ficam.
+- **Livro de Pesca**: 30 espécies de superfície; cada raridade completa dá **+5% de valor permanente** (até +30%).
+- **Mar Profundo (endgame)**: abre na **Época 3**. Tem **15 espécies abissais**, a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Completar a raridade abissal dá mais **+5%** (total +35%).
+- **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro, o Mar Profundo e o streak ficam.
 - **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.
 - Pescadores rendem moedas offline (até 24h). A sessão renova a cada **12h**; o evento, a missão e o chefe são **diários**. O tempo só desconta com o separador visível (Page Visibility API).
 
@@ -55,6 +56,7 @@ Tudo ajustável no `CONFIG` no topo do `<script>`:
 | Chefe do dia | `CHEFE_*` |
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
+| Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
