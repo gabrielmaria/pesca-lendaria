@@ -6,9 +6,23 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.2';
+const APP_VERSION = '1.5.3';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.3',
+    data: '12/11/2026',
+    titulo: 'Cenários da transição',
+    tituloEn: 'Transition scenery',
+    itens: [
+      'Rochas e medusas bioluminescentes ao descer para o Mar Profundo.',
+      'Colinas, árvores e o farol no fim da subida à superfície.'
+    ],
+    itensEn: [
+      'Rocks and bioluminescent jellyfish when descending to the Deep Sea.',
+      'Hills, trees and the lighthouse at the end of the ascent to the surface.'
+    ]
+  },
   {
     versao: '1.5.2',
     data: '12/11/2026',

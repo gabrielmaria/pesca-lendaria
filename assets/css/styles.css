@@ -702,6 +702,38 @@ h1{
   position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,4,10,.65) 100%);
 }
+.descida-fundo{
+  position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;
+  transition:opacity .5s steps(4);
+}
+.descida.ativa:not(.volta) .descida-fundo{opacity:1;}
+.descida-rocha{
+  position:absolute;bottom:-6px;display:block;
+  background:linear-gradient(180deg,#0b3040,#041820);
+  clip-path:polygon(50% 0,64% 22%,58% 22%,74% 48%,66% 48%,84% 74%,72% 74%,100% 100%,0 100%,22% 78%,12% 78%,30% 50%,22% 50%,38% 24%,32% 24%);
+  opacity:.92;
+}
+.descida-medusa{
+  position:absolute;display:block;opacity:.75;
+  filter:drop-shadow(0 0 10px rgba(46,230,214,.75));
+  animation:medusaFlutua var(--mdur,1.4s) steps(4) infinite alternate;
+  animation-delay:var(--mdelay,0s);
+}
+.descida-medusa::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:42%;
+  background:radial-gradient(ellipse at 50% 100%,#7ff2e6 0%,#2ee6d6 45%,#0e7f8c 100%);
+  border-radius:50% 50% 22% 22%;
+  box-shadow:inset 0 -5px 0 rgba(4,24,32,.45);
+}
+.descida-medusa::after{
+  content:'';position:absolute;left:14%;right:14%;top:38%;height:62%;
+  background:linear-gradient(90deg,
+    transparent 0 6%, rgba(46,230,214,.8) 6% 10%,
+    transparent 10% 28%, rgba(46,230,214,.65) 28% 32%,
+    transparent 32% 54%, rgba(46,230,214,.75) 54% 58%,
+    transparent 58% 76%, rgba(46,230,214,.55) 76% 80%, transparent 80%);
+}
+@keyframes medusaFlutua{from{transform:translateY(-6px);}to{transform:translateY(8px);}}
 .descida-peixes{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
 .descida-peixe{
   position:absolute;left:0;display:block;opacity:.9;
@@ -715,7 +747,7 @@ h1{
 }
 .descida.volta .descida-peixe{opacity:.82;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35));}
 .descida-arvores{
-  position:absolute;left:-2%;right:-2%;bottom:-10px;height:150px;z-index:1;
+  position:absolute;left:-2%;right:-2%;bottom:-10px;height:220px;z-index:1;
   opacity:0;transform:translateY(46px);pointer-events:none;
   transition:opacity .3s steps(3), transform .4s steps(6);
 }
@@ -725,16 +757,32 @@ h1{
   background:repeating-linear-gradient(90deg,#0e3b33 0 18px,#12473c 18px 36px);
   border-top:4px solid #1d5a4a;
 }
-.descida-arvores span{
-  position:absolute;bottom:28px;display:block;
-  background:#145243;
+.descida-morro{
+  position:absolute;bottom:26px;display:block;border-radius:50% 50% 0 0;
+  background:#0e3b33;opacity:.9;
+}
+.descida-arvore{
+  position:absolute;bottom:28px;display:block;background:#145243;
   clip-path:polygon(50% 0,56% 16%,52% 16%,64% 34%,58% 34%,72% 55%,64% 55%,80% 78%,58% 78%,58% 100%,42% 100%,42% 78%,20% 78%,36% 55%,28% 55%,42% 34%,36% 34%,48% 16%,44% 16%);
   box-shadow:inset 0 0 0 2px rgba(46,230,214,.08);
 }
-.descida-arvores span::after{
+.descida-arvore::after{
   content:'';position:absolute;left:50%;bottom:-16px;width:4px;height:18px;
   transform:translateX(-50%);background:#3b2a1e;
 }
+.descida-farol{
+  position:absolute;right:9%;bottom:26px;display:block;
+  filter:drop-shadow(0 0 8px rgba(255,224,138,.4));
+}
+.descida-farol canvas{width:48px !important;height:88px !important;display:block;}
+.descida-farol::after{
+  content:'';position:absolute;right:24px;top:8px;width:160px;height:44px;
+  transform-origin:100% 50%;
+  background:linear-gradient(270deg,rgba(255,224,138,.5),transparent);
+  clip-path:polygon(0 0,100% 50%,0 100%);
+  animation:feixeChegada 1.2s steps(8) infinite alternate;
+}
+@keyframes feixeChegada{from{transform:rotate(-7deg);}to{transform:rotate(9deg);}}
 .descida-texto{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   z-index:2;

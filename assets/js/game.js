@@ -1549,19 +1549,59 @@ function animarDescida(m, comTexto) {
     }
   }
 
-  // Ao subir, revela uma linha de árvores no fim da animação.
+  // Elementos do fundo: rochas e medusas a descer; costa/lazer a subir.
+  const fundo = $('descidaFundo');
+  if (fundo) {
+    fundo.innerHTML = '';
+    if (m === 'abisso') {
+      for (let i = 0; i < 5; i++) {
+        const r = document.createElement('span');
+        r.className = 'descida-rocha';
+        r.style.left = (i * 18 - 5 + Math.random() * 8) + '%';
+        r.style.width = (80 + Math.random() * 90) + 'px';
+        r.style.height = (60 + Math.random() * 130) + 'px';
+        fundo.appendChild(r);
+      }
+      for (let i = 0; i < 3; i++) {
+        const j = document.createElement('span');
+        j.className = 'descida-medusa';
+        j.style.left = (8 + Math.random() * 78) + '%';
+        j.style.top = (18 + Math.random() * 55) + '%';
+        j.style.width = (34 + Math.random() * 28) + 'px';
+        j.style.height = (50 + Math.random() * 32) + 'px';
+        j.style.setProperty('--mdur', (1.2 + Math.random() * 0.6).toFixed(2) + 's');
+        j.style.setProperty('--mdelay', (Math.random() * 0.5).toFixed(2) + 's');
+        fundo.appendChild(j);
+      }
+    }
+  }
+
+  // Ao subir, revela colinas, árvores e o farol no fim da animação.
   const arvores = $('descidaArvores');
   if (arvores) {
     arvores.innerHTML = '';
     if (m === 'superficie') {
+      for (let i = 0; i < 3; i++) {
+        const h = document.createElement('span');
+        h.className = 'descida-morro';
+        h.style.left = (i * 31 - 6 + Math.random() * 4) + '%';
+        h.style.width = (130 + Math.random() * 90) + 'px';
+        h.style.height = (60 + Math.random() * 40) + 'px';
+        arvores.appendChild(h);
+      }
       for (let i = 0; i < 9; i++) {
         const a = document.createElement('span');
+        a.className = 'descida-arvore';
         a.style.left = (i * 10.5 + 2 + (Math.random() * 3 - 1.5)) + '%';
         a.style.width = (26 + Math.random() * 20) + 'px';
         a.style.height = (46 + Math.random() * 44) + 'px';
         a.style.background = i % 2 ? '#145243' : '#0f463a';
         arvores.appendChild(a);
       }
+      const farol = document.createElement('span');
+      farol.className = 'descida-farol';
+      farol.appendChild(spriteCenario('farol', 4));
+      arvores.appendChild(farol);
     }
   }
 
@@ -1584,6 +1624,7 @@ function animarDescida(m, comTexto) {
     if (chegadaTimer) { clearTimeout(chegadaTimer); chegadaTimer = null; }
     if (txt) txt.textContent = '';
     if (peixes) peixes.innerHTML = '';
+    if (fundo) fundo.innerHTML = '';
     if (arvores) arvores.innerHTML = '';
   }, 1350);
 }
