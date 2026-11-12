@@ -1515,6 +1515,28 @@ function renderModo() {
   aplicarHora();
 }
 
+let descidaTimer = null;
+function animarDescida(m, comTexto) {
+  const el = $('descida');
+  if (!el) return;
+  const txt = $('descidaTexto');
+  if (txt) {
+    txt.textContent = comTexto
+      ? t(m === 'abisso' ? 'modoAbismoOn' : 'modoSuperficieOn')
+      : '';
+  }
+  el.classList.toggle('volta', m === 'superficie');
+  el.classList.remove('ativa');
+  void el.offsetWidth;
+  el.classList.add('ativa');
+  if (descidaTimer) clearTimeout(descidaTimer);
+  descidaTimer = setTimeout(function () {
+    descidaTimer = null;
+    el.classList.remove('ativa');
+    if (txt) txt.textContent = '';
+  }, 1200);
+}
+
 function aplicarModo(m, aviso) {
   if (m !== 'abisso' && m !== 'superficie') return false;
   if (m === 'abisso' && !abissoAtivo()) {
@@ -1530,17 +1552,8 @@ function aplicarModo(m, aviso) {
     renderIscas();
   }
   renderModo();
-  const sea = $('sea');
-  if (sea) {
-    sea.classList.remove('a-descer');
-    void sea.offsetWidth;
-    sea.classList.add('a-descer');
-    setTimeout(function () { sea.classList.remove('a-descer'); }, 800);
-  }
-  if (aviso) {
-    toast(t(m === 'abisso' ? 'modoAbismoOn' : 'modoSuperficieOn'));
-    bip(m === 'abisso' ? 420 : 720, .08);
-  }
+  animarDescida(m, aviso);
+  if (aviso) bip(m === 'abisso' ? 420 : 720, .08);
   guardar();
   return true;
 }

@@ -659,11 +659,58 @@ h1{
 }
 .scene[data-fundo="abisso"] .status{text-shadow:2px 2px 0 #020a14,-1px 2px 0 #020a14;}
 .scene[data-fundo="abisso"][data-clima] .clima{opacity:.35;}
-.scene.a-descer::after{
-  content:'';position:absolute;inset:0;z-index:30;pointer-events:none;
-  background:#020a14;animation:descerFundo .75s steps(5) forwards;
+
+/* ---------- Transição Superfície ↔ Mar Profundo ---------- */
+.descida{
+  position:fixed;inset:0;z-index:70;pointer-events:none;overflow:hidden;
+  opacity:0;background:linear-gradient(180deg,#06283a 0%,#020a14 100%);
+  transition:opacity .18s steps(2);
 }
-@keyframes descerFundo{0%{opacity:0;}35%{opacity:1;}100%{opacity:0;}}
+.descida.ativa{opacity:1;pointer-events:auto;}
+.descida.volta{background:linear-gradient(180deg,#2f7fb5 0%,#c9edfb 100%);}
+.descida-agua{
+  position:absolute;inset:-25% -10%;opacity:.8;
+  background:
+    repeating-linear-gradient(180deg, rgba(120,230,230,.14) 0 3px, transparent 3px 22px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 2px, transparent 2px 42px),
+    linear-gradient(180deg, rgba(255,255,255,.06), transparent 40%);
+}
+.descida.ativa .descida-agua{animation:aguaSobe 1.15s linear both;}
+.descida.volta .descida-agua{animation-name:aguaDesce;}
+@keyframes aguaSobe{from{transform:translateY(18%);}to{transform:translateY(-18%);}}
+@keyframes aguaDesce{from{transform:translateY(-18%);}to{transform:translateY(18%);}}
+.descida-bolhas{
+  position:absolute;inset:-10% 0;opacity:.8;
+  background-image:
+    radial-gradient(circle, rgba(190,255,250,.75) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(140,230,255,.5) 2px, transparent 3px),
+    radial-gradient(circle, rgba(210,255,250,.4) 1px, transparent 2px);
+  background-size:64px 96px, 101px 137px, 43px 71px;
+  background-position:0 0, 22px 40px, 11px 17px;
+}
+.descida.ativa .descida-bolhas{animation:bolhasSobem 1.15s linear both;}
+.descida.volta .descida-bolhas{animation-name:bolhasDescem;}
+@keyframes bolhasSobem{
+  from{background-position:0 0, 22px 40px, 11px 17px;}
+  to{background-position:8px -192px, -14px -274px, 5px -142px;}
+}
+@keyframes bolhasDescem{
+  from{background-position:0 0, 22px 40px, 11px 17px;}
+  to{background-position:-8px 192px, 14px 274px, -5px 142px;}
+}
+.descida-vinheta{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,4,10,.65) 100%);
+}
+.descida-texto{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:'Silkscreen',var(--font);font-size:14px;font-weight:900;
+  text-transform:uppercase;letter-spacing:1px;text-align:center;
+  color:#dffcff;text-shadow:2px 2px 0 #041820, 0 0 12px rgba(46,230,214,.6);
+  opacity:0;transition:opacity .2s steps(2);
+}
+.descida.ativa .descida-texto{opacity:1;}
+.descida.volta .descida-texto{color:#062a33;text-shadow:2px 2px 0 #dffcff;}
 
 /* ---------- Animações ---------- */
 @keyframes blink{50%{opacity:.4;}}

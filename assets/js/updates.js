@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.1',
+    data: '12/11/2026',
+    titulo: 'Transição de profundidade',
+    tituloEn: 'Depth transition',
+    itens: [
+      'Animação de água ao descer para o Mar Profundo.',
+      'Animação de subida ao voltar à superfície.',
+      'Bolhas e texto de direção durante a mudança de ambiente.'
+    ],
+    itensEn: [
+      'Water animation when descending to the Deep Sea.',
+      'Ascent animation when returning to the surface.',
+      'Bubbles and direction text while switching environments.'
+    ]
+  },
   {
     versao: '1.5.0',
     data: '12/11/2026',
