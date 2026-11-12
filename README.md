@@ -23,7 +23,7 @@ Todo o visual é pixel art (à Celeste/Stardew): **sprites desenhados pixel a pi
     │   └── legal.css       # CSS partilhado por sobre/privacidade
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
-        ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS
+        ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS, CONQUISTAS, LEGADO
         ├── sprites.js      # motor de pixel art em canvas
         ├── game.js         # estado, regras, render e ciclo de pesca
         └── main.js         # arranque, eventos globais e loop
@@ -59,6 +59,7 @@ python3 -m http.server 8080
 - **Livro de Pesca**: 30 espécies de superfície; cada raridade completa dá **+5% de valor permanente** (até +30%).
 - **Mar Profundo (endgame)**: abre na **Época 3**. No topo da pesca escolhes **Superfície** ou **Mar Profundo**; no fundo o cenário e o fundo da página mudam (água escura, plâncton, bolhas) e só lá aparecem as **15 espécies abissais**. Tem a raridade **Abissal** (×5000), duas iscas próprias (**Abissal** e **Relíquia**) e um **chefe abissal** (×6) a cada 4 dias. Escolher uma isca abissal desce automaticamente. Completar a raridade abissal dá mais **+5%** (total +35%).
 - **Nova Época (prestígio)**: aos 30 níveis de upgrades podes recomeçar trocando progresso por **estrelas permanentes (+8% de valor cada)**. O Livro, o Mar Profundo e o streak ficam.
+- **Legado (conquistas + Pérolas)**: 37 conquistas de longo prazo dão **Pérolas**; gastas em 9 melhorias permanentes (tempo de sessão, sorte abissal, offline, anúncios, valor, combo, chefe, bónus de livro e nível inicial na época). Cada chefe apanhado também dá 1 Pérola (2 se for abissal).
 - **Fim de cada sessão** mostra o resumo, o **evento de amanhã** e a contagem para a próxima sessão.
 - Pescadores rendem moedas offline (até 24h). A sessão renova a cada **12h**; o evento, a missão e o chefe são **diários**. O tempo só desconta com o separador visível (Page Visibility API).
 
@@ -88,6 +89,7 @@ Tudo ajustável no `CONFIG` em `assets/js/config.js`:
 | Chefe do dia | `CHEFE_*` |
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
+| Conquistas / Legado | `CONQUISTAS`, `LEGADO` em `assets/js/data.js` |
 | Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |

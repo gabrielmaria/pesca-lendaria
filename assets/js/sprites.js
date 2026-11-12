@@ -413,6 +413,12 @@ function spriteIcone(nome, escala) {
       elipsePx(g, 8, 8, 1.6, 1.6, '#0b3a55');
       px(g, 3, 3, '#7ff2e6'); px(g, 12, 2, '#7ff2e6'); px(g, 2, 12, '#7ff2e6');
       break;
+    case 'perola':
+      elipsePx(g, 8, 8, 5.6, 5.2, '#dffcff');
+      elipsePx(g, 8, 8, 4.2, 3.8, '#b9f3f7');
+      elipsePx(g, 8.5, 8.5, 2.4, 2.1, '#8fd3da');
+      px(g, 5, 5, '#ffffff'); px(g, 6, 4, '#ffffff'); px(g, 4, 7, '#f2ffff');
+      break;
     case 'reliquia':
       rectPx(g, 7, 3, 2, 9, '#d8c07a');
       rectPx(g, 4, 3, 2, 4, '#d8c07a');

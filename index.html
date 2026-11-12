@@ -47,6 +47,7 @@
     <button class="tab active" data-tab="pesca" data-i18n="abaPesca">Pesca</button>
     <button class="tab" data-tab="upgrades" data-i18n="abaUpgrades">Upgrades</button>
     <button class="tab" data-tab="livro" data-i18n="abaLivro">Livro</button>
+    <button class="tab" data-tab="legado" data-i18n="abaLegado">Legado</button>
   </nav>
 
   <main>
@@ -184,6 +185,21 @@
       <div class="book-bonus" id="bookBonus">Bónus de coleção: +0%</div>
       <div class="seals" id="bookSeals"></div>
       <div class="grid" id="bookGrid"></div>
+    </section>
+
+    <!-- ======================= LEGADO ======================= -->
+    <section class="panel" id="panel-legado">
+      <div class="legado-top">
+        <span class="perola-badge"><span class="spr-slot" data-sprite="perola"></span> <b id="perolasVal">0</b> <span data-i18n="perolasUnit">Pérolas</span></span>
+        <span class="muted" id="legadoProg">0/0 conquistas</span>
+      </div>
+      <div class="hint" data-i18n="legadoDica">As conquistas dão Pérolas. Gasta-as em melhorias permanentes.</div>
+      <div class="book-switch">
+        <button class="book-tab active" id="legadoTabConquistas" data-legado-vista="conquistas" data-i18n="legadoConquistas">Conquistas</button>
+        <button class="book-tab" id="legadoTabLoja" data-legado-vista="loja" data-i18n="legadoLoja">Loja</button>
+      </div>
+      <div id="conquistasLista"></div>
+      <div id="legadoLoja" class="hidden"></div>
     </section>
   </main>
 

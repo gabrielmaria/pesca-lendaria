@@ -63,6 +63,7 @@ function aplicarIdioma() {
     renderLivro();
     renderIscas();
     renderModo();
+    renderLegado();
     botaoLancar();
 
     if (fase === 'waiting') {
@@ -134,6 +135,16 @@ function iniciar() {
       bip(620, .06);
     });
   });
+  document.querySelectorAll('[data-legado-vista]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      legadoVista = b.dataset.legadoVista;
+      renderLegado();
+      bip(620, .06);
+    });
+  });
+
+  /* --- Conquistas já alcançadas (inclui saves antigos) --- */
+  setTimeout(agendarConquistas, 1500);
 
   /* --- Pesca --- */
   $('castBtn').addEventListener('click', function () {

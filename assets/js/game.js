@@ -110,6 +110,14 @@ function estadoPorDefeito() {
     epoca: 1,
     abissoVisto: false,     // já viu o aviso de desbloqueio do Mar Profundo
     modo: 'superficie',     // 'superficie' | 'abisso' (pesca no Mar Profundo)
+    perolas: 0,             // moeda do Legado
+    conquistas: {},         // id -> true
+    legado: {},             // id -> nível
+    stats: {
+      peixes:0, perfeitos:0, chefes:0, chefeAbissal:0, abissais:0,
+      lendarios:0, miticos:0, moedasTotal:0, sessoes:0, anuncios:0,
+      melhorCombo:0, melhorSessaoMoedas:0
+    },
     som: true,
     ultimoVisto: Date.now(),
     novato: true            // primeiro dia: boost de raridades + upgrade grátis
@@ -147,14 +155,26 @@ function carregar() {
       out.epoca < CONFIG.ABISMO_EPOCA) out.isca = 'comum';
   if (out.modo !== 'abisso' && out.modo !== 'superficie') out.modo = 'superficie';
   if (out.epoca < CONFIG.ABISMO_EPOCA) out.modo = 'superficie';
+  out.perolas = Math.max(0, Math.floor(Number(out.perolas) || 0));
+  out.conquistas = (s.conquistas && typeof s.conquistas === 'object' && !Array.isArray(s.conquistas))
+    ? Object.assign({}, s.conquistas) : {};
+  out.legado = {};
+  LEGADO.forEach(function (l) {
+    const val = (s.legado && typeof s.legado === 'object') ? s.legado[l.id] : 0;
+    out.legado[l.id] = clamp(Math.floor(Number(val) || 0), 0, l.max);
+  });
+  out.stats = Object.assign({}, d.stats, (s.stats && typeof s.stats === 'object') ? s.stats : {});
+  Object.keys(out.stats).forEach(function (k) {
+    out.stats[k] = Math.max(0, Math.floor(Number(out.stats[k]) || 0));
+  });
   if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
   out.sessao = Object.assign({ moedas:0, peixes:0, melhor:null },
     (s.sessao && typeof s.sessao === 'object') ? s.sessao : {});
   if (!s.proximoRefill || typeof out.proximoRefill !== 'number' || !isFinite(out.proximoRefill)) {
     out.proximoRefill = Date.now() + CONFIG.INTERVALO_SESSAO_HORAS * 3600000;
     if (out.tempo <= 0) {
-      out.tempo = CONFIG.DIA_SEGUNDOS;
-      out.tempoTotal = CONFIG.DIA_SEGUNDOS;
+      out.tempo = tempoSessaoMax(out);
+      out.tempoTotal = tempoSessaoMax(out);
     }
   }
   return out;
@@ -262,10 +282,12 @@ function verificarRefill() {
   }
   if (agora < state.proximoRefill) return false;
 
-  state.tempo = CONFIG.DIA_SEGUNDOS;
-  state.tempoTotal = CONFIG.DIA_SEGUNDOS;
+  state.tempo = tempoSessaoMax();
+  state.tempoTotal = tempoSessaoMax();
   state.sessao = { moedas:0, peixes:0, melhor:null };
   state.combo = 0;
+  if (state.stats) state.stats.sessoes = (state.stats.sessoes || 0) + 1;
+  agendarConquistas();
   while (state.proximoRefill <= agora) {
     state.proximoRefill += CONFIG.INTERVALO_SESSAO_HORAS * 3600000;
   }
@@ -304,6 +326,7 @@ function mods() {
   if (fx.raro) for (let i = 2; i < tier.length; i++) tier[i] *= fx.raro;
   if (fx.mitico) tier[5] *= fx.mitico;
   if (fx.abisso) tier[6] *= fx.abisso;
+  if (modoAbismo()) tier[6] *= (1 + efeitoLegado('sorte'));
   // A raridade abissal só existe enquanto estás no Mar Profundo
   if (!modoAbismo()) tier[6] = 0;
 
@@ -340,7 +363,7 @@ function taxaPescador() {
 
 /** Multiplicador do combo atual (1x a 2,2x). */
 function multCombo() {
-  return 1 + Math.min(state.combo || 0, CONFIG.COMBO_MAX) * CONFIG.COMBO_PASSO;
+  return 1 + Math.min(state.combo || 0, CONFIG.COMBO_MAX + efeitoLegado('combo')) * CONFIG.COMBO_PASSO;
 }
 
 /** Duração da barra de timing: encurta à medida que o combo sobe. */
@@ -376,6 +399,8 @@ function avancarMissao(tipo, qtd) {
     m.ok = true;
     state.moedas += m.premio;
     state.hoje.moedas += m.premio;
+    if (state.stats) state.stats.moedasTotal = (state.stats.moedasTotal || 0) + m.premio;
+    agendarConquistas();
     toast(tf('missaoConcluida', { v: fmt(m.premio) }));
     bip(880, .1);
     setTimeout(function () { bip(1180, .12); }, 110);
@@ -491,7 +516,7 @@ function atualizarHUD() {
   const timer = $('timer');
   timer.textContent = pad2(Math.floor(restante / 60)) + ':' + pad2(Math.floor(restante % 60));
   timer.classList.toggle('low', restante <= 30);
-  const total = state.tempoTotal > 0 ? state.tempoTotal : CONFIG.DIA_SEGUNDOS;
+  const total = state.tempoTotal > 0 ? state.tempoTotal : tempoSessaoMax();
   $('timeFill').style.width = clamp(restante / total * 100, 0, 100) + '%';
 
   const cb = $('comboBadge');
@@ -556,6 +581,7 @@ function mudarSeparador(nome) {
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + nome));
   if (nome === 'upgrades') renderUpgrades();
   if (nome === 'livro') renderLivro();
+  if (nome === 'legado') renderLegado();
 }
 
 /* ==========================================================================
@@ -738,6 +764,110 @@ function renderLivro() {
 }
 
 /* ==========================================================================
+   9.b) LEGADO (conquistas + loja de Pérolas)
+   ========================================================================== */
+let legadoVista = 'conquistas';
+
+function txtProgressoConquista(a, v) {
+  if (a.tipo === 'moedasTotal' || a.tipo === 'melhorSessaoMoedas') {
+    return fmt(v) + '/' + fmt(a.alvo);
+  }
+  return v + '/' + a.alvo;
+}
+
+function renderLegado() {
+  const pv = $('perolasVal');
+  if (!pv) return;
+  pv.textContent = fmt(state.perolas || 0);
+  const feitas = CONQUISTAS.filter(function (a) {
+    return state.conquistas && state.conquistas[a.id];
+  }).length;
+  $('legadoProg').textContent = tf('legadoProgresso', { n: feitas, t: CONQUISTAS.length });
+
+  const tc = $('legadoTabConquistas');
+  const tl = $('legadoTabLoja');
+  if (tc) tc.classList.toggle('active', legadoVista === 'conquistas');
+  if (tl) tl.classList.toggle('active', legadoVista === 'loja');
+  const lc = $('conquistasLista');
+  const ll = $('legadoLoja');
+  if (lc) lc.classList.toggle('hidden', legadoVista !== 'conquistas');
+  if (ll) ll.classList.toggle('hidden', legadoVista !== 'loja');
+
+  if (legadoVista === 'conquistas') renderConquistas();
+  else renderLoja();
+}
+
+function renderConquistas() {
+  const wrap = $('conquistasLista');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  CONQUISTAS_CATS.forEach(function (cat) {
+    const title = document.createElement('div');
+    title.className = 'ach-cat';
+    title.textContent = nomeCategoriaConquista(cat);
+    wrap.appendChild(title);
+
+    CONQUISTAS.filter(function (a) { return a.categoria === cat.id; }).forEach(function (a) {
+      const val = Math.min(valorConquista(a), a.alvo);
+      const done = !!(state.conquistas && state.conquistas[a.id]);
+      const pct = Math.min(100, Math.round(val / a.alvo * 100));
+      const card = document.createElement('div');
+      card.className = 'ach-card' + (done ? ' done' : '');
+      card.innerHTML =
+        '<span class="ach-ico spr-slot" data-sprite="' + a.icone + '"></span>' +
+        '<div class="ach-main">' +
+          '<div class="ach-name">' + nomeConquista(a) + '</div>' +
+          '<div class="ach-desc">' + descConquista(a) + '</div>' +
+          '<div class="ach-bar"><span class="ach-fill" style="width:' + pct + '%"></span></div>' +
+          '<div class="ach-prog">' + txtProgressoConquista(a, val) + '</div>' +
+        '</div>' +
+        '<div class="ach-reward">' + (done
+          ? '<b>✓</b> ' + t('conquistaFeita')
+          : '<span class="spr-slot" data-sprite="perola"></span> +' + a.premio) + '</div>';
+      wrap.appendChild(card);
+    });
+  });
+  hidratarSprites(wrap);
+}
+
+function renderLoja() {
+  const wrap = $('legadoLoja');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  LEGADO.forEach(function (l) {
+    const lvl = nivelLegado(l.id);
+    const maxed = lvl >= l.max;
+    const custo = maxed ? 0 : custoLegado(l, lvl);
+    const pode = !maxed && (state.perolas || 0) >= custo;
+    let pips = '';
+    for (let i = 0; i < l.max; i++) pips += '<span class="pip' + (i < lvl ? ' on' : '') + '"></span>';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML =
+      '<div class="up-head">' +
+        '<span class="up-ico" data-sprite="' + l.icone + '"></span>' +
+        '<div><div class="up-name">' + nomeLegado(l) + '</div>' +
+        '<div class="lvl">' + t('nivel') + ' ' + lvl + '/' + l.max + '</div></div>' +
+      '</div>' +
+      '<div class="pips">' + pips + '</div>' +
+      '<div class="up-desc">' + descLegado(l) + '</div>' +
+      '<div class="up-eff">' + t('agoraLabel') + ' <b>' + efeitoLegadoTexto(l, lvl) + '</b></div>' +
+      (maxed
+        ? '<div class="up-eff muted">' + t('nivelMax') + '</div>'
+        : '<div class="up-eff muted">' + t('proximoLabel') + ' <b>' + efeitoLegadoTexto(l, lvl + 1) + '</b></div>') +
+      '<button class="btn buy' + (pode ? '' : ' off') + '" data-legado="' + l.id + '"' + (pode ? '' : ' disabled') + '>' +
+        (maxed ? t('maximo') : tf('comprarPorPerolas', { v: custo + ' ' + t('perolasUnit') })) +
+      '</button>';
+    wrap.appendChild(card);
+  });
+  hidratarSprites(wrap);
+  wrap.querySelectorAll('.buy').forEach(function (b) {
+    b.addEventListener('click', function () { comprarLegado(b.dataset.legado); });
+  });
+}
+
+/* ==========================================================================
    10) CICLO DE PESCA
    fases: idle → waiting → bar → result → idle
    Tudo feito com tempo acumulado (dt), para pausar com o separador oculto.
@@ -863,15 +993,23 @@ function resolverBarra(pos) {
       const chefe = peixePorId(state.hoje.chefe.id) || PEIXES[0];
       const m = mods();
       const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
-      const bonusChefe = state.hoje.chefe.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS;
+      const bonusChefe = (state.hoje.chefe.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS) + efeitoLegado('chefe');
       const valor = Math.round(calcValor(chefe, chefe.r, tipo === 'perfeito', m, peso) * bonusChefe);
       registarCaptura(chefe, chefe.r, tipo === 'perfeito', valor, peso);
       state.hoje.chefe.feito = true;
+      if (state.stats) {
+        state.stats.chefes = (state.stats.chefes || 0) + 1;
+        if (state.hoje.chefe.abissal) state.stats.chefeAbissal = (state.stats.chefeAbissal || 0) + 1;
+      }
+      const perolasChefe = state.hoje.chefe.abissal ? 2 : 1;
+      state.perolas = (state.perolas || 0) + perolasChefe;
       if (tipo === 'perfeito') state.combo = (state.combo || 0) + 1;
+      if (state.stats && (state.combo || 0) > (state.stats.melhorCombo || 0)) state.stats.melhorCombo = state.combo;
       sonsDoResultado(tipo);
-      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true, abissal: !!state.hoje.chefe.abissal });
+      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true, abissal: !!state.hoje.chefe.abissal, perolas: perolasChefe, bonus: bonusChefe });
       efeitoEspecial(Math.max(4, chefe.r));
       toast(t(state.hoje.chefe.abissal ? 'chefeApanhadoAbismo' : 'chefeApanhado'));
+      agendarConquistas();
       track('chefe', { raridade: chefe.r });
       atualizarChefeUI();
     }
@@ -926,6 +1064,7 @@ function calcValor(peixe, rIdx, perfeito, m, peso) {
   v *= ((iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual()).valor; // isco do lance
   v *= (1 + bonusColecao());           // bónus do Livro de Pesca
   v *= bonusEstrelas();                // bónus das estrelas de prestígio
+  v *= (1 + efeitoLegado('valor'));    // bónus permanente do Legado
   if (perfeito) v *= CONFIG.BONUS_PERFEITO;
   return Math.max(1, Math.round(v));
 }
@@ -996,13 +1135,20 @@ function mostrarCaptura(res) {
   info.style.color = '#7a6248';
   info.textContent = num(res.peso || 1, 2) + ' kg' +
     (res.perfeito ? ' · ' + t('perfeito') : '') +
-    (res.chefe ? ' · ' + t(res.abissal ? 'bonusChefeAbismo' : 'bonusChefe') : '');
+    (res.chefe ? ' · ' + tf('bonusChefeN', { n: res.bonus || (res.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS) }) : '');
   box.appendChild(info);
 
   const val = document.createElement('div');
   val.className = 'catch-val';
   val.textContent = '+' + fmt(res.valor);
   box.appendChild(val);
+
+  if (res.perolas) {
+    const pel = document.createElement('div');
+    pel.className = 'catch-pearl';
+    pel.textContent = tf('perolasGanhas', { n: res.perolas });
+    box.appendChild(pel);
+  }
 
   box.classList.remove('hidden');
   vooMoeda(sprite);
@@ -1034,7 +1180,7 @@ function raridadesCompletas() {
   return n;
 }
 function bonusColecao() {
-  return raridadesCompletas() * CONFIG.COLECAO_BONUS;
+  return raridadesCompletas() * CONFIG.COLECAO_BONUS + efeitoLegado('livro');
 }
 
 /* --- Prestígio --- */
@@ -1065,6 +1211,147 @@ function verificarAbismo() {
   guardar();
   return true;
 }
+
+/* ==========================================================================
+   10.c) LEGADO: conquistas, Pérolas e melhorias permanentes
+   ========================================================================== */
+function nivelLegado(id) {
+  return (state.legado && state.legado[id]) || 0;
+}
+function efeitoLegado(id) {
+  const l = LEGADO.find(function (x) { return x.id === id; });
+  return l ? l.efeito * nivelLegado(id) : 0;
+}
+function tempoSessaoMax(obj) {
+  const l = LEGADO.find(function (x) { return x.id === 'tempo'; });
+  const niveis = ((obj && obj.legado) || state.legado || {}).tempo || 0;
+  return CONFIG.DIA_SEGUNDOS + l.efeito * niveis;
+}
+function custoLegado(l, nivel) {
+  return l.custo[nivel] || 0;
+}
+function maxAnuncios() {
+  return CONFIG.ANUNCIO_MAX_DIA + efeitoLegado('anuncios');
+}
+function contarDescobertos(vista) {
+  return peixesDaVista(vista).filter(function (p) {
+    return state.descobertos.indexOf(p.id) !== -1;
+  }).length;
+}
+function valorConquista(a) {
+  const s = state.stats || {};
+  switch (a.tipo) {
+    case 'peixes': return s.peixes || 0;
+    case 'perfeitos': return s.perfeitos || 0;
+    case 'chefes': return s.chefes || 0;
+    case 'chefeAbissal': return s.chefeAbissal || 0;
+    case 'abissais': return s.abissais || 0;
+    case 'lendarios': return s.lendarios || 0;
+    case 'miticos': return s.miticos || 0;
+    case 'moedasTotal': return s.moedasTotal || 0;
+    case 'sessoes': return s.sessoes || 0;
+    case 'anuncios': return s.anuncios || 0;
+    case 'combo': return s.melhorCombo || 0;
+    case 'melhorSessaoMoedas': return s.melhorSessaoMoedas || 0;
+    case 'epoca': return state.epoca || 1;
+    case 'estrelas': return state.estrelas || 0;
+    case 'streak': return state.melhorStreak || 1;
+    case 'livroSuperficie': return contarDescobertos('superficie');
+    case 'livroAbismo': return contarDescobertos('abisso');
+  }
+  return 0;
+}
+function nomeConquista(a) {
+  return (idiomaAtual() === 'en' && a.nomeEn) ? a.nomeEn : a.nome;
+}
+function descConquista(a) {
+  const alvo = (a.tipo === 'moedasTotal' || a.tipo === 'melhorSessaoMoedas') ? fmt(a.alvo) : a.alvo;
+  const txt = (idiomaAtual() === 'en' && a.descEn) ? a.descEn : a.desc;
+  return txt.split('{n}').join(alvo);
+}
+function nomeCategoriaConquista(c) {
+  return (idiomaAtual() === 'en' && c.nomeEn) ? c.nomeEn : c.nome;
+}
+function nomeLegado(l) {
+  return (idiomaAtual() === 'en' && l.nomeEn) ? l.nomeEn : l.nome;
+}
+function descLegado(l) {
+  const txt = (idiomaAtual() === 'en' && l.descEn) ? l.descEn : l.desc;
+  const v = (l.id === 'sorte' || l.id === 'valor' || l.id === 'livro')
+    ? Math.round(l.efeito * 100) : l.efeito;
+  return txt.split('{v}').join(v);
+}
+function efeitoLegadoTexto(l, nivel) {
+  const v = l.efeito * nivel;
+  switch (l.id) {
+    case 'tempo': return tf('legadoEfeitoTempo', { v: v });
+    case 'sorte': return tf('legadoEfeitoSorte', { v: Math.round(v * 100) });
+    case 'offline': return tf('legadoEfeitoOffline', { v: v });
+    case 'anuncios': return tf('legadoEfeitoAnuncios', { v: v });
+    case 'inicio': return tf('legadoEfeitoInicio', { v: v });
+    case 'chefe': return tf('legadoEfeitoChefe', { v: v });
+    case 'combo': return tf('legadoEfeitoCombo', { v: v });
+    case 'valor': return tf('legadoEfeitoValor', { v: Math.round(v * 100) });
+    case 'livro': return tf('legadoEfeitoLivro', { v: Math.round(v * 100) });
+  }
+  return '';
+}
+
+let conquistaTimer = null;
+function agendarConquistas() {
+  if (conquistaTimer) clearTimeout(conquistaTimer);
+  conquistaTimer = setTimeout(function () {
+    conquistaTimer = null;
+    verificarConquistas();
+  }, 700);
+}
+function verificarConquistas() {
+  if (!state.conquistas) state.conquistas = {};
+  let ganhas = 0, perolas = 0;
+  CONQUISTAS.forEach(function (a) {
+    if (state.conquistas[a.id]) return;
+    if (valorConquista(a) >= a.alvo) {
+      state.conquistas[a.id] = true;
+      state.perolas = (state.perolas || 0) + a.premio;
+      ganhas++;
+      perolas += a.premio;
+    }
+  });
+  if (ganhas > 0) {
+    toast(tf('conquistasGanhas', { p: perolas }));
+    bip(880, .1);
+    setTimeout(function () { bip(1180, .12); }, 90);
+    renderLegado();
+    guardar();
+  }
+  return ganhas;
+}
+function comprarLegado(id) {
+  const l = LEGADO.find(function (x) { return x.id === id; });
+  if (!l) return;
+  const lvl = nivelLegado(id);
+  if (lvl >= l.max) return;
+  const custo = custoLegado(l, lvl);
+  if ((state.perolas || 0) < custo) {
+    toast(t('perolasInsuficientes'));
+    bip(200, .15, 'sawtooth');
+    return;
+  }
+  state.perolas -= custo;
+  state.legado[id] = lvl + 1;
+  // O tempo extra entra já na sessão atual, se estiver a decorrer.
+  if (id === 'tempo' && state.tempo > 0) {
+    state.tempo += l.efeito;
+    state.tempoTotal += l.efeito;
+  }
+  bip(760, .08);
+  setTimeout(function () { bip(1140, .1); }, 80);
+  toast(tf('legadoNivel', { n: nomeLegado(l), l: lvl + 1 }));
+  guardar();
+  renderLegado();
+  atualizarHUD();
+}
+
 function totalNiveis() {
   let n = 0;
   ['rod','bait','boat','fisher','freezer'].forEach(function (k) { n += state.up[k] || 0; });
@@ -1094,8 +1381,10 @@ function prestigiar() {
 
   state.estrelas = (state.estrelas || 0) + ganhas;
   state.epoca = (state.epoca || 1) + 1;
-  state.up = { rod: 0, bait: 0, boat: 0, fisher: 0, freezer: 0 };
+  const inicio = efeitoLegado('inicio');
+  state.up = { rod: inicio, bait: inicio, boat: inicio, fisher: inicio, freezer: inicio };
   state.moedas = 1000 * ganhas;
+  if (state.stats) state.stats.moedasTotal = (state.stats.moedasTotal || 0) + state.moedas;
   state.combo = 0;
   state.isca = 'comum';
 
@@ -1104,6 +1393,7 @@ function prestigiar() {
   setTimeout(function () { bip(1320, .16); }, 210);
   toast(tf('novaEpoca', { g: ganhas }));
   track('prestigio', { estrelas: ganhas });
+  agendarConquistas();
   setTimeout(verificarAbismo, 2400);
   guardar();
   renderUpgrades();
@@ -1358,6 +1648,19 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
   state.sessao.moedas += valor;
   state.sessao.peixes += 1;
 
+  const st = state.stats;
+  if (st) {
+    st.peixes = (st.peixes || 0) + 1;
+    if (perfeito) st.perfeitos = (st.perfeitos || 0) + 1;
+    if (rIdx >= 4) st.lendarios = (st.lendarios || 0) + 1;
+    if (rIdx === 5) st.miticos = (st.miticos || 0) + 1;
+    if (rIdx === 6) st.abissais = (st.abissais || 0) + 1;
+    st.moedasTotal = (st.moedasTotal || 0) + valor;
+    if ((state.combo || 0) > (st.melhorCombo || 0)) st.melhorCombo = state.combo;
+    if (state.sessao.moedas > (st.melhorSessaoMoedas || 0)) st.melhorSessaoMoedas = state.sessao.moedas;
+  }
+  agendarConquistas();
+
   const novo = state.descobertos.indexOf(peixe.id) === -1;
   const antes = raridadesCompletas();
   if (novo) state.descobertos.push(peixe.id);
@@ -1424,7 +1727,9 @@ function loop() {
   /* Rendimento passivo em tempo real (Pescador Contratado) */
   const taxa = taxaPescador();
   if (taxa > 0) {
-    state.moedas += taxa * (dt / 60000);
+    const ganho = taxa * (dt / 60000);
+    state.moedas += ganho;
+    if (state.stats) state.stats.moedasTotal = (state.stats.moedasTotal || 0) + ganho;
   }
 
   /* Máquinas de estados da pesca */
@@ -1525,7 +1830,7 @@ function abrirFimDia() {
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
-  $('btnAnuncio').style.display = state.anuncios < CONFIG.ANUNCIO_MAX_DIA ? '' : 'none';
+  $('btnAnuncio').style.display = state.anuncios < maxAnuncios() ? '' : 'none';
   $('fimModal').classList.remove('hidden');
   preencherSlotFim();
   atualizarProximoDia();
@@ -1777,7 +2082,7 @@ function pedirRewardedH5(cb) {
 }
 
 function verAnuncio() {
-  if (state.anuncios >= CONFIG.ANUNCIO_MAX_DIA) {
+  if (state.anuncios >= maxAnuncios()) {
     toast(t('jaVisteAnuncios'));
     return;
   }
@@ -1787,7 +2092,9 @@ function verAnuncio() {
       return;
     }
     state.anuncios += 1;
+    if (state.stats) state.stats.anuncios = (state.stats.anuncios || 0) + 1;
     concederTempo();
+    agendarConquistas();
     track('anuncio');
   };
   if (ADS.modo === 'gamedistribution') {
@@ -1837,7 +2144,7 @@ let offlinePendente = 0;
 function calcularOffline() {
   const taxa = taxaPescador();
   if (taxa <= 0) { state.ultimoVisto = Date.now(); return; }
-  const cap = CONFIG.OFFLINE_CAP_HORAS * 3600000;
+  const cap = (CONFIG.OFFLINE_CAP_HORAS + efeitoLegado('offline')) * 3600000;
   const decorrido = clamp(Date.now() - state.ultimoVisto, 0, cap);
   offlinePendente = Math.floor(taxa * (decorrido / 60000));
   state.ultimoVisto = Date.now();
@@ -1849,10 +2156,12 @@ function calcularOffline() {
 
 function recolherOffline() {
   state.moedas += offlinePendente;
+  if (state.stats) state.stats.moedasTotal = (state.stats.moedasTotal || 0) + offlinePendente;
   offlinePendente = 0;
   $('offlineModal').classList.add('hidden');
   bip(880, .1); setTimeout(() => bip(1180, .12), 90);
   toast(t('recolhido'));
+  agendarConquistas();
   atualizarHUD();
   renderUpgradesSeVisivel();
   guardar();
