@@ -97,20 +97,18 @@ const CONFIG = {
 };
 
 /* ==========================================================================
-   1.b) ANÚNCIOS: GameDistribution (rewarded)
+   1.b) ANÚNCIOS: AdSense no site / GameDistribution no portal
    --------------------------------------------------------------------------
-   COMO LIGAR:
-   1. Cria conta em https://gamedistribution.com e regista o jogo.
-   2. Publica o index.html como jogo no portal (eles alojam ou dão o embed).
-   3. Muda ADS.modo para 'gamedistribution'.
-   4. (Opcional) Liga o intersticial no fim do dia.
-   O SDK é carregado só quando o modo é este; caso contrário fica a
-   simulação (nada quebra, nada é enviado para a rede).
+   O modo 'auto' usa GameDistribution quando o jogo está servido num domínio
+   gamedistribution.com e AdSense no teu domínio.
+   Para forçar no browser: ?ads=gd, ?ads=adsense ou ?ads=simulado.
+   Para publicar no portal: cria conta em https://gamedistribution.com,
+   regista o jogo e carrega o index.html/zip. O SDK trata dos anúncios.
    ========================================================================== */
 const ADS = {
-  modo: 'adsense',             // 'simulado' | 'gamedistribution' | 'adsense'
+  modo: 'auto',                // 'auto' | 'adsense' | 'gamedistribution' | 'simulado'
   sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
-  intersticialFimDia: false,   // true para interstitial quando o dia acaba
+  intersticialFimDia: false,   // true para interstitial no fim do dia (portal GD)
   adsense: {
     client: 'ca-pub-5123386402594330',
     // Unidades 320x100. O slot do jogo já está ligado; falta o do fim do dia.

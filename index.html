@@ -4,7 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#3b2416">
-<script async data-ad-frequency-hint="30s" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5123386402594330" crossorigin="anonymous"></script>
+<script>
+(function () {
+  var h = (location.hostname || '');
+  var q = (location.search || '');
+  if (h.indexOf('gamedistribution') !== -1 || /(^|[?&])ads=gd(&|$)/.test(q)) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.setAttribute('data-ad-frequency-hint', '30s');
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5123386402594330';
+  s.crossOrigin = 'anonymous';
+  document.head.appendChild(s);
+})();
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
 <link rel="shortcut icon" type="image/png" href="assets/img/favicon-32.png">

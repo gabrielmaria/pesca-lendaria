@@ -103,6 +103,7 @@ function iniciar() {
   primeiraVez();
 
   /* --- Interface --- */
+  try { document.body.setAttribute('data-ads', modoAds() === 'gamedistribution' ? 'gd' : 'site'); } catch (e) {}
   iniciarAnuncios();
   iniciarAnalytics();
   aplicarHora();

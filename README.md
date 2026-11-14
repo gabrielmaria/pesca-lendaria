@@ -90,6 +90,8 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 ├── .gitignore
 ├── README.md
 ├── ROADMAP.md              # ideias e camadas futuras
+├── scripts/
+│   └── build-portal.py     # gera o ZIP para a GameDistribution
 └── assets/
     ├── css/
     │   ├── styles.css      # todo o CSS do jogo
@@ -229,9 +231,34 @@ O botão “Ver anúncio: +60s” usa a **Ad Placement API / H5 Games Ads** (a m
 - se a API não estiver disponível, o botão diz “anúncio indisponível” e **não dá tempo**
 - para testar sem rede: `ADS.rewarded = 'simulado'`
 
-### GameDistribution
+### GameDistribution (portal)
 
-Para publicar no portal, muda `ADS.modo = 'gamedistribution'`. O SDK trata de rewarded e interstitials, mas só faz sentido quando o jogo é servido no portal com o game ID associado.
+O modo `auto` (por defeito) deteta quando o jogo está num domínio `gamedistribution.com` e carrega o SDK; no teu domínio continua a usar AdSense. O script do AdSense é omitido no portal para não haver conflito.
+
+1. Cria conta em <https://gamedistribution.com> e regista o jogo.
+2. Carrega o `index.html` + `assets/` num zip (sem `node_modules`, não há build).
+3. Testa no preview do portal: o botão **+60s** usa um rewarded e o relógio pausa durante o anúncio.
+4. Opcional: liga `ADS.intersticialFimDia = true` para um interstitial no fim da sessão.
+5. Para testar localmente: `?ads=gd`; sem rede/rede indisponível: `?ads=simulado`.
+
+Normalmente não precisas de game ID no código — o portal associa o jogo ao SDK. Se o SDK falhar, o jogo continua a funcionar: o botão diz “anúncio indisponível” e não dá tempo.
+
+Para gerar o pacote de submissão:
+
+```bash
+python3 scripts/build-portal.py
+# dist/pesca-lendaria-gamedistribution.zip
+```
+
+O script força `ADS.modo = 'gamedistribution'`, desliga o analytics, remove o AdSense do pacote e deixa o `index.html` na raiz do ZIP. Também gera uma capa 512×512 em `dist/gamedistribution-cover.png` se tiveres Pillow instalado.
+
+### Forçar o provedor
+
+- `?ads=gd` → GameDistribution
+- `?ads=adsense` → AdSense
+- `?ads=simulado` → anúncio de teste, sem rede
+
+Sem parâmetro, o modo `auto` decide pelo domínio (GameDistribution no portal, AdSense no teu site).
 
 ### Notas
 

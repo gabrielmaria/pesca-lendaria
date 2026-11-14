@@ -1682,6 +1682,7 @@ function gcContar(obj, tentativa) {
 }
 
 function iniciarAnalytics() {
+  if (modoAds() === 'gamedistribution') return;
   lerOrigem();
   if (!ANALYTICS.ativo) return;
 
@@ -1941,8 +1942,8 @@ function encerrarDia() {
   abrirFimDia();
   guardar();
   // Intersticial opcional (só quando publicado no portal)
-  if (ADS.modo === 'gamedistribution' && ADS.intersticialFimDia) {
-    try { if (window.gdsdk && window.gdsdk.showAd) window.gdsdk.showAd(); } catch (e) {}
+  if (modoAds() === 'gamedistribution' && ADS.intersticialFimDia) {
+    try { if (window.gdsdk && window.gdsdk.showAd) window.gdsdk.showAd('interstitial'); } catch (e) {}
   }
 }
 
@@ -2064,6 +2065,20 @@ async function partilhar() {
 let gdCarregado = false;
 let gdPronto = false;
 
+/** Decide o provedor de anúncios: portal GD, AdSense ou simulação. */
+function modoAds() {
+  const forcar = paramURL('ads');
+  if (forcar === 'gd' || forcar === 'gamedistribution') return 'gamedistribution';
+  if (forcar === 'adsense') return 'adsense';
+  if (forcar === 'simulado') return 'simulado';
+  if (ADS.modo === 'gamedistribution' || ADS.modo === 'adsense' || ADS.modo === 'simulado') return ADS.modo;
+  try {
+    const host = (window.location && window.location.hostname) || '';
+    if (host.indexOf('gamedistribution') !== -1) return 'gamedistribution';
+  } catch (e) {}
+  return 'adsense';
+}
+
 /** Carrega o SDK da GameDistribution (só no modo correspondente). */
 function adsenseConfigurado() {
   const a = ADS.adsense || {};
@@ -2116,7 +2131,7 @@ function carregarAdSense() {
 /** Preenche o slot do fim do dia apenas com o modal já visível (política AdSense). */
 function preencherSlotFim() {
   try {
-    if (ADS.modo !== 'adsense' || !adsenseConfigurado()) return;
+    if (modoAds() !== 'adsense' || !adsenseConfigurado()) return;
     if (!ADS.adsense.slotEnd || ADS.adsense.slotEnd === '0000000000') return;
     const el = $('ad-banner');
     if (!el || el.getAttribute('data-filled') === '1') return;
@@ -2139,7 +2154,7 @@ function preencherSlotFim() {
 
 function iniciarAnuncios() {
   /* --- AdSense no próprio site --- */
-  if (ADS.modo === 'adsense') {
+  if (modoAds() === 'adsense') {
     if (!adsenseConfigurado()) return;
     let consent = null;
     try { consent = localStorage.getItem(ADS.consentKey); } catch (e) {}
@@ -2150,7 +2165,7 @@ function iniciarAnuncios() {
   }
 
   /* --- GameDistribution (portal) --- */
-  if (ADS.modo !== 'gamedistribution' || gdCarregado) return;
+  if (modoAds() !== 'gamedistribution' || gdCarregado) return;
   gdCarregado = true;
   const s = document.createElement('script');
   s.src = ADS.sdkUrl;
@@ -2264,7 +2279,7 @@ function verAnuncio() {
     agendarConquistas();
     track('anuncio');
   };
-  if (ADS.modo === 'gamedistribution') {
+  if (modoAds() === 'gamedistribution') {
     if (!window.gdsdk) {
       toast(t('anuncioIndisponivel'));
       return;
@@ -2273,7 +2288,7 @@ function verAnuncio() {
     return;
   }
 
-  if (ADS.modo === 'adsense') {
+  if (modoAds() === 'adsense') {
     let consent = null;
     try { consent = localStorage.getItem(ADS.consentKey); } catch (e) {}
     if (consent !== 'ads') {
