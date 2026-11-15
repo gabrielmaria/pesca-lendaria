@@ -6,9 +6,29 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.6';
+const APP_VERSION = '1.5.7';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.7',
+    data: '15/11/2026',
+    titulo: 'Fluidez',
+    tituloEn: 'Smoothness',
+    itens: [
+      'Animações da Fossa passam a usar transform e opacity, mais leves para a GPU.',
+      'Removidas animações contínuas de página inteira e efeitos de layout.',
+      'A loja de ferramentas deixou de ser reconstruída a cada captura.',
+      'O HUD só redesenha quando os valores mudam.',
+      'Bolhas e poeira mantêm o efeito, mas com menos trabalho de pintura.'
+    ],
+    itensEn: [
+      'Trench animations now use transform and opacity, which are lighter on the GPU.',
+      'Removed continuous full-page animations and layout-triggering effects.',
+      'The tool shop is no longer rebuilt on every catch.',
+      'The HUD only redraws when values change.',
+      'Bubbles and dust keep the effect with less paint work.'
+    ]
+  },
   {
     versao: '1.5.6',
     data: '15/11/2026',

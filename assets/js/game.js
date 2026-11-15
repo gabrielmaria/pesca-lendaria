@@ -540,31 +540,64 @@ function vooMoeda(fromEl) {
 /* ==========================================================================
    7) RENDER DO HUD, SEPARADORES E EVENTO
    ========================================================================== */
+const hudCache = { moedas:'', timer:'', low:null, pct:null, combo:'', hot:null, missao:'', missaoOk:null };
 function atualizarHUD() {
-  $('coinVal').textContent = fmt(state.moedas);
+  const moedas = fmt(state.moedas);
+  if (moedas !== hudCache.moedas) {
+    hudCache.moedas = moedas;
+    $('coinVal').textContent = moedas;
+  }
   const restante = Math.max(0, state.tempo);
+  const timerTxt = pad2(Math.floor(restante / 60)) + ':' + pad2(Math.floor(restante % 60));
   const timer = $('timer');
-  timer.textContent = pad2(Math.floor(restante / 60)) + ':' + pad2(Math.floor(restante % 60));
-  timer.classList.toggle('low', restante <= 30);
+  if (timerTxt !== hudCache.timer) {
+    hudCache.timer = timerTxt;
+    timer.textContent = timerTxt;
+  }
+  const low = restante <= 30;
+  if (low !== hudCache.low) {
+    hudCache.low = low;
+    timer.classList.toggle('low', low);
+  }
   const total = state.tempoTotal > 0 ? state.tempoTotal : tempoSessaoMax();
-  $('timeFill').style.width = clamp(restante / total * 100, 0, 100) + '%';
+  const pct = Math.round(clamp(restante / total * 100, 0, 100) * 2) / 2;
+  if (pct !== hudCache.pct) {
+    hudCache.pct = pct;
+    $('timeFill').style.width = pct + '%';
+  }
 
   const cb = $('comboBadge');
-  $('comboTxt').textContent = '×' + num(multCombo(), 1);
-  cb.classList.toggle('hot', (state.combo || 0) >= 3);
+  const comboTxt = '×' + num(multCombo(), 1);
+  if (comboTxt !== hudCache.combo) {
+    hudCache.combo = comboTxt;
+    $('comboTxt').textContent = comboTxt;
+  }
+  const hot = (state.combo || 0) >= 3;
+  if (hot !== hudCache.hot) {
+    hudCache.hot = hot;
+    cb.classList.toggle('hot', hot);
+  }
 
   const mb = $('missaoBadge');
   const mt = $('missaoTxt');
   const m = state.hoje && state.hoje.missao;
-  if (!m) {
-    mt.textContent = '-';
-    mb.classList.remove('ok');
-  } else if (m.ok) {
-    mt.textContent = tf('missaoFeita', { v: fmt(m.premio) });
-    mb.classList.add('ok');
-  } else {
-    mt.textContent = Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + nomeMissao(m.tipo);
-    mb.classList.remove('ok');
+  let missaoTxt = '-';
+  let missaoOk = false;
+  if (m) {
+    if (m.ok) {
+      missaoTxt = tf('missaoFeita', { v: fmt(m.premio) });
+      missaoOk = true;
+    } else {
+      missaoTxt = Math.min(m.prog, m.alvo) + '/' + m.alvo + ' ' + nomeMissao(m.tipo);
+    }
+  }
+  if (missaoTxt !== hudCache.missao) {
+    hudCache.missao = missaoTxt;
+    mt.textContent = missaoTxt;
+  }
+  if (missaoOk !== hudCache.missaoOk) {
+    hudCache.missaoOk = missaoOk;
+    mb.classList.toggle('ok', missaoOk);
   }
 }
 
@@ -792,6 +825,13 @@ function renderFerramentas() {
     }
   }
 
+  renderFerramentasBar();
+}
+
+/** Atualização leve: só os dois botões, sem reconstruir a loja. */
+function renderFerramentasBar() {
+  const bar = $('fossaTools');
+  if (bar) bar.classList.toggle('hidden', !(fossaAtivo() && modoFossa()));
   const botoes = [
     { id: 'sonar', no: $('toolSonar'), info: $('toolSonarInfo') },
     { id: 'garra', no: $('toolGarra'), info: $('toolGarraInfo') }
@@ -844,7 +884,7 @@ function alternarFerramenta(id) {
     toast(t(garraArmada ? 'ferrGarraOn' : 'ferrGarraOff'));
   }
   bip(id === 'sonar' ? 880 : 520, .08);
-  renderFerramentas();
+  renderFerramentasBar();
 }
 /* ==========================================================================
    9) LIVRO DE PESCA (coleção)
@@ -1187,7 +1227,7 @@ function lancar() {
   if (sonarLance) {
     sonarAtivo = false;
     state.ferrCd.sonar = recargaFerramenta('sonar');
-    renderFerramentas();
+    renderFerramentasBar();
   }
   fase = 'waiting';
   const rod = $('rod');
@@ -1849,7 +1889,7 @@ function renderModo() {
     sea.setAttribute('data-fundo', (ab || fo) ? 'abisso' : 'superficie');
     sea.setAttribute('data-zona', fo ? 'fossa' : (ab ? 'abisso' : 'superficie'));
   }
-  renderFerramentas();
+  renderFerramentasBar();
   aplicarHora();
 }
 
@@ -2227,7 +2267,7 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
   FERRAMENTAS_DADOS.forEach(function (f) {
     if (state.ferrCd[f.id] > 0) state.ferrCd[f.id] -= 1;
   });
-  renderFerramentas();
+  renderFerramentasBar();
   agendarConquistas();
 
   const novo = state.descobertos.indexOf(peixe.id) === -1;
