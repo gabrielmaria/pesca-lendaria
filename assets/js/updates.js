@@ -6,9 +6,27 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.7';
+const APP_VERSION = '1.5.8';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.8',
+    data: '15/11/2026',
+    titulo: 'Fluidez extra',
+    tituloEn: 'Extra smoothness',
+    itens: [
+      'O sonar do cenário só pulsa quando a ferramenta está armada.',
+      'Luz, plâncton e animações do céu escondido deixam de correr no fundo.',
+      'Se detetar menos de ~50 FPS ou muitos frames lentos, ativa sozinho o modo de fluidez.',
+      'Podes forçar todos os efeitos com ?fx=full.'
+    ],
+    itensEn: [
+      'The scenery sonar only pulses while the tool is armed.',
+      'Light, plankton and hidden-sky animations stop running in the deep.',
+      'If it detects under ~50 FPS or many slow frames, it automatically enables fluidity mode.',
+      'You can force all effects with ?fx=full.'
+    ]
+  },
   {
     versao: '1.5.7',
     data: '15/11/2026',

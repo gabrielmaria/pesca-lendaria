@@ -237,6 +237,54 @@ function iniciar() {
   /* --- Loop principal --- */
   ultimoAgora = Date.now();
   setInterval(loop, CONFIG.TICK_MS);
+
+  /* --- Se o dispositivo estiver a sofrer, reduz só o ambiente --- */
+  setTimeout(monitorizarFluidez, 4200);
+}
+
+/** Mede ~1,5s de frames e ativa o modo leve se estiver abaixo de 45 FPS. */
+function monitorizarFluidez() {
+  if (document.body.getAttribute('data-fx') === 'leve') return;
+  try { if (paramURL('fx') === 'full') return; } catch (e) {}
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  } catch (e) {}
+  if (document.hidden) { setTimeout(monitorizarFluidez, 3000); return; }
+  if (typeof fase !== 'undefined' && fase !== 'idle') {
+    setTimeout(monitorizarFluidez, 2500);
+    return;
+  }
+  if (document.querySelector('.modal:not(.hidden)')) {
+    setTimeout(monitorizarFluidez, 3000);
+    return;
+  }
+  const consent = $('consent');
+  if (consent && !consent.classList.contains('hidden')) {
+    setTimeout(monitorizarFluidez, 3000);
+    return;
+  }
+
+  let frames = 0;
+  let longos = 0;
+  let inicio = 0;
+  let ultimo = 0;
+  function passo(t) {
+    if (!inicio) { inicio = t; ultimo = t; }
+    else { if (t - ultimo > 24) longos++; ultimo = t; }
+    frames++;
+    const dur = t - inicio;
+    if (dur >= 1600) {
+      const fps = frames > 1 ? (frames - 1) * 1000 / dur : 60;
+      const jank = frames > 1 ? longos / (frames - 1) : 0;
+      if ((fps > 0 && fps < 50) || jank > 0.18) {
+        document.body.setAttribute('data-fx', 'leve');
+        toast(t('modoLite'));
+      }
+      return;
+    }
+    requestAnimationFrame(passo);
+  }
+  requestAnimationFrame(passo);
 }
 
 iniciar();

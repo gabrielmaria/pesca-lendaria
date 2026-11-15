@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.7" src="https://img.shields.io/badge/vers%C3%A3o-1.5.7-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.8" src="https://img.shields.io/badge/vers%C3%A3o-1.5.8-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
@@ -170,6 +170,10 @@ O progresso fica em `localStorage`, na chave `pescaLendaria.v2`. Não há botão
 
 1. DevTools → Application → Local Storage → apagar `pescaLendaria.v2`.
 2. Ou abrir numa janela anónima.
+
+### Fluidez
+
+O jogo mede ~1,5s de frames depois de arrancar. Se detetar menos de ~50 FPS ou muitos frames lentos, ativa sozinho o **modo de fluidez**, que reduz apenas os efeitos contínuos de ambiente. Transições, capturas e feedback de jogo mantêm-se. Para forçar todos os efeitos num dispositivo lento, abre o jogo com `?fx=full`.
 
 ### Novidades / changelog
 

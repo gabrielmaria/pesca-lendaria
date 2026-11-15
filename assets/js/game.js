@@ -832,6 +832,8 @@ function renderFerramentas() {
 function renderFerramentasBar() {
   const bar = $('fossaTools');
   if (bar) bar.classList.toggle('hidden', !(fossaAtivo() && modoFossa()));
+  const sea = $('sea');
+  if (sea) sea.classList.toggle('sonar', !!(fossaAtivo() && modoFossa() && sonarAtivo));
   const botoes = [
     { id: 'sonar', no: $('toolSonar'), info: $('toolSonarInfo') },
     { id: 'garra', no: $('toolGarra'), info: $('toolGarraInfo') }

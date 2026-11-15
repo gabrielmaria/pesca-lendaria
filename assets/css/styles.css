@@ -1569,6 +1569,12 @@ body[data-tema="abisso"] .nov-item{border-top-color:rgba(120,230,230,.25);}
 .scene[data-fundo="abisso"] .poste{display:none;}
 .scene[data-fundo="abisso"] .cana-spr{filter:brightness(.75) saturate(.25) hue-rotate(140deg);}
 .scene[data-fundo="abisso"][data-clima] .clima{opacity:.22;filter:hue-rotate(150deg) saturate(.6);}
+.scene[data-fundo="abisso"] .sol,
+.scene[data-fundo="abisso"] .lua-noite,
+.scene[data-fundo="abisso"] .nuvem,
+.scene[data-fundo="abisso"] .passaro,
+.scene[data-fundo="abisso"] .peixe-salta,
+.scene[data-fundo="abisso"] .estrelas{animation:none !important;}
 
 /* ==========================================================================
    FOSSA — pressão, violeta e bioluminescência rosa
@@ -1867,7 +1873,7 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
     linear-gradient(102deg, transparent 30%, rgba(255,110,199,.11) 31%, rgba(255,110,199,.11) 38%, transparent 39%),
     linear-gradient(78deg, transparent 56%, rgba(176,107,255,.1) 57%, rgba(176,107,255,.1) 64%, transparent 65%),
     linear-gradient(90deg, transparent 47%, rgba(159,247,255,.05) 48%, rgba(159,247,255,.05) 51%, transparent 52%);
-  animation-duration:13s;
+  animation:none;
 }
 .scene[data-zona="fossa"] .abismo-plankton{
   opacity:.75;
@@ -1876,7 +1882,7 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
     radial-gradient(circle, rgba(201,154,255,.7) 1px, transparent 2px),
     radial-gradient(circle, rgba(159,247,255,.55) 1px, transparent 2px);
   background-size:87px 67px, 53px 89px, 113px 73px;
-  animation-duration:4.2s;
+  animation:none;
 }
 .scene[data-zona="fossa"] .abismo-bolhas{
   opacity:.42;
@@ -1933,7 +1939,6 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
 .fossa-fendas{
   position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;
   fill:none;stroke:#ff6ec7;stroke-width:1.4;
-  filter:drop-shadow(0 0 4px rgba(255,110,199,.7));
   shape-rendering:crispEdges;
 }
 .scene[data-zona="fossa"] .fossa-fendas{opacity:.22;clip-path:inset(38% 0 0 0);}
@@ -1953,7 +1958,7 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
   transform:translate(-50%,-50%) scale(.1);opacity:0;pointer-events:none;
   will-change:transform,opacity;
 }
-.scene[data-zona="fossa"] .fossa-sonar{animation:sonarCena 5.4s steps(26) infinite;}
+.scene[data-zona="fossa"].sonar .fossa-sonar{animation:sonarCena 5.4s steps(26) infinite;}
 @keyframes poeiraCena{
   from{transform:translate3d(0,0,0);}
   to{transform:translate3d(0,240px,0);}
@@ -2048,3 +2053,20 @@ body[data-modo="fossa"] .fish-cell.hadal.unknown{
 body[data-modo="fossa"] .fish-cell.hadal .fc-name{color:#fff0fa;}
 body[data-modo="fossa"] .fish-cell.hadal .fc-rar,
 body[data-modo="fossa"] .fish-cell.hadal .fc-val{color:#ffb3e2;}
+
+
+/* ==========================================================================
+   MODO DE FLUIDEZ: desliga só o ambiente contínuo, mantém o feedback
+   ========================================================================== */
+body[data-fx="leve"] .scene .abismo-luz,
+body[data-fx="leve"] .scene .abismo-plankton,
+body[data-fx="leve"] .scene .abismo-bolhas,
+body[data-fx="leve"] .scene .fossa-poeira,
+body[data-fx="leve"] .descida.fossa.ativa,
+body[data-fx="leve"] .descida-poeira{
+  animation:none !important;
+}
+body[data-fx="leve"] .scene[data-zona="fossa"]{
+  box-shadow:inset 0 0 0 3px rgba(255,110,199,.2), 0 6px 0 rgba(0,0,0,.5);
+}
+body[data-fx="leve"] .scene[data-zona="fossa"] .fossa-fendas{opacity:.16;}
