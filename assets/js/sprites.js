@@ -625,6 +625,7 @@ function spriteCenario(nome, escala) {
     contorno(g, '#123a55');
     return gridParaCanvas(g, escala);
   }
+  if (nome === 'anfipode') return spriteAnfipode(escala);
   return spriteIcone(nome, escala);
 }
 
@@ -658,6 +659,31 @@ function spriteMedusa(escala) {
   }
   px(g, 5, 4, '#ffffff'); px(g, 9, 5, '#dffcff');
   contorno(g, '#041820');
+  return gridParaCanvas(g, escala);
+}
+
+/** Anfípode hadal: pequeno crustáceo típico das fossas. */
+function spriteAnfipode(escala) {
+  const g = novoGrid(16, 10);
+  // pernas
+  linhaPx(g, 4, 6, 2, 9, '#8d4bd1');
+  linhaPx(g, 7, 6, 6, 9, '#8d4bd1');
+  linhaPx(g, 10, 6, 10, 9, '#8d4bd1');
+  linhaPx(g, 13, 6, 14, 9, '#8d4bd1');
+  // corpo em segmentos
+  elipsePx(g, 8, 5, 5.2, 2.2, '#5a2a8a');
+  elipsePx(g, 8, 5, 4.2, 1.7, '#b06bff');
+  rectPx(g, 5, 4, 2, 2, '#c99aff');
+  rectPx(g, 8, 4, 2, 2, '#c99aff');
+  rectPx(g, 11, 4, 2, 2, '#ff8bd1');
+  // cauda
+  triPx(g, 13, 5, 15, 2, 15, 8, '#ff8bd1');
+  // cabeça e antenas
+  px(g, 3, 4, '#f8ecff');
+  px(g, 3, 5, '#ffb3e2');
+  linhaPx(g, 3, 3, 0, 1, '#ffb3e2');
+  linhaPx(g, 3, 4, 0, 4, '#c99aff');
+  contorno(g, '#12051f');
   return gridParaCanvas(g, escala);
 }
 

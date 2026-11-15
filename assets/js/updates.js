@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.8';
+const APP_VERSION = '1.5.9';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.9',
+    data: '15/11/2026',
+    titulo: 'Vida da Fossa',
+    tituloEn: 'Trench life',
+    itens: [
+      'Saíram as medusas e as fissuras pontiagudas da Fossa.',
+      'Entraram anfípodes hadal e paredes de sedimento arredondadas.',
+      'A transição para a Fossa também troca medusas por anfípodes.'
+    ],
+    itensEn: [
+      'Removed the jellyfish and spiky cracks from the Trench.',
+      'Added hadal amphipods and rounded sediment walls.',
+      'The descent into the Trench now uses amphipods instead of jellyfish.'
+    ]
+  },
   {
     versao: '1.5.8',
     data: '15/11/2026',

@@ -1976,15 +1976,36 @@ function animarDescida(m, comTexto, anterior) {
         r.appendChild(spriteRocha(i % 2 ? 3 : 4));
         fundo.appendChild(r);
       }
-      for (let i = 0; i < (m === 'fossa' ? 4 : 3); i++) {
-        const j = document.createElement('span');
-        j.className = 'descida-medusa';
-        j.style.left = (8 + Math.random() * 78) + '%';
-        j.style.top = (18 + Math.random() * 55) + '%';
-        j.appendChild(spriteMedusa(i % 2 ? 4 : 5));
-        j.style.setProperty('--mdur', (1.2 + Math.random() * 0.6).toFixed(2) + 's');
-        j.style.setProperty('--mdelay', (Math.random() * 0.5).toFixed(2) + 's');
-        fundo.appendChild(j);
+      if (m === 'abisso') {
+        for (let i = 0; i < 3; i++) {
+          const j = document.createElement('span');
+          j.className = 'descida-medusa';
+          j.style.left = (8 + Math.random() * 78) + '%';
+          j.style.top = (18 + Math.random() * 55) + '%';
+          j.appendChild(spriteMedusa(i % 2 ? 4 : 5));
+          j.style.setProperty('--mdur', (1.2 + Math.random() * 0.6).toFixed(2) + 's');
+          j.style.setProperty('--mdelay', (Math.random() * 0.5).toFixed(2) + 's');
+          fundo.appendChild(j);
+        }
+      }
+    }
+  }
+
+  // A Fossa tem anfípodes hadal, não medusas.
+  const anfipodes = $('descidaAnfipodes');
+  if (anfipodes) {
+    anfipodes.innerHTML = '';
+    if (m === 'fossa') {
+      for (let i = 0; i < 5; i++) {
+        const a = document.createElement('span');
+        a.className = 'descida-anfipode';
+        a.style.top = (16 + Math.random() * 68) + '%';
+        a.style.width = (22 + Math.random() * 20) + 'px';
+        a.style.setProperty('--dur', (1.6 + Math.random() * 0.7).toFixed(2) + 's');
+        a.style.setProperty('--delay', (Math.random() * 0.7).toFixed(2) + 's');
+        a.style.setProperty('--dir', Math.random() < 0.5 ? -1 : 1);
+        a.appendChild(spriteAnfipode(2));
+        anfipodes.appendChild(a);
       }
     }
   }
@@ -2037,6 +2058,7 @@ function animarDescida(m, comTexto, anterior) {
     if (txt) txt.textContent = '';
     if (peixes) peixes.innerHTML = '';
     if (fundo) fundo.innerHTML = '';
+    if (anfipodes) anfipodes.innerHTML = '';
     if (arvores) arvores.innerHTML = '';
     pararProfundidade();
   }, dur);
