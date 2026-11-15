@@ -407,8 +407,21 @@ function spriteIcone(nome, escala) {
       triPx(g, 15, 8, 8, 5, 8, 11, '#ffe08a');
       rectPx(g, 7, 7, 2, 2, '#fff6c0');
       break;
-    case 'sonar':
-      elipsePx(g, 8, 8, 6.2, 6.2, '#3a1454');
+    case 'fossa':
+      triPx(g, 8, 1, 1, 13, 15, 13, '#3a1558');
+      triPx(g, 8, 4, 4, 12, 12, 12, '#b06bff');
+      triPx(g, 8, 7, 6, 11, 10, 11, '#ff8bd1');
+      px(g, 8, 10, '#f8ecff'); px(g, 7, 11, '#ffd0ef'); px(g, 9, 11, '#ffd0ef');
+      break;
+    case 'pressao':
+      elipsePx(g, 8, 8, 6.5, 6.5, '#3a1558');
+      elipsePx(g, 8, 8, 5.2, 5.2, '#b06bff');
+      elipsePx(g, 8, 8, 3.8, 3.8, '#3a1558');
+      rectPx(g, 7, 3, 2, 6, '#f8ecff');
+      triPx(g, 8, 13, 4, 7, 12, 7, '#ff6ec7');
+      px(g, 8, 13, '#ffd0ef');
+      break;
+    case 'sonar':      elipsePx(g, 8, 8, 6.2, 6.2, '#3a1454');
       elipsePx(g, 8, 8, 5.1, 5.1, '#b06bff');
       elipsePx(g, 8, 8, 4.0, 4.0, '#3a1454');
       elipsePx(g, 8, 8, 2.9, 2.9, '#ff6ec7');

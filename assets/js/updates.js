@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.11';
+const APP_VERSION = '1.5.12';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.12',
+    data: '15/11/2026',
+    titulo: 'Fossa sem azuis',
+    tituloEn: 'No more blue',
+    itens: [
+      'Combo, missão, evento, capturas, conquistas e modais passam a violeta e rosa na Fossa.',
+      'As iscas Fossa e Pressão ganharam ícones próprios.',
+      'Os ícones abissais convidados são tingidos para a paleta da Fossa.'
+    ],
+    itensEn: [
+      'Combo, mission, event, catches, achievements and modals use violet and pink in the Trench.',
+      'Trench and Pressure baits now have their own icons.',
+      'Guest abyssal icons are tinted to match the Trench palette.'
+    ]
+  },
   {
     versao: '1.5.11',
     data: '15/11/2026',

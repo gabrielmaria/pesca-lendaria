@@ -709,7 +709,7 @@ body[data-ads="gd"] .site-footer{display:none !important;}
   background-image:
     radial-gradient(circle, rgba(255,110,199,.85) 1.5px, transparent 2.5px),
     radial-gradient(circle, rgba(201,154,255,.6) 2px, transparent 3px),
-    radial-gradient(circle, rgba(159,247,255,.45) 1px, transparent 2px);
+    radial-gradient(circle, rgba(255,179,226,.45) 1px, transparent 2px);
 }
 .descida.fossa.ativa .descida-bolhas{animation-duration:2.2s;}
 .descida.fossa .descida-vinheta{
@@ -727,7 +727,7 @@ body[data-ads="gd"] .site-footer{display:none !important;}
     inset 0 0 26px rgba(255,110,199,.4);
   background:
     linear-gradient(90deg, rgba(255,110,199,.16), transparent 13%, transparent 87%, rgba(255,110,199,.16)),
-    repeating-linear-gradient(0deg, transparent 0 7px, rgba(159,247,255,.035) 7px 8px);
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(255,179,226,.04) 7px 8px);
 }
 .descida.fossa.ativa .descida-pressao{animation:pressaoPulsa 1.7s steps(3) infinite;}
 .descida-sonar{
@@ -742,7 +742,7 @@ body[data-ads="gd"] .site-footer{display:none !important;}
   position:absolute;top:-120%;bottom:-120%;left:0;right:0;z-index:1;opacity:0;pointer-events:none;
   background-image:
     radial-gradient(circle, rgba(201,154,255,.65) 1px, transparent 2px),
-    radial-gradient(circle, rgba(159,247,255,.4) 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,179,226,.4) 1px, transparent 2px),
     radial-gradient(circle, rgba(255,110,199,.45) 1px, transparent 2px);
   background-size:60px 80px, 90px 120px, 40px 60px;
   background-position:0 0, 21px 33px, 9px 17px;
@@ -1602,7 +1602,7 @@ body[data-modo="fossa"]::before{
     repeating-linear-gradient(0deg, rgba(255,110,199,.025) 0 1px, transparent 1px 5px),
     radial-gradient(circle, rgba(255,110,199,.55) 1px, transparent 2px),
     radial-gradient(circle, rgba(201,154,255,.42) 1px, transparent 2px),
-    radial-gradient(circle, rgba(159,247,255,.34) 1px, transparent 2px);
+    radial-gradient(circle, rgba(255,179,226,.34) 1px, transparent 2px);
   background-size:auto, auto, 97px 113px, 151px 173px, 223px 197px;
   background-position:center, 0 0, 0 0, 37px 61px, 93px 19px;
   opacity:.5;
@@ -1867,12 +1867,13 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
 .scene[data-zona="fossa"] .barco-spr,
 .scene[data-zona="fossa"] .poste,
 .scene[data-zona="fossa"] .peixe-salta{display:none;}
-.scene[data-zona="fossa"] .morro{opacity:.18;filter:hue-rotate(260deg) brightness(.42);}
+.scene[data-zona="fossa"] .morro,
+.scene[data-zona="fossa"] .estrelas{display:none;}
 .scene[data-zona="fossa"] .abismo-luz{
   background:
     linear-gradient(102deg, transparent 30%, rgba(255,110,199,.11) 31%, rgba(255,110,199,.11) 38%, transparent 39%),
     linear-gradient(78deg, transparent 56%, rgba(176,107,255,.1) 57%, rgba(176,107,255,.1) 64%, transparent 65%),
-    linear-gradient(90deg, transparent 47%, rgba(159,247,255,.05) 48%, rgba(159,247,255,.05) 51%, transparent 52%);
+    linear-gradient(90deg, transparent 47%, rgba(255,179,226,.05) 48%, rgba(255,179,226,.05) 51%, transparent 52%);
   animation:none;
 }
 .scene[data-zona="fossa"] .abismo-plankton{
@@ -1880,7 +1881,7 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
   background-image:
     radial-gradient(circle, rgba(255,110,199,.95) 1px, transparent 2px),
     radial-gradient(circle, rgba(201,154,255,.7) 1px, transparent 2px),
-    radial-gradient(circle, rgba(159,247,255,.55) 1px, transparent 2px);
+    radial-gradient(circle, rgba(255,179,226,.55) 1px, transparent 2px);
   background-size:87px 67px, 53px 89px, 113px 73px;
   animation:none;
 }
@@ -1889,7 +1890,7 @@ body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
   background-image:
     radial-gradient(circle, rgba(255,110,199,.8) 1px, transparent 2px),
     radial-gradient(circle, rgba(201,154,255,.65) 1.5px, transparent 2.5px),
-    radial-gradient(circle, rgba(159,247,255,.45) 1px, transparent 2px);
+    radial-gradient(circle, rgba(255,179,226,.45) 1px, transparent 2px);
   animation:none;
 }
 .scene[data-zona="fossa"] .abismo-vinheta{
@@ -2071,3 +2072,129 @@ body[data-fx="leve"] .scene[data-zona="fossa"]{
   box-shadow:inset 0 0 0 3px rgba(255,110,199,.2), 0 6px 0 rgba(0,0,0,.5);
 }
 body[data-fx="leve"] .scene[data-zona="fossa"] .fossa-fendas{opacity:.16;}
+
+
+/* ==========================================================================
+   FOSSA: remover os últimos azuis herdados do Mar Profundo
+   ========================================================================== */
+body[data-modo="fossa"] .muted{color:#c9a4e6;text-shadow:none;}
+body[data-modo="fossa"] .modal{background:rgba(6,0,12,.82);}
+
+/* Evento, combo e missão */
+body[data-modo="fossa"] .event-card{
+  background:linear-gradient(180deg,#2c1147,#160825);
+  border-color:#030006;
+  box-shadow:inset 0 0 0 2px #512379, 4px 4px 0 rgba(0,0,0,.5);
+  color:#f3e6ff;
+}
+body[data-modo="fossa"] .ev-title{color:#ffe6f7;}
+body[data-modo="fossa"] .ev-desc{color:#d9c2f0;}
+body[data-modo="fossa"] .ev-close{background:#3c1a5c;border-color:#030006;color:#ffe6f7;}
+body[data-modo="fossa"] .combo{
+  background:linear-gradient(180deg,#321650,#1d0b32);
+  border-color:#030006;
+  color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.2), 0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .combo.hot{
+  background:linear-gradient(180deg,#ffd0ef,#ff6ec7);
+  color:#2a061c;
+}
+body[data-modo="fossa"] .missao{
+  background:linear-gradient(180deg,#321650,#1d0b32);
+  border-color:#030006;
+  color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.2), 0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .missao.ok{
+  background:linear-gradient(180deg,#512379,#2b0e47);
+  color:#ffe6f7;
+}
+body[data-modo="fossa"] #toast{background:#1d0b32;border-color:#512379;color:#f8ecff;}
+
+/* Resultado da captura */
+body[data-modo="fossa"] .catch{
+  background:#1a0a2e;
+  box-shadow:inset 0 0 0 5px #2d1245, inset 0 0 0 8px #512379;
+}
+body[data-modo="fossa"] .catch-name{color:#f8ecff;}
+body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
+body[data-modo="fossa"] .catch-info{color:#d9c2f0;}
+body[data-modo="fossa"] .catch-pearl{color:#ffb3e2;}
+body[data-modo="fossa"] .catch-flag{border-color:#12051f;}
+body[data-modo="fossa"] #marker{box-shadow:0 0 0 2px #12051f;}
+body[data-modo="fossa"] .boia{border-color:#12051f;}
+
+/* Novidades */
+body[data-modo="fossa"] .nov-sub,
+body[data-modo="fossa"] .nov-data,
+body[data-modo="fossa"] .nov-itens{color:#d9c2f0;}
+body[data-modo="fossa"] .nov-versao{color:#f3e6ff;}
+body[data-modo="fossa"] .nov-titulo{color:#ff9ad9;}
+body[data-modo="fossa"] .nov-item{border-top-color:rgba(255,110,199,.24);}
+
+/* Conquistas */
+body[data-modo="fossa"] .ach-card{
+  background:linear-gradient(180deg,#24103d,#10051e);
+  border-color:#030006;
+  box-shadow:inset -2px -2px 0 #12051f, inset 2px 2px 0 #512379;
+}
+body[data-modo="fossa"] .ach-card.done{
+  background:linear-gradient(180deg,#3b1558,#24103d);
+  border-color:#ff6ec7;
+}
+body[data-modo="fossa"] .ach-name{color:#f3e6ff;}
+body[data-modo="fossa"] .ach-desc{color:#d9c2f0;}
+body[data-modo="fossa"] .ach-bar{background:#12051f;border-color:#030006;}
+body[data-modo="fossa"] .ach-fill{background:linear-gradient(90deg,#b06bff,#ff6ec7);}
+body[data-modo="fossa"] .ach-prog{color:#c9a4e6;}
+body[data-modo="fossa"] .ach-reward{color:#ff9ad9;}
+
+/* Modais e fim do dia */
+body[data-modo="fossa"] .modal-card{
+  background:linear-gradient(180deg,#24103d,#10051e);
+  border-color:#030006;
+  box-shadow:inset 0 0 0 3px #512379, 8px 8px 0 rgba(0,0,0,.55);
+  color:#f3e6ff;
+}
+body[data-modo="fossa"] .modal-card h2{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
+body[data-modo="fossa"] .modal-card p{color:#d9c2f0;}
+body[data-modo="fossa"] .fim-grid div{
+  background:linear-gradient(180deg,#24103d,#140724);
+  border-color:#030006;
+  box-shadow:inset -2px -2px 0 #12051f, inset 2px 2px 0 #512379;
+}
+body[data-modo="fossa"] .fim-grid b{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
+body[data-modo="fossa"] .fim-grid span{color:#c9a4e6;}
+body[data-modo="fossa"] .fim-best{
+  background:#24103d;border-color:#030006;box-shadow:inset 0 0 0 2px #512379;color:#f3e6ff;
+}
+body[data-modo="fossa"] .fim-best b{color:#ff9ad9;}
+body[data-modo="fossa"] .streak{
+  background:#321650;border-color:#030006;color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px #512379;
+}
+body[data-modo="fossa"] .streak b{color:#ff9ad9;}
+body[data-modo="fossa"] .nextday{color:#d9c2f0;}
+body[data-modo="fossa"] .nextday span{color:#ff9ad9;}
+body[data-modo="fossa"] .amanha{
+  background:#24103d;border-color:#030006;color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px #512379;
+}
+body[data-modo="fossa"] .amanha b{color:#ff9ad9;}
+body[data-modo="fossa"] .fim-chefe{
+  background:#321650;border-color:#030006;color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px #512379;
+}
+body[data-modo="fossa"] #ad-banner{
+  background:repeating-linear-gradient(45deg,#2c1147 0 8px,#1a0a2e 8px 16px);
+  border-color:#512379;
+  color:#c9a4e6;
+}
+body[data-modo="fossa"] #offlineVal{color:#ff9ad9 !important;}
+body[data-modo="fossa"] .consent{border-top-color:#ff6ec7;}
+
+/* Ícones abissais convidados ficam na paleta da Fossa */
+body[data-modo="fossa"] [data-sprite="abismo"] canvas{
+  filter:hue-rotate(115deg) saturate(1.15) brightness(1.08);
+}

@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.11" src="https://img.shields.io/badge/vers%C3%A3o-1.5.11-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.12" src="https://img.shields.io/badge/vers%C3%A3o-1.5.12-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
