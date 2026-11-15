@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.10';
+const APP_VERSION = '1.5.11';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.11',
+    data: '15/11/2026',
+    titulo: 'Só a transição',
+    tituloEn: 'Transition only',
+    itens: [
+      'A cena junto ao pescador volta ao visual anterior da Fossa.',
+      'A transição mantém os anfípodes e deixa de ter medusas e fissuras.',
+      'A Medusa do Núcleo volta ao livro; a mudança era só na transição.'
+    ],
+    itensEn: [
+      'The scene next to the fisherman returns to the previous Trench look.',
+      'The transition keeps the amphipods and no longer has jellyfish or cracks.',
+      'Core Jellyfish returns to the book; the change was only for the transition.'
+    ]
+  },
   {
     versao: '1.5.10',
     data: '15/11/2026',

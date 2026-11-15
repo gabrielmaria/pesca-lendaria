@@ -86,7 +86,7 @@ const PEIXES = [
   { id:'raia_do_vazio',        nome:'Raia do Vazio', en:'Void Ray',                         emoji:'🐟', r:7, base:74 },
   { id:'celacanto_submersivel', nome:'Celacanto Submersível', en:'Submersible Coelacanth',  emoji:'🐟', r:7, base:76 },
   { id:'caranguejo_das_fumarolas', nome:'Caranguejo das Fumarolas', en:'Vent Crab',         emoji:'🦀', r:7, base:78 },
-  { id:'medusa_do_nucleo',     nome:'Peixe-Caramelo das Fossas', en:'Hadal Snailfish',          emoji:'🐟', r:7, base:80 },
+  { id:'medusa_do_nucleo',     nome:'Medusa do Núcleo', en:'Core Jellyfish',                emoji:'🐙', r:7, base:80 },
   { id:'leviata_de_pressao',   nome:'Leviatã de Pressão', en:'Pressure Leviathan',          emoji:'🐳', r:7, base:84 },
   { id:'dragao_das_fendas',    nome:'Dragão das Fendas', en:'Trench Dragon',                 emoji:'🐉', r:7, base:88 }
 ];
