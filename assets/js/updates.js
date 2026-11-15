@@ -6,9 +6,23 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.3';
+const APP_VERSION = '1.5.4';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.4',
+    data: '15/11/2026',
+    titulo: 'Patrocinador +60s',
+    tituloEn: 'Sponsor +60s',
+    itens: [
+      'Novo patrocinador interno no fim da sessão: 15s para ganhar +60s de pesca.',
+      'Preparado para trocar pelo rewarded real quando o H5 Games Ads estiver disponível.'
+    ],
+    itensEn: [
+      'New internal sponsor at the end of the session: 15s to earn +60s of fishing.',
+      'Ready to switch to real rewarded ads when H5 Games Ads is available.'
+    ]
+  },
   {
     versao: '1.5.3',
     data: '12/11/2026',

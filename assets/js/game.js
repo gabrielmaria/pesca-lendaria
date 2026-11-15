@@ -1998,7 +1998,8 @@ function abrirFimDia() {
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
-  $('btnAnuncio').style.display = (modoAds() !== 'adsterra' && state.anuncios < maxAnuncios()) ? '' : 'none';
+  $('btnAnuncio').style.display = state.anuncios < maxAnuncios() ? '' : 'none';
+  $('btnAnuncioTxt').textContent = t(modoAds() === 'adsterra' ? 'verPatrocinador' : 'verAnuncio');
   $('fimModal').classList.remove('hidden');
   preencherSlotFim();
   atualizarProximoDia();
@@ -2315,9 +2316,57 @@ function pedirRewardedH5(cb) {
   } catch (e) { responder(null); }
 }
 
+let patrocinioTimer = null;
+let patrocinioRestante = 0;
+
+function atualizarPatrocinio() {
+  const s = Math.max(0, patrocinioRestante);
+  const contador = $('patrocinioContador');
+  const ok = $('btnPatrocinioOk');
+  if (contador) contador.textContent = s + 's';
+  if (!ok) return;
+  ok.disabled = s > 0;
+  ok.textContent = s > 0
+    ? tf('patrocinioAguarda', { s: s })
+    : tf('patrocinioPronto', { s: CONFIG.ANUNCIO_SEGUNDOS });
+}
+
+function abrirPatrocinio() {
+  if (state.anuncios >= maxAnuncios()) {
+    toast(t('jaVisteAnuncios'));
+    return;
+  }
+  if (patrocinioTimer) { clearInterval(patrocinioTimer); patrocinioTimer = null; }
+  patrocinioRestante = CONFIG.PATROCINIO_SEGUNDOS;
+  atualizarPatrocinio();
+  $('patrocinioModal').classList.remove('hidden');
+  bip(620, .06);
+  patrocinioTimer = setInterval(function () {
+    if (document.hidden) return;
+    patrocinioRestante -= 1;
+    atualizarPatrocinio();
+    if (patrocinioRestante <= 0) {
+      clearInterval(patrocinioTimer);
+      patrocinioTimer = null;
+    }
+  }, 1000);
+}
+
+function fecharPatrocinio(premiar) {
+  if (patrocinioTimer) { clearInterval(patrocinioTimer); patrocinioTimer = null; }
+  const m = $('patrocinioModal');
+  if (m) m.classList.add('hidden');
+  if (!premiar || patrocinioRestante > 0) return;
+  state.anuncios += 1;
+  if (state.stats) state.stats.anuncios = (state.stats.anuncios || 0) + 1;
+  track('anuncio', { tipo: 'patrocinador' });
+  concederTempo();
+  agendarConquistas();
+}
+
 function verAnuncio() {
   if (modoAds() === 'adsterra') {
-    toast(t('anuncioIndisponivel'));
+    abrirPatrocinio();
     return;
   }
   if (state.anuncios >= maxAnuncios()) {

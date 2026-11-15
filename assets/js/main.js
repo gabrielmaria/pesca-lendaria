@@ -82,6 +82,8 @@ function aplicarIdioma() {
     $('evDesc').textContent = descEvento(ev);
 
     if (!$('fimModal').classList.contains('hidden')) abrirFimDia();
+    const pm = $('patrocinioModal');
+    if (pm && !pm.classList.contains('hidden')) atualizarPatrocinio();
     guardar();
   } catch (e) {}
 }
@@ -197,6 +199,8 @@ function iniciar() {
   $('btnPartilhar').addEventListener('click', partilhar);
   $('btnFecharFim').addEventListener('click', fecharFimDia);
   $('btnAnuncio').addEventListener('click', verAnuncio);
+  $('btnPatrocinioOk').addEventListener('click', function () { fecharPatrocinio(true); });
+  $('btnPatrocinioFechar').addEventListener('click', function () { fecharPatrocinio(false); });
 
   /* --- Offline --- */
   $('btnRecolher').addEventListener('click', recolherOffline);

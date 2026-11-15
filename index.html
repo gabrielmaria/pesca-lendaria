@@ -265,9 +265,21 @@
     <!-- ======== ANÚNCIO RECOMPENSADO (simulado) ========
          LIGAR SDK REAL MAIS TARDE: chamar rewardedAd.show() e só
          executar concederTempo() no fim do anúncio. -->
-    <button class="btn ad" id="btnAnuncio"><span class="spr-slot" data-sprite="tv"></span> <span data-i18n="verAnuncio">Ver anúncio: +60s de pesca</span></button>
+    <button class="btn ad" id="btnAnuncio"><span class="spr-slot" data-sprite="tv"></span> <span id="btnAnuncioTxt" data-i18n="verAnuncio">Ver anúncio: +60s de pesca</span></button>
 
     <button class="btn ghost" id="btnFecharFim" data-i18n="fechar">Fechar</button>
+  </div>
+</div>
+
+<!-- ======================= MODAL: PATROCINADOR INTERNO ======================= -->
+<div class="modal hidden" id="patrocinioModal">
+  <div class="modal-card patrocinio-card">
+    <h2 data-i18n="patrocinioTitulo">Patrocinador</h2>
+    <p data-i18n="patrocinioTexto">Este espaço está reservado para um patrocinador. Obrigado por apoiares o Pesca Lendária!</p>
+    <div class="patrocinio-logo"><img src="assets/img/logo.png" width="128" height="128" alt=""></div>
+    <div class="patrocinio-contador" id="patrocinioContador">15s</div>
+    <button class="btn gold" id="btnPatrocinioOk" disabled></button>
+    <button class="btn ghost small" id="btnPatrocinioFechar" data-i18n="fechar">Fechar</button>
   </div>
 </div>
 

@@ -14,6 +14,7 @@ const CONFIG = {
   INTERVALO_SESSAO_HORAS: 12, // horas entre sessões (2 por dia)
   ANUNCIO_SEGUNDOS: 60,       // segundos ganhos por anúncio
   ANUNCIO_MAX_DIA: 2,         // anúncios máximos por dia
+  PATROCINIO_SEGUNDOS: 15,    // contagem do patrocinador interno
   OFFLINE_CAP_HORAS: 24,      // cap do rendimento offline
 
   /* --- Ciclo de pesca --- */
@@ -278,6 +279,11 @@ const TEXTOS = {
     proximoDia: "Próxima sessão em",
     anuncio: "Anúncio",
     verAnuncio: "Ver anúncio: +60s de pesca",
+    verPatrocinador: "Ver patrocinador: +60s de pesca",
+    patrocinioTitulo: "Patrocinador",
+    patrocinioTexto: "Este espaço está reservado para um patrocinador. Obrigado por apoiares o Pesca Lendária!",
+    patrocinioAguarda: "Aguarda {s}s",
+    patrocinioPronto: "Continuar: +{s}s de pesca",
     fechar: "Fechar",
     anuncioIndisponivel: "Anúncio indisponível. Tenta outra vez.",
     jaVisteAnuncios: "Já viste os anúncios de hoje. Volta amanhã!",
@@ -444,6 +450,11 @@ const TEXTOS = {
     proximoDia: "Next session in",
     anuncio: "Ad",
     verAnuncio: "Watch ad: +60s of fishing",
+    verPatrocinador: "Watch sponsor: +60s of fishing",
+    patrocinioTitulo: "Sponsor",
+    patrocinioTexto: "This space is reserved for a sponsor. Thanks for supporting Pesca Lendária!",
+    patrocinioAguarda: "Wait {s}s",
+    patrocinioPronto: "Continue: +{s}s of fishing",
     fechar: "Close",
     anuncioIndisponivel: "Ad unavailable. Try again.",
     jaVisteAnuncios: "All ads for today are done. Come back tomorrow!",

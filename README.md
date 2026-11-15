@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.3" src="https://img.shields.io/badge/vers%C3%A3o-1.5.3-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.4" src="https://img.shields.io/badge/vers%C3%A3o-1.5.4-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
@@ -220,7 +220,7 @@ Os banners estão isolados em iframes para não haver conflito de `atOptions`:
 - `assets/ads/adsterra-main.html` — 320×50, slot do jogo
 - `assets/ads/adsterra-end.html` — 300×250, fim da sessão
 
-Só carregam depois do consentimento. Neste modo o AdSense não é carregado e o botão “+60s” fica escondido (a Adsterra não tem rewarded). Para trocar de rede, muda `ADS.modo` (`adsterra`, `adsense`, `gamedistribution` ou `simulado`).
+Só carregam depois do consentimento. Neste modo o AdSense não é carregado. O botão “+60s” no fim da sessão usa um **patrocinador interno** de 15 segundos, sem receita, até o rewarded real (H5 Games Ads) estar disponível.
 
 > Os banners podem demorar a preencher no início; adblockers, país e tráfego influenciam. Se a Adsterra fornecer linhas para `ads.txt`, acrescenta-as na raiz.
 
@@ -244,6 +244,8 @@ O botão “Ver anúncio: +60s” usa a **Ad Placement API / H5 Games Ads** (a m
 - o relógio de pesca pausa durante o anúncio
 - se a API não estiver disponível, o botão diz “anúncio indisponível” e **não dá tempo**
 - para testar sem rede: `ADS.rewarded = 'simulado'`
+
+No modo Adsterra, enquanto o H5 não estiver aprovado, o botão “+60s” usa o **patrocinador interno** de 15s. Quando o H5 estiver ativo, confirma na consola do site que `typeof adConfig === 'function'` antes de trocar o fluxo.
 
 ### GameDistribution (portal)
 
