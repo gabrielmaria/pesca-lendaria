@@ -39,6 +39,12 @@ for name in ("logo.png", "favicon-32.png", "favicon-64.png", "apple-touch-icon.p
 cfg_path = OUT / "assets" / "js" / "config.js"
 cfg = cfg_path.read_text()
 cfg = cfg.replace("modo: 'auto',", "modo: 'gamedistribution',")
+cfg = re.sub(
+    r"modo:\s*'(?:auto|adsense|adsterra|gamedistribution|simulado)',",
+    "modo: 'gamedistribution',",
+    cfg,
+    count=1,
+)
 cfg = cfg.replace("const ANALYTICS = {\n  ativo: true,", "const ANALYTICS = {\n  ativo: false,")
 cfg_path.write_text(cfg)
 

@@ -97,18 +97,20 @@ const CONFIG = {
 };
 
 /* ==========================================================================
-   1.b) ANÚNCIOS: AdSense no site / GameDistribution no portal
+   1.b) ANÚNCIOS: Adsterra no site / AdSense / GameDistribution no portal
    --------------------------------------------------------------------------
-   O modo 'auto' usa GameDistribution quando o jogo está servido num domínio
-   gamedistribution.com e AdSense no teu domínio.
-   Para forçar no browser: ?ads=gd, ?ads=adsense ou ?ads=simulado.
-   Para publicar no portal: cria conta em https://gamedistribution.com,
-   regista o jogo e carrega o index.html/zip. O SDK trata dos anúncios.
+   Modo atual: Adsterra (banners no próprio domínio).
+   Para forçar no browser: ?ads=adsterra, ?ads=adsense, ?ads=gd ou ?ads=simulado.
+   Os códigos dos banners estão em assets/ads/.
    ========================================================================== */
 const ADS = {
-  modo: 'auto',                // 'auto' | 'adsense' | 'gamedistribution' | 'simulado'
+  modo: 'adsterra',            // 'adsterra' | 'adsense' | 'gamedistribution' | 'simulado' | 'auto'
   sdkUrl: 'https://html5.api.gamedistribution.com/main.min.js',
   intersticialFimDia: false,   // true para interstitial no fim do dia (portal GD)
+  adsterra: {
+    main: { src: 'assets/ads/adsterra-main.html', width: 320, height: 50 },
+    end:  { src: 'assets/ads/adsterra-end.html',  width: 300, height: 250 }
+  },
   adsense: {
     client: 'ca-pub-5123386402594330',
     // Unidades 320x100. O slot do jogo já está ligado; falta o do fim do dia.

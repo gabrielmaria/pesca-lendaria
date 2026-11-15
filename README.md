@@ -93,6 +93,9 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 ├── scripts/
 │   └── build-portal.py     # gera o ZIP para a GameDistribution
 └── assets/
+    ├── ads/
+    │   ├── adsterra-main.html
+    │   └── adsterra-end.html
     ├── css/
     │   ├── styles.css      # todo o CSS do jogo
     │   └── legal.css       # CSS partilhado por sobre/privacidade
@@ -206,9 +209,20 @@ const ANALYTICS = {
 </details>
 
 <details>
-<summary><strong>Anúncios (AdSense / rewarded / GameDistribution)</strong></summary>
+<summary><strong>Anúncios (Adsterra / AdSense / rewarded / GameDistribution)</strong></summary>
 
-Tudo configurado em `const ADS`, em `assets/js/config.js`.
+Tudo configurado em `const ADS`, em `assets/js/config.js`. O modo atual é **Adsterra**.
+
+### Adsterra no site
+
+Os banners estão isolados em iframes para não haver conflito de `atOptions`:
+
+- `assets/ads/adsterra-main.html` — 320×50, slot do jogo
+- `assets/ads/adsterra-end.html` — 300×250, fim da sessão
+
+Só carregam depois do consentimento. Neste modo o AdSense não é carregado e o botão “+60s” fica escondido (a Adsterra não tem rewarded). Para trocar de rede, muda `ADS.modo` (`adsterra`, `adsense`, `gamedistribution` ou `simulado`).
+
+> Os banners podem demorar a preencher no início; adblockers, país e tráfego influenciam. Se a Adsterra fornecer linhas para `ads.txt`, acrescenta-as na raiz.
 
 ### AdSense no site
 

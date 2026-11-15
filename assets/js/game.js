@@ -1998,7 +1998,7 @@ function abrirFimDia() {
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
-  $('btnAnuncio').style.display = state.anuncios < maxAnuncios() ? '' : 'none';
+  $('btnAnuncio').style.display = (modoAds() !== 'adsterra' && state.anuncios < maxAnuncios()) ? '' : 'none';
   $('fimModal').classList.remove('hidden');
   preencherSlotFim();
   atualizarProximoDia();
@@ -2069,9 +2069,11 @@ let gdPronto = false;
 function modoAds() {
   const forcar = paramURL('ads');
   if (forcar === 'gd' || forcar === 'gamedistribution') return 'gamedistribution';
+  if (forcar === 'adsterra' || forcar === 'adst') return 'adsterra';
   if (forcar === 'adsense') return 'adsense';
   if (forcar === 'simulado') return 'simulado';
-  if (ADS.modo === 'gamedistribution' || ADS.modo === 'adsense' || ADS.modo === 'simulado') return ADS.modo;
+  if (ADS.modo === 'gamedistribution' || ADS.modo === 'adsense' ||
+      ADS.modo === 'adsterra' || ADS.modo === 'simulado') return ADS.modo;
   try {
     const host = (window.location && window.location.hostname) || '';
     if (host.indexOf('gamedistribution') !== -1) return 'gamedistribution';
@@ -2095,7 +2097,38 @@ function responderConsentimento(aceitou) {
   try { localStorage.setItem(ADS.consentKey, aceitou ? 'ads' : 'essential'); } catch (e) {}
   const c = $('consent');
   if (c) c.classList.add('hidden');
-  if (aceitou) carregarAdSense();
+  if (aceitou) {
+    if (modoAds() === 'adsterra') carregarAdsterraMain();
+    else if (modoAds() === 'adsense') carregarAdSense();
+    const fim = $('fimModal');
+    if (fim && !fim.classList.contains('hidden')) preencherSlotFim();
+  }
+}
+
+/** Carrega um banner Adsterra isolado num iframe (evita conflito de atOptions). */
+function carregarAdsterraUnidade(el, unidade) {
+  if (!el || !unidade || !unidade.src) return;
+  if (el.getAttribute('data-filled') === '1') return;
+  el.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = unidade.src;
+  iframe.width = unidade.width;
+  iframe.height = unidade.height;
+  iframe.style.width = unidade.width + 'px';
+  iframe.style.height = unidade.height + 'px';
+  iframe.style.border = '0';
+  iframe.style.display = 'block';
+  iframe.style.background = 'transparent';
+  iframe.setAttribute('scrolling', 'no');
+  iframe.setAttribute('title', t('anuncio'));
+  el.appendChild(iframe);
+  el.classList.remove('hidden');
+  el.classList.add('adsterra');
+  el.setAttribute('data-filled', '1');
+}
+
+function carregarAdsterraMain() {
+  carregarAdsterraUnidade($('ad-main'), (ADS.adsterra || {}).main);
 }
 
 /** Injeta o script do AdSense e preenche os dois slots (principal e fim do dia). */
@@ -2128,13 +2161,22 @@ function carregarAdSense() {
   } catch (e) {}
 }
 
-/** Preenche o slot do fim do dia apenas com o modal já visível (política AdSense). */
+/** Preenche o slot do fim do dia apenas com o modal já visível. */
 function preencherSlotFim() {
   try {
+    const el = $('ad-banner');
+    if (!el) return;
+    if (modoAds() === 'adsterra') {
+      let consent = null;
+      try { consent = localStorage.getItem(ADS.consentKey); } catch (e) {}
+      if (consent !== 'ads') { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      carregarAdsterraUnidade(el, (ADS.adsterra || {}).end);
+      return;
+    }
     if (modoAds() !== 'adsense' || !adsenseConfigurado()) return;
     if (!ADS.adsense.slotEnd || ADS.adsense.slotEnd === '0000000000') return;
-    const el = $('ad-banner');
-    if (!el || el.getAttribute('data-filled') === '1') return;
+    if (el.getAttribute('data-filled') === '1') return;
     let consent = null;
     try { consent = localStorage.getItem(ADS.consentKey); } catch (e) {}
     if (consent !== 'ads') return;
@@ -2153,6 +2195,16 @@ function preencherSlotFim() {
 }
 
 function iniciarAnuncios() {
+  /* --- Adsterra no próprio site --- */
+  if (modoAds() === 'adsterra') {
+    let consent = null;
+    try { consent = localStorage.getItem(ADS.consentKey); } catch (e) {}
+    if (consent === 'ads') { carregarAdsterraMain(); return; }
+    if (consent === 'essential') return;
+    mostrarConsentimento();
+    return;
+  }
+
   /* --- AdSense no próprio site --- */
   if (modoAds() === 'adsense') {
     if (!adsenseConfigurado()) return;
@@ -2264,6 +2316,10 @@ function pedirRewardedH5(cb) {
 }
 
 function verAnuncio() {
+  if (modoAds() === 'adsterra') {
+    toast(t('anuncioIndisponivel'));
+    return;
+  }
   if (state.anuncios >= maxAnuncios()) {
     toast(t('jaVisteAnuncios'));
     return;
