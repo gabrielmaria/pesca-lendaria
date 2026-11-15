@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.5" src="https://img.shields.io/badge/vers%C3%A3o-1.5.5-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.6" src="https://img.shields.io/badge/vers%C3%A3o-1.5.6-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
@@ -33,6 +33,8 @@
 - **58 espécies e 8 raridades**: 30 de superfície, 15 abissais e 13 hadal, com nomes propositadamente parvos.
 - **Três biomas**: Superfície, **Mar Profundo** e **Fossa**, cada um com cenário, fundo de página, botões próprios e transição de água com peixes, medusas, rochas, colinas e farol.
 - **Chefe, evento e missão diários**: o chefe abissal aparece a cada 4 dias (bónus ×6) e o chefe da Fossa a cada 5 dias (bónus ×8).
+- **Ferramentas ativas na Fossa**: Sonar de Pressão (revela a zona perfeita) e Garra Hidráulica (segunda tentativa depois de uma falha).
+- **Preços de profundidade**: os upgrades custam +15% no Mar Profundo e +30% na Fossa, porque os peixes do fundo também pagam mais.
 - **Livro de Pesca**: completa raridades para ganhar bónus permanentes de valor.
 - **5 upgrades** (Cana, Isco, Barco, Pescador e Geleira) e **prestígio** com estrelas permanentes.
 - **Legado**: 40 conquistas dão **Pérolas** para 9 melhorias permanentes.
@@ -68,6 +70,7 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 | **Prestígio** | Aos 30 níveis podes recomeçar upgrades por estrelas permanentes (+8% de valor cada). |
 | **Mar Profundo** | Modo de pesca separado, raridade Abissal (×5000), iscas Abissal/Relíquia e chefe abissal. |
 | **Fossa** | Zona mais funda, raridade Hadal (×12000), iscas Fossa/Pressão, pressão no timing e chefe da Fossa. |
+| **Ferramentas** | Sonar e Garra: compras ativas que gastam moedas e recarregam com capturas. |
 | **Legado** | Conquistas dão Pérolas; gastas em tempo de sessão, sorte, offline, anúncios, valor, combo e mais. |
 
 ## Capturas
@@ -112,7 +115,7 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
     │   └── screenshot-2026-11-10.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
-        ├── data.js         # PEIXES, RARIDADES, UPGRADES, EVENTOS, CONQUISTAS, LEGADO
+        ├── data.js         # PEIXES, RARIDADES, UPGRADES, FERRAMENTAS, EVENTOS, CONQUISTAS, LEGADO
         ├── updates.js      # versão atual e changelog (PT/EN)
         ├── sprites.js      # motor de pixel art em canvas
         ├── game.js         # estado, regras, render e ciclo de pesca
@@ -146,7 +149,8 @@ Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
 | Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
-| Fossa | `FOSSA_EPOCA`, `FOSSA_ABISSAL_MIN`, `FOSSA_PESO`, `ISCO_HADAL`, `FOSSA_ZONA`, `FOSSA_VALOR`, `CHEFE_BONUS_FOSSA`, `CHEFE_FOSSA_DIAS` |
+| Fossa | `FOSSA_EPOCA`, `FOSSA_ABISSAL_MIN`, `FOSSA_PESO`, `ISCO_HADAL`, `FOSSA_ZONA`, `FOSSA_BARRA`, `FOSSA_PERFEITA`, `FOSSA_VALOR`, `CHEFE_BONUS_FOSSA`, `CHEFE_FOSSA_DIAS` |
+| Custo e ferramentas | `CUSTO_ABISMO`, `CUSTO_FOSSA`, `FERRAMENTAS`, `RESGATE_MS` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |

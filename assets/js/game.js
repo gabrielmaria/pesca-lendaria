@@ -82,6 +82,8 @@ function estadoPorDefeito() {
   return {
     moedas: 0,
     up: { rod:0, bait:0, boat:0, fisher:0, freezer:0 },
+    ferramentas: { sonar:0, garra:0 },  // níveis das ferramentas ativas da Fossa
+    ferrCd: { sonar:0, garra:0 },       // capturas até recarregar
     descobertos: [],
     dataDia: k,             // data do dia de jogo atual
     tempo: CONFIG.DIA_SEGUNDOS,
@@ -147,6 +149,15 @@ function carregar() {
   if (typeof out.ultimoVisto !== 'number') out.ultimoVisto = Date.now();
   ['rod','bait','boat','fisher','freezer'].forEach(k => {
     out.up[k] = clamp(Math.floor(Number(out.up[k]) || 0), 0, CONFIG.UPGRADE_MAX);
+  });
+  out.ferramentas = Object.assign({}, d.ferramentas,
+    (s.ferramentas && typeof s.ferramentas === 'object') ? s.ferramentas : {});
+  out.ferrCd = Object.assign({}, d.ferrCd,
+    (s.ferrCd && typeof s.ferrCd === 'object') ? s.ferrCd : {});
+  FERRAMENTAS_DADOS.forEach(function (f) {
+    out.ferramentas[f.id] = clamp(Math.floor(Number(out.ferramentas[f.id]) || 0), 0,
+      CONFIG.FERRAMENTAS[f.id].max);
+    out.ferrCd[f.id] = Math.max(0, Math.floor(Number(out.ferrCd[f.id]) || 0));
   });
   if (!CONFIG.ISCAS[out.isca]) out.isca = 'comum';
   if (!out.abissoVisto) out.abissoVisto = false;
@@ -385,7 +396,8 @@ function multCombo() {
 /** Duração da barra de timing: encurta à medida que o combo sobe. */
 function duracaoBarra() {
   const f = 1 - (state.combo || 0) * CONFIG.BARRA_ACELERA_COMBO;
-  return Math.max(CONFIG.BARRA_MIN_MS, CONFIG.BARRA_MS * f);
+  const base = Math.max(CONFIG.BARRA_MIN_MS, CONFIG.BARRA_MS * f);
+  return modoFossa() ? base * CONFIG.FOSSA_BARRA : base;
 }
 
 /** Prémio da missão: metade do custo médio do próximo nível. */
@@ -605,8 +617,14 @@ function mudarSeparador(nome) {
 /* ==========================================================================
    8) UPGRADES
    ========================================================================== */
+/** O fundo paga melhor, por isso cobra upgrades ligeiramente mais caros. */
+function multiplicadorCustoZona() {
+  if (fossaAtivo()) return CONFIG.CUSTO_FOSSA;
+  if (abissoAtivo()) return CONFIG.CUSTO_ABISMO;
+  return 1;
+}
 function custoUpgrade(u, nivel) {
-  return Math.round(CONFIG.CUSTO_BASE[u.id] * Math.pow(CONFIG.CRESCIMENTO[u.id], nivel));
+  return Math.round(CONFIG.CUSTO_BASE[u.id] * Math.pow(CONFIG.CRESCIMENTO[u.id], nivel) * multiplicadorCustoZona());
 }
 
 /** Efeito legível de um nível (para mostrar custo/efeito com clareza). */
@@ -673,6 +691,13 @@ function renderUpgrades() {
   });
   hidratarSprites(wrap);
   renderEpoca();
+  const dc = $('depthCost');
+  if (dc) {
+    const mul = multiplicadorCustoZona();
+    dc.classList.toggle('hidden', mul <= 1);
+    dc.textContent = mul > 1 ? tf('custoProfundidade', { p: Math.round((mul - 1) * 100) }) : '';
+  }
+  renderFerramentas();
   wrap.querySelectorAll('.buy').forEach(function (b) {
     b.addEventListener('click', function () { comprarUpgrade(b.dataset.id); });
   });
@@ -692,6 +717,134 @@ function comprarUpgrade(id) {
   guardar();
   renderUpgrades();
   atualizarHUD();
+}
+
+/* --- Ferramentas ativas da Fossa --- */
+function nivelFerramenta(id) {
+  return (state.ferramentas && state.ferramentas[id]) || 0;
+}
+function recargaFerramenta(id) {
+  const cfg = CONFIG.FERRAMENTAS[id];
+  const lvl = nivelFerramenta(id);
+  return Math.max(2, Math.round(cfg.recarga - Math.max(0, lvl - 1) * cfg.recargaNivel));
+}
+function zonaGarra() {
+  return 1 + nivelFerramenta('garra') * CONFIG.FERRAMENTAS.garra.zona;
+}
+function custoFerramenta(f, nivel) {
+  const cfg = CONFIG.FERRAMENTAS[f.id];
+  return Math.round(cfg.custo * Math.pow(cfg.crescimento, nivel) * multiplicadorCustoZona());
+}
+function efeitoFerramentaTexto(f, nivel) {
+  const cfg = CONFIG.FERRAMENTAS[f.id];
+  const n = Math.max(2, Math.round(cfg.recarga - Math.max(0, nivel - 1) * cfg.recargaNivel));
+  if (f.id === 'sonar') return tf('ferrEfeitoSonar', { n: n });
+  return tf('ferrEfeitoGarra', { z: Math.round(nivel * cfg.zona * 100), n: n });
+}
+function infoFerramenta(id) {
+  const lvl = nivelFerramenta(id);
+  if (!lvl) return t('ferrComprar');
+  if (id === 'sonar' && sonarAtivo) return t('ferrAtivo');
+  if (id === 'garra' && garraArmada) return t('ferrAtivo');
+  const cd = (state.ferrCd && state.ferrCd[id]) || 0;
+  return cd > 0 ? tf('ferrRecarga', { n: cd }) : t('ferrPronto');
+}
+function renderFerramentas() {
+  const gear = $('fossaGear');
+  const bar = $('fossaTools');
+  const aberto = fossaAtivo();
+  if (gear) gear.classList.toggle('hidden', !aberto);
+  if (bar) bar.classList.toggle('hidden', !(aberto && modoFossa()));
+
+  if (aberto && gear) {
+    const lista = $('ferramentasLista');
+    if (lista) {
+      lista.innerHTML = '';
+      FERRAMENTAS_DADOS.forEach(function (f) {
+        const cfg = CONFIG.FERRAMENTAS[f.id];
+        const lvl = nivelFerramenta(f.id);
+        const maxed = lvl >= cfg.max;
+        const custo = maxed ? 0 : custoFerramenta(f, lvl);
+        const pode = !maxed && state.moedas >= custo;
+        const agora = lvl > 0 ? efeitoFerramentaTexto(f, lvl) : t('ferrComprar');
+        const card = document.createElement('div');
+        card.className = 'card gear-card';
+        card.innerHTML =
+          '<div class="up-head">' +
+            '<span class="up-ico" data-sprite="' + f.icone + '"></span>' +
+            '<div><div class="up-name">' + nomeUpgrade(f) + '</div>' +
+            '<div class="lvl">' + t('nivel') + ' ' + lvl + '/' + cfg.max + '</div></div>' +
+          '</div>' +
+          '<div class="up-desc">' + descUpgrade(f) + '</div>' +
+          '<div class="up-eff">' + t('agoraLabel') + ' <b>' + agora + '</b></div>' +
+          (maxed
+            ? '<div class="up-eff muted">' + t('nivelMax') + '</div>'
+            : '<div class="up-eff muted">' + t('proximoLabel') + ' <b>' + efeitoFerramentaTexto(f, lvl + 1) + '</b></div>') +
+          '<button class="btn buy' + (pode ? '' : ' off') + '" data-ferr="' + f.id + '"' + (pode ? '' : ' disabled') + '>' +
+            (maxed ? t('maximo') : tf('comprarPor', { v: fmt(custo) })) +
+          '</button>';
+        lista.appendChild(card);
+      });
+      hidratarSprites(lista);
+      lista.querySelectorAll('.buy[data-ferr]').forEach(function (b) {
+        b.addEventListener('click', function () { comprarFerramenta(b.dataset.ferr); });
+      });
+    }
+  }
+
+  const botoes = [
+    { id: 'sonar', no: $('toolSonar'), info: $('toolSonarInfo') },
+    { id: 'garra', no: $('toolGarra'), info: $('toolGarraInfo') }
+  ];
+  botoes.forEach(function (x) {
+    if (!x.no) return;
+    const lvl = nivelFerramenta(x.id);
+    const cd = (state.ferrCd && state.ferrCd[x.id]) || 0;
+    const ativo = x.id === 'sonar' ? sonarAtivo : garraArmada;
+    x.no.classList.toggle('active', ativo);
+    x.no.classList.toggle('off', !lvl || (cd > 0 && !ativo));
+    if (x.info) x.info.textContent = infoFerramenta(x.id);
+  });
+}
+function comprarFerramenta(id) {
+  const f = FERRAMENTAS_DADOS.find(function (x) { return x.id === id; });
+  if (!f) return;
+  if (!fossaAtivo()) { toast(tf('fossaBloqueada', { e: CONFIG.FOSSA_EPOCA, n: CONFIG.FOSSA_ABISSAL_MIN })); return; }
+  const cfg = CONFIG.FERRAMENTAS[id];
+  const lvl = nivelFerramenta(id);
+  if (lvl >= cfg.max) return;
+  const custo = custoFerramenta(f, lvl);
+  if (state.moedas < custo) { toast(t('moedasInsuficientes')); bip(200, .15, 'sawtooth'); return; }
+  state.moedas -= custo;
+  state.ferramentas[id] = lvl + 1;
+  state.ferrCd[id] = 0;
+  bip(620, .08); setTimeout(function () { bip(940, .1); }, 80);
+  toast(tf('ferrComprada', { n: nomeUpgrade(f), l: lvl + 1 }));
+  guardar();
+  renderFerramentas();
+  atualizarHUD();
+}
+function alternarFerramenta(id) {
+  const lvl = nivelFerramenta(id);
+  if (!lvl) {
+    toast(t('ferrComprar'));
+    mudarSeparador('upgrades');
+    const gear = $('fossaGear');
+    if (gear) setTimeout(function () { gear.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+    return;
+  }
+  if (!modoFossa()) { toast(t('ferrSoFossa')); return; }
+  const cd = (state.ferrCd && state.ferrCd[id]) || 0;
+  if (cd > 0) { toast(tf('ferrRecarregando', { n: cd })); bip(220, .12, 'square'); return; }
+  if (id === 'sonar') {
+    sonarAtivo = !sonarAtivo;
+    toast(t(sonarAtivo ? 'ferrSonarOn' : 'ferrSonarOff'));
+  } else {
+    garraArmada = !garraArmada;
+    toast(t(garraArmada ? 'ferrGarraOn' : 'ferrGarraOff'));
+  }
+  bip(id === 'sonar' ? 880 : 520, .08);
+  renderFerramentas();
 }
 /* ==========================================================================
    9) LIVRO DE PESCA (coleção)
@@ -967,13 +1120,17 @@ function verificarNovidades() {
    fases: idle → waiting → bar → result → idle
    Tudo feito com tempo acumulado (dt), para pausar com o separador oculto.
    ========================================================================== */
-let fase = 'idle';          // 'idle' | 'waiting' | 'bar' | 'result' | 'ended'
+let fase = 'idle';          // 'idle' | 'waiting' | 'bar' | 'result' | 'rescue' | 'ended'
 let esperaMs = 0, esperaAcc = 0;
 let barAcc = 0, zonaPos = 0, zonaLarg = 0, barraAtual = CONFIG.BARRA_MS;
 let resultAcc = 0;
 let barVisivel = false;
 let bossAtual = false;
 let iscaLance = null;
+let sonarAtivo = false;     // armado antes do lance
+let sonarLance = false;     // o lance atual tem sonar
+let garraArmada = false;    // resgate disponível na próxima falha
+let resgateBoss = false;    // a falha resgatada era um chefe
 
 function botaoLancar() {
   const b = $('castBtn');
@@ -1002,7 +1159,10 @@ function setStatus(html) { $('status').innerHTML = html; }
 function cancelarPesca() {
   fase = 'idle';
   barVisivel = false;
+  sonarLance = false;
+  resgateBoss = false;
   $('timingBar').classList.add('hidden');
+  $('timingBar').classList.remove('sonar');
   $('catchBox').classList.add('hidden');
   $('catchBox').innerHTML = '';
   $('sea').classList.remove('pescando', 'mordeu');
@@ -1023,6 +1183,12 @@ function lancar() {
   esperaMs = clamp(comCana * m.espera * isc.espera, CONFIG.ESPERA_MIN_MS_ABS, 9000);
   esperaAcc = 0;
   bossAtual = chefePronto();
+  sonarLance = sonarAtivo;
+  if (sonarLance) {
+    sonarAtivo = false;
+    state.ferrCd.sonar = recargaFerramenta('sonar');
+    renderFerramentas();
+  }
   fase = 'waiting';
   const rod = $('rod');
   rod.classList.remove('casting'); void rod.offsetWidth; rod.classList.add('casting');
@@ -1035,27 +1201,52 @@ function lancar() {
 }
 
 /** 2) O peixe morde: abre a barra de timing. */
-function mordida() {
+function abrirBarra(comGarra) {
   fase = 'bar';
   barAcc = 0;
   const baseZona = CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * state.up.rod;
   zonaLarg = bossAtual ? CONFIG.CHEFE_ZONA : clamp(baseZona, 0.1, 0.85);
   if (modoFossa()) zonaLarg *= CONFIG.FOSSA_ZONA;
+  if (comGarra) zonaLarg = clamp(zonaLarg * zonaGarra(), 0.1, 0.92);
   zonaPos = rnd(0, 1 - zonaLarg);
+  const fatorPerfeita = CONFIG.JANELA_PERFEITA * (modoFossa() ? CONFIG.FOSSA_PERFEITA : 1);
   $('greenZone').style.left = (zonaPos * 100) + '%';
   $('greenZone').style.width = (zonaLarg * 100) + '%';
+  $('greenZone').style.setProperty('--perfeita', (fatorPerfeita * 100).toFixed(1) + '%');
   $('marker').style.left = '0%';
   barraAtual = bossAtual
     ? Math.max(480, duracaoBarra() * CONFIG.CHEFE_BARRA)
     : duracaoBarra();
+  if (comGarra) barraAtual *= 1.08;
+  $('timingBar').classList.toggle('sonar', sonarLance);
   $('timingBar').classList.remove('hidden');
   barVisivel = true;
   $('sea').classList.add('mordeu');
-  setStatus(bossAtual
-    ? '<span class="bite">' + t('statusChefeMordida') + '</span>'
-    : '<span class="bite">' + t('statusMordida') + '</span>');
+  setStatus(comGarra
+    ? '<span class="bite">' + t('statusGarra') + '</span>'
+    : (bossAtual
+      ? '<span class="bite">' + t('statusChefeMordida') + '</span>'
+      : '<span class="bite">' + t('statusMordida') + '</span>'));
   bip(bossAtual ? 700 : 920, .12, 'square');
   botaoLancar();
+}
+function mordida() {
+  abrirBarra(false);
+}
+
+/** A Garra dá uma segunda tentativa depois de uma falha. */
+function usarGarra() {
+  if (fase !== 'rescue') return;
+  const box = $('catchBox');
+  box.classList.add('hidden');
+  box.innerHTML = '';
+  bossAtual = resgateBoss;
+  resgateBoss = false;
+  $('sea').classList.add('pescando');
+  abrirBarra(true);
+  toast(t('ferrGarraUsada'));
+  bip(520, .1, 'triangle');
+  setTimeout(function () { bip(760, .12, 'triangle'); }, 90);
 }
 
 /** 3) Resolução do toque (pos = posição 0..1 do marcador, null = tempo esgotado). */
@@ -1073,7 +1264,23 @@ function resolverBarra(pos) {
   let tipo = 'falhou';
   if (pos !== null && pos >= zonaPos && pos <= zonaPos + zonaLarg) {
     const centro = zonaPos + zonaLarg / 2;
-    tipo = Math.abs(pos - centro) <= (zonaLarg * CONFIG.JANELA_PERFEITA) / 2 ? 'perfeito' : 'bom';
+    const fatorPerfeita = CONFIG.JANELA_PERFEITA * (modoFossa() ? CONFIG.FOSSA_PERFEITA : 1);
+    tipo = Math.abs(pos - centro) <= (zonaLarg * fatorPerfeita) / 2 ? 'perfeito' : 'bom';
+  }
+  sonarLance = false;
+  $('timingBar').classList.remove('sonar');
+
+  /* ---------- Garra: segunda tentativa ---------- */
+  if (tipo === 'falhou' && garraArmada) {
+    garraArmada = false;
+    state.ferrCd.garra = recargaFerramenta('garra');
+    resgateBoss = eraChefe;
+    state.combo = 0;
+    prepararResgate(eraChefe);
+    atualizarHUD();
+    botaoLancar();
+    guardar();
+    return;
   }
 
   /* ---------- Confronto com o chefe do dia ---------- */
@@ -1169,6 +1376,38 @@ function calcValor(peixe, rIdx, perfeito, m, peso) {
 }
 
 /** Ecrã rápido do resultado (captura ou fuga). */
+function prepararResgate(eraChefe) {
+  fase = 'rescue';
+  resultAcc = 0;
+  const box = $('catchBox');
+  box.innerHTML = '';
+
+  const ico = document.createElement('div');
+  ico.className = 'catch-fail garra-ico';
+  ico.appendChild(spriteIcone('garra', 3));
+  box.appendChild(ico);
+
+  const titulo = document.createElement('div');
+  titulo.className = 'catch-name';
+  titulo.textContent = eraChefe ? t('chefeTituloCatch') : t('escapou');
+  box.appendChild(titulo);
+
+  const sub = document.createElement('div');
+  sub.className = 'catch-rar catch-info';
+  sub.textContent = t('garraAjuda');
+  box.appendChild(sub);
+
+  const btn = document.createElement('button');
+  btn.className = 'btn gold garra-btn';
+  btn.textContent = t('garraBotao');
+  btn.addEventListener('click', usarGarra);
+  box.appendChild(btn);
+
+  box.classList.remove('hidden');
+  sonsDoResultado('falhou');
+  bip(330, .14, 'square');
+}
+
 function mostrarCaptura(res) {
   const box = $('catchBox');
   box.innerHTML = '';
@@ -1258,10 +1497,19 @@ function mostrarCaptura(res) {
 }
 
 function esconderCaptura() {
+  const eraResgate = fase === 'rescue';
+  if (eraResgate) {
+    if (resgateBoss && state.hoje && state.hoje.chefe) {
+      state.hoje.chefe.prox = state.hoje.peixes + CONFIG.CHEFE_RETRY;
+      atualizarChefeUI();
+      toast(t('chefeEscapou'));
+    }
+    resgateBoss = false;
+  }
   $('catchBox').classList.add('hidden');
   $('catchBox').innerHTML = '';
-  if (fase === 'result') fase = 'idle';
-  setStatus('Gira a cana e lança!');
+  if (fase === 'result' || fase === 'rescue') fase = 'idle';
+  setStatus(t('statusPronto'));
   botaoLancar();
 }
 
@@ -1334,6 +1582,8 @@ function verificarFossa() {
   track('fossa', {});
   renderIscas();
   renderModo();
+  renderFerramentas();
+  renderUpgrades();
   renderLivro();
   guardar();
   return true;
@@ -1561,10 +1811,10 @@ function escolherIsca(id) {
   }
   // A isca leva-te automaticamente à zona certa.
   if (fossa && !modoFossa()) {
-    if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return; }
+    if (fase === 'waiting' || fase === 'bar' || fase === 'rescue') { toast(t('modoOcupado')); return; }
     aplicarModo('fossa', false);
   } else if (abissal && !modoAbismo()) {
-    if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return; }
+    if (fase === 'waiting' || fase === 'bar' || fase === 'rescue') { toast(t('modoOcupado')); return; }
     aplicarModo('abisso', false);
   }
   state.isca = id;
@@ -1599,14 +1849,42 @@ function renderModo() {
     sea.setAttribute('data-fundo', (ab || fo) ? 'abisso' : 'superficie');
     sea.setAttribute('data-zona', fo ? 'fossa' : (ab ? 'abisso' : 'superficie'));
   }
+  renderFerramentas();
   aplicarHora();
 }
 
 let descidaTimer = null;
 let chegadaTimer = null;
+let profundidadeTimer = null;
+function formatarMetros(n) {
+  return '−' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' m';
+}
+function pararProfundidade() {
+  if (profundidadeTimer) { clearInterval(profundidadeTimer); profundidadeTimer = null; }
+}
+function animarProfundidade() {
+  const el = $('descidaMetros');
+  if (!el) return;
+  pararProfundidade();
+  let d = 4000;
+  el.textContent = formatarMetros(d);
+  profundidadeTimer = setInterval(function () {
+    d += 700;
+    if (d >= 11000) { d = 11000; pararProfundidade(); }
+    el.textContent = formatarMetros(d);
+  }, 120);
+}
+function somDescidaFossa() {
+  if (!state.som) return;
+  bip(64, .55, 'sawtooth');
+  setTimeout(function () { bip(98, .32, 'triangle'); }, 180);
+  setTimeout(function () { bip(196, .18, 'square'); }, 420);
+  setTimeout(function () { bip(58, .7, 'sine'); }, 620);
+}
 function animarDescida(m, comTexto, anterior) {
   const el = $('descida');
   if (!el) return;
+  const dur = m === 'fossa' ? 2350 : (m === 'abisso' && anterior === 'fossa' ? 1800 : 1350);
   const txt = $('descidaTexto');
   if (txt) {
     txt.textContent = comTexto
@@ -1616,8 +1894,10 @@ function animarDescida(m, comTexto, anterior) {
           : 'modoSuperficieOn')
       : '';
   }
+  if (m === 'fossa') animarProfundidade(); else pararProfundidade();
+  if (comTexto && m === 'fossa') somDescidaFossa();
 
-  // 5 peixes a atravessar: hadal a descer à Fossa, abissais no fundo, superfície ao subir.
+  // Peixes a atravessar: hadal a descer à Fossa, abissais no fundo, superfície ao subir.
   const peixes = $('descidaPeixes');
   if (peixes) {
     peixes.innerHTML = '';
@@ -1626,14 +1906,15 @@ function animarDescida(m, comTexto, anterior) {
       if (m === 'abisso') return p.r === 6;
       return p.r < 6;
     });
-    for (let i = 0; i < 5; i++) {
+    const total = m === 'fossa' ? 8 : 5;
+    for (let i = 0; i < total; i++) {
       const p = lista[Math.floor(Math.random() * lista.length)];
       const f = document.createElement('span');
       f.className = 'descida-peixe';
       f.style.top = (8 + Math.random() * 74) + '%';
-      f.style.width = (40 + Math.random() * 30) + 'px';
-      f.style.setProperty('--dur', (0.9 + Math.random() * 0.45).toFixed(2) + 's');
-      f.style.setProperty('--delay', (Math.random() * 0.3).toFixed(2) + 's');
+      f.style.width = (m === 'fossa' ? 32 + Math.random() * 30 : 40 + Math.random() * 30) + 'px';
+      f.style.setProperty('--dur', (m === 'fossa' ? 1.4 + Math.random() * 0.8 : 0.9 + Math.random() * 0.45).toFixed(2) + 's');
+      f.style.setProperty('--delay', (m === 'fossa' ? Math.random() * 0.65 : Math.random() * 0.3).toFixed(2) + 's');
       f.style.setProperty('--dy', Math.round(Math.random() * 40 - 20) + 'px');
       f.style.setProperty('--dir', Math.random() < 0.5 ? -1 : 1);
       f.appendChild(spritePeixe(p, 2));
@@ -1715,7 +1996,8 @@ function animarDescida(m, comTexto, anterior) {
     if (peixes) peixes.innerHTML = '';
     if (fundo) fundo.innerHTML = '';
     if (arvores) arvores.innerHTML = '';
-  }, 1350);
+    pararProfundidade();
+  }, dur);
 }
 
 function aplicarModo(m, aviso) {
@@ -1728,10 +2010,14 @@ function aplicarModo(m, aviso) {
     toast(tf('fossaBloqueada', { e: CONFIG.FOSSA_EPOCA, n: CONFIG.FOSSA_ABISSAL_MIN }));
     return false;
   }
-  if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return false; }
+  if (fase === 'waiting' || fase === 'bar' || fase === 'rescue') { toast(t('modoOcupado')); return false; }
   if (state.modo === m) return true;
   const anterior = state.modo;
   state.modo = m;
+  if (m !== 'fossa') {
+    sonarAtivo = false;
+    garraArmada = false;
+  }
   // Ao sair de uma zona profunda, iscas que já não se aplicam voltam a Comum.
   const iscasProfundas = ['abissal', 'reliquia', 'fossa', 'pressao'];
   if (m === 'superficie' && iscasProfundas.indexOf(state.isca) !== -1) {
@@ -1938,6 +2224,10 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
     if ((state.combo || 0) > (st.melhorCombo || 0)) st.melhorCombo = state.combo;
     if (state.sessao.moedas > (st.melhorSessaoMoedas || 0)) st.melhorSessaoMoedas = state.sessao.moedas;
   }
+  FERRAMENTAS_DADOS.forEach(function (f) {
+    if (state.ferrCd[f.id] > 0) state.ferrCd[f.id] -= 1;
+  });
+  renderFerramentas();
   agendarConquistas();
 
   const novo = state.descobertos.indexOf(peixe.id) === -1;
@@ -2026,6 +2316,9 @@ function loop() {
   } else if (fase === 'result') {
     resultAcc += dt;
     if (resultAcc >= CONFIG.MOSTRA_CAPTURA_MS) esconderCaptura();
+  } else if (fase === 'rescue') {
+    resultAcc += dt;
+    if (resultAcc >= CONFIG.RESGATE_MS) esconderCaptura();
   }
 
   atualizarHUD();

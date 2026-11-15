@@ -55,7 +55,7 @@ body{
   background-attachment:fixed;
   overscroll-behavior-y:none;
 }
-#app{max-width:520px;margin:0 auto;padding:10px 10px 44px;}
+#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:10px 10px 44px;}
 
 /* ---------- Utilitários ---------- */
 .hidden{display:none !important;}
@@ -688,7 +688,119 @@ body[data-ads="gd"] .site-footer{display:none !important;}
 }
 .descida.ativa{opacity:1;pointer-events:auto;}
 .descida.volta{background:linear-gradient(180deg,#2f7fb5 0%,#c9edfb 100%);}
-.descida.fossa{background:linear-gradient(180deg,#1a0f2e 0%,#030108 100%);}
+.descida.fossa{
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(176,107,255,.24), transparent 58%),
+    linear-gradient(180deg,#240f3d 0%,#0b0416 55%,#020005 100%);
+}
+.descida.fossa.ativa{animation:fossaTreme 1.2s steps(2) 1;}
+.descida.fossa .descida-agua{
+  opacity:.9;
+  background:
+    repeating-linear-gradient(180deg, rgba(176,107,255,.18) 0 3px, transparent 3px 20px),
+    repeating-linear-gradient(90deg, rgba(255,110,199,.06) 0 2px, transparent 2px 46px),
+    linear-gradient(180deg, rgba(255,110,199,.08), transparent 45%);
+}
+.descida.fossa.ativa .descida-agua{animation-duration:2.2s;}
+.descida.fossa .descida-bolhas{
+  background-image:
+    radial-gradient(circle, rgba(255,110,199,.85) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(201,154,255,.6) 2px, transparent 3px),
+    radial-gradient(circle, rgba(159,247,255,.45) 1px, transparent 2px);
+}
+.descida.fossa.ativa .descida-bolhas{animation-duration:2.2s;}
+.descida.fossa .descida-vinheta{
+  background:radial-gradient(ellipse at 50% 42%, transparent 28%, rgba(6,0,12,.82) 100%);
+}
+.descida.fossa .descida-texto{
+  color:#f8ecff;
+  letter-spacing:2px;
+  text-shadow:2px 2px 0 #12051f, 0 0 10px rgba(255,110,199,.9), 0 0 28px rgba(176,107,255,.7);
+}
+.descida-pressao{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;
+  box-shadow:
+    inset 0 0 90px rgba(176,107,255,.55),
+    inset 0 0 26px rgba(255,110,199,.4);
+  background:
+    linear-gradient(90deg, rgba(255,110,199,.16), transparent 13%, transparent 87%, rgba(255,110,199,.16)),
+    repeating-linear-gradient(0deg, transparent 0 7px, rgba(159,247,255,.035) 7px 8px);
+}
+.descida.fossa.ativa .descida-pressao{animation:pressaoPulsa 1.7s steps(3) infinite;}
+.descida-fendas{
+  position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;
+  opacity:0;fill:none;stroke:#ff8bd1;stroke-width:1.6;
+  filter:drop-shadow(0 0 5px rgba(255,110,199,.9));
+  shape-rendering:crispEdges;
+}
+.descida.fossa.ativa .descida-fendas{animation:fendasRasgam 2.25s steps(14) 1 both;}
+.descida-sonar{
+  position:absolute;left:50%;top:52%;width:20px;height:20px;z-index:1;
+  border:2px solid rgba(255,110,199,.7);border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;
+  box-shadow:0 0 0 2px rgba(176,107,255,.2);
+}
+.descida.fossa.ativa .descida-sonar{animation:sonarGrande 2.2s steps(22) 2;}
+.descida-poeira{
+  position:absolute;inset:-15% 0;z-index:1;opacity:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(201,154,255,.65) 1px, transparent 2px),
+    radial-gradient(circle, rgba(159,247,255,.4) 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,110,199,.45) 1px, transparent 2px);
+  background-size:53px 71px, 89px 113px, 37px 59px;
+  background-position:0 0, 21px 33px, 9px 17px;
+}
+.descida.fossa.ativa .descida-poeira{animation:poeiraCai 2.2s linear both;}
+.descida-profundidade{
+  position:absolute;left:14px;bottom:16px;z-index:3;
+  display:flex;flex-direction:column;gap:2px;
+  padding:7px 10px 8px;
+  background:linear-gradient(180deg,rgba(32,13,52,.92),rgba(8,2,16,.92));
+  border:2px solid #ff6ec7;border-left-width:5px;
+  box-shadow:inset 0 0 0 2px rgba(201,154,255,.16), 0 0 16px rgba(255,110,199,.2);
+  opacity:0;transform:translateY(8px);
+}
+.descida-profundidade b{
+  font-family:'Silkscreen',var(--font);font-size:19px;line-height:1;
+  color:#f8ecff;letter-spacing:1px;text-shadow:2px 2px 0 #12051f;
+}
+.descida-profundidade span{
+  font-family:'Silkscreen',var(--font);font-size:8px;color:#ff8bd1;letter-spacing:2px;
+}
+.descida.fossa.ativa .descida-profundidade{animation:profundidadeEntra 2.2s steps(12) 1 both;}
+@keyframes fossaTreme{
+  0%{transform:translate(0,0);}
+  18%{transform:translate(-1px,1px);}
+  37%{transform:translate(1px,-1px);}
+  58%{transform:translate(-1px,0);}
+  76%{transform:translate(1px,1px);}
+  100%{transform:translate(0,0);}
+}
+@keyframes pressaoPulsa{
+  0%,100%{opacity:.45;}
+  50%{opacity:1;}
+}
+@keyframes fendasRasgam{
+  0%{opacity:0;transform:scale(1.08);}
+  18%{opacity:1;}
+  70%{opacity:.85;}
+  100%{opacity:1;transform:scale(1);}
+}
+@keyframes sonarGrande{
+  0%{width:20px;height:20px;opacity:0;}
+  12%{opacity:.9;}
+  100%{width:520px;height:520px;opacity:0;}
+}
+@keyframes poeiraCai{
+  from{opacity:0;background-position:0 0,21px 33px,9px 17px;}
+  15%{opacity:.9;}
+  to{opacity:.25;background-position:0 290px,21px 363px,9px 247px;}
+}
+@keyframes profundidadeEntra{
+  0%{opacity:0;transform:translateY(8px);}
+  15%,82%{opacity:1;transform:translateY(0);}
+  100%{opacity:0;transform:translateY(-4px);}
+}
 .descida.subida{background:linear-gradient(180deg,#123a55 0%,#08202f 100%);}
 .descida.subida .descida-agua{animation-name:aguaDesce;}
 .descida.subida .descida-bolhas{animation-name:bolhasDescem;}
@@ -1453,92 +1565,473 @@ body[data-tema="abisso"] .nov-item{border-top-color:rgba(120,230,230,.25);}
 .scene[data-fundo="abisso"][data-clima] .clima{opacity:.22;filter:hue-rotate(150deg) saturate(.6);}
 
 /* ==========================================================================
-   FOSSA — tema mais fundo (roxo/índigo)
+   FOSSA — pressão, violeta e bioluminescência rosa
    ========================================================================== */
 body[data-modo="fossa"]{
-  --sky1:#080414; --sky2:#120a24; --sea1:#1a0f2e; --sea2:#070312; --sea3:#030108;
-  background-color:#070312;
+  --fossa-void:#05010a;
+  --fossa-deep:#0b0416;
+  --fossa-plum:#1a0a2e;
+  --fossa-violet:#b06bff;
+  --fossa-pink:#ff6ec7;
+  --fossa-ice:#9ff7ff;
+  --fossa-bone:#f8ecff;
+  --fossa-line:#2d1245;
+  --sky1:#07020f; --sky2:#1b0a30; --sea1:#2a1144; --sea2:#0a0314; --sea3:#030006;
+  background-color:var(--fossa-void);
+  background-image:
+    radial-gradient(ellipse at 50% -8%, rgba(176,107,255,.16), transparent 54%),
+    repeating-linear-gradient(90deg, rgba(255,110,199,.028) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 38%, var(--sea1) 38%, var(--sea2) 100%);
 }
+body[data-modo="fossa"]::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(255,110,199,.55) 1px, transparent 2px),
+    radial-gradient(circle, rgba(201,154,255,.42) 1px, transparent 2px),
+    radial-gradient(circle, rgba(159,247,255,.34) 1px, transparent 2px);
+  background-size:97px 113px, 151px 173px, 223px 197px;
+  background-position:0 0, 37px 61px, 93px 19px;
+  opacity:.55;
+  animation:fossaPoeira 24s steps(24) infinite;
+}
+body[data-modo="fossa"]::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 46%, transparent 34%, rgba(6,0,12,.7) 100%),
+    repeating-linear-gradient(0deg, rgba(255,110,199,.025) 0 1px, transparent 1px 5px);
+  animation:fossaRespira 5.5s steps(3) infinite;
+}
+@keyframes fossaPoeira{
+  from{background-position:0 0,37px 61px,93px 19px;}
+  to{background-position:0 452px,-151px 477px,223px 413px;}
+}
+@keyframes fossaRespira{50%{opacity:.72;}}
+
+/* HUD e controlos */
 body[data-modo="fossa"] .hud-sticky{
   background:
-    repeating-linear-gradient(0deg, rgba(176,107,255,.045) 0 2px, transparent 2px 4px),
-    linear-gradient(180deg,#150a22 0%,#080412 100%);
-  border-bottom-color:#0d0616;
+    repeating-linear-gradient(0deg, rgba(255,110,199,.045) 0 2px, transparent 2px 5px),
+    linear-gradient(180deg,#1c0a30 0%,#090213 100%);
+  border-bottom-color:#030006;
+  box-shadow:0 5px 0 rgba(0,0,0,.32), 0 1px 0 rgba(255,110,199,.22);
+}
+body[data-modo="fossa"] .logo{filter:drop-shadow(2px 2px 0 #12051f) drop-shadow(0 0 7px rgba(255,110,199,.28));}
+body[data-modo="fossa"] h1{
+  color:#f3d9ff;
+  text-shadow:2px 2px 0 #12051f, 0 0 12px rgba(255,110,199,.45);
+}
+body[data-modo="fossa"] .plate{
+  background:
+    repeating-linear-gradient(90deg, rgba(255,110,199,.07) 0 3px, transparent 3px 9px),
+    linear-gradient(180deg,#321650 0%,#1b0a2e 55%,#0b0416 100%);
+  border-color:#030006;
+  box-shadow:inset 0 0 0 2px rgba(201,154,255,.2), 0 4px 0 rgba(0,0,0,.5);
+}
+body[data-modo="fossa"] .plate-lbl{background:#030006;color:#ffb3e2;letter-spacing:1.4px;}
+body[data-modo="fossa"] #timer{
+  color:var(--fossa-bone);
+  text-shadow:3px 3px 0 #12051f, 0 0 14px rgba(255,110,199,.5);
+}
+body[data-modo="fossa"] #coinVal{color:#ffe6f7;text-shadow:2px 2px 0 #12051f;}
+body[data-modo="fossa"] .timebar{
+  background:#030006;
+  border-color:#12051f;
+  box-shadow:inset 0 0 0 2px #2d1245;
+}
+body[data-modo="fossa"] #timeFill{
+  background:
+    repeating-linear-gradient(90deg,#ffb3e2 0 7px,#ff6ec7 7px 14px);
+  box-shadow:inset 0 -4px 0 rgba(0,0,0,.28), inset 0 3px 0 rgba(255,255,255,.35), 0 0 10px rgba(255,110,199,.4);
 }
 body[data-modo="fossa"] .seal{
-  background:linear-gradient(180deg,#3a1f4d,#261334);
-  border-color:#0d0616;
+  background:linear-gradient(180deg,#3c1a5c,#1d0b32);
+  border-color:#030006;
+  color:#f8ecff;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.22), 0 3px 0 rgba(0,0,0,.4);
 }
-body[data-modo="fossa"] .big-btn{
-  color:#1a0a26;
-  background:linear-gradient(180deg,#e6c8ff 0%,#b06bff 70%,#5a2a8a 100%);
-  box-shadow:inset -4px -4px 0 #5a2a8a, inset 4px 4px 0 #f2e6ff, 0 6px 0 #2a123f, 0 9px 0 rgba(0,0,0,.25);
+body[data-modo="fossa"] .tab{
+  color:#d9c2f0;
+  background:linear-gradient(180deg,#2c1147,#160825);
+  border-color:#030006;
+  box-shadow:inset 0 2px 0 rgba(255,110,199,.16);
 }
-body[data-modo="fossa"] .big-btn.hot{
-  background:linear-gradient(180deg,#f2e6ff 0%,#d9b8ff 70%,#b06bff 100%);
-  box-shadow:inset -4px -4px 0 #b06bff, inset 4px 4px 0 #ffffff, 0 6px 0 #3a1f4d, 0 9px 0 rgba(0,0,0,.25);
+body[data-modo="fossa"] .tab.active{
+  color:#ffe6f7;
+  background:linear-gradient(180deg,#512379,#2b0e47);
+  box-shadow:inset 0 3px 0 rgba(255,179,226,.3), 0 0 12px rgba(255,110,199,.3);
+}
+body[data-modo="fossa"] .icon-btn{
+  color:#ffe6f7;
+  background:linear-gradient(180deg,#3c1a5c,#1d0b32);
+  border-color:#030006;
+  box-shadow:inset -2px -2px 0 #12051f, inset 2px 2px 0 #7a3fa5, 0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .btn{
+  background:linear-gradient(180deg,#3a1d58,#220d38);
+  color:#f3e6ff;
+  border-color:#030006;
+  box-shadow:inset -3px -3px 0 #12051f, inset 3px 3px 0 #7a3fa5, 0 4px 0 rgba(0,0,0,.5);
 }
 body[data-modo="fossa"] .btn.gold{
-  background:linear-gradient(180deg,#e6c8ff,#b06bff);
-  box-shadow:inset -3px -3px 0 #5a2a8a, inset 3px 3px 0 #f2e6ff, 0 4px 0 rgba(0,0,0,.45);
+  background:linear-gradient(180deg,#ffd0ef,#ff6ec7 65%,#b23c8f);
+  color:#2a061c;
+  box-shadow:inset -3px -3px 0 #7a1f5e, inset 3px 3px 0 #fff0fa, 0 4px 0 rgba(0,0,0,.5), 0 0 12px rgba(255,110,199,.22);
 }
-body[data-modo="fossa"] .tab.active,
-body[data-modo="fossa"] .book-tab.active,
-body[data-modo="fossa"] .isca.ativa{
-  background:linear-gradient(180deg,#f3e9ff,#d9c2f0);
-  border-color:#b06bff;
-  color:#1a0a26;
-  box-shadow:inset 0 0 0 2px #e0c8ff, 0 3px 0 rgba(0,0,0,.4);
+body[data-modo="fossa"] .btn.ghost{
+  background:linear-gradient(180deg,#2c1147,#160825);
+  color:#d9c2f0;
+  box-shadow:inset -3px -3px 0 #12051f, inset 3px 3px 0 #512379, 0 4px 0 rgba(0,0,0,.5);
 }
-body[data-modo="fossa"] .isca.ativa small,
-body[data-modo="fossa"] .book-tab.active small{color:#5a2a8a;}
+body[data-modo="fossa"] .btn.ad{
+  background:linear-gradient(180deg,#c99aff,#8d4bd1);
+  color:#1a0628;
+  box-shadow:inset -3px -3px 0 #5a2a8a, inset 3px 3px 0 #f3e9ff, 0 4px 0 rgba(0,0,0,.5);
+}
+body[data-modo="fossa"] .big-btn{
+  color:#2a061c;
+  background:linear-gradient(180deg,#ffd0ef 0%,#ff6ec7 45%,#b23c8f 100%);
+  border-color:#030006;
+  box-shadow:inset -4px -4px 0 #7a1f5e, inset 4px 4px 0 #fff0fa, 0 6px 0 #2b0720, 0 0 22px rgba(255,110,199,.34), 0 9px 0 rgba(0,0,0,.28);
+}
+body[data-modo="fossa"] .big-btn.hot{
+  background:linear-gradient(180deg,#fff0fa 0%,#ff9ad9 45%,#ff6ec7 100%);
+  box-shadow:inset -4px -4px 0 #ff6ec7, inset 4px 4px 0 #ffffff, 0 6px 0 #512379, 0 0 26px rgba(255,110,199,.55), 0 9px 0 rgba(0,0,0,.28);
+}
 body[data-modo="fossa"] .perola-badge{
-  background:linear-gradient(180deg,#f3e9ff,#d9c2f0);
-  border-color:#0d0616;
+  background:linear-gradient(180deg,#3c1a5c,#1d0b32);
+  border-color:#030006;
+  color:#f8ecff;
 }
-body[data-modo="fossa"] .patrocinio-contador{color:#d9b8ff;}
+body[data-modo="fossa"] .patrocinio-contador{color:#ffb3e2;}
+
+/* Iscas e separadores */
+body[data-modo="fossa"] .isca{
+  background:linear-gradient(180deg,#2c1147,#160825);
+  border-color:#030006;
+  color:#e9d8ff;
+  box-shadow:0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .isca small{color:#b38fd0;}
+body[data-modo="fossa"] .isca.ativa{
+  background:linear-gradient(180deg,#512379,#2b0e47);
+  border-color:#ff6ec7;
+  color:#fff0fa;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.36), 0 0 14px rgba(255,110,199,.28), 0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .isca.ativa small{color:#ffb3e2;}
+body[data-modo="fossa"] .book-tab{
+  background:linear-gradient(180deg,#2c1147,#160825);
+  border-color:#030006;
+  color:#e9d8ff;
+}
+body[data-modo="fossa"] .book-tab small{color:#b38fd0;}
+body[data-modo="fossa"] .book-tab.active{
+  background:linear-gradient(180deg,#512379,#2b0e47);
+  border-color:#ff6ec7;
+  color:#fff0fa;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.36), 0 0 14px rgba(255,110,199,.24), 0 3px 0 rgba(0,0,0,.45);
+}
+body[data-modo="fossa"] .book-tab.active small{color:#ffb3e2;}
+body[data-modo="fossa"] .ev-close{background:#3c1a5c;border-color:#030006;color:#ffe6f7;}
+body[data-modo="fossa"] .pip.on{background:#ff6ec7;}
+body[data-modo="fossa"] .ach-fill{background:linear-gradient(90deg,#b06bff,#ff6ec7);}
+body[data-modo="fossa"] .seal-badge{background:#f8ecff;border-color:#030006;color:#7a1f5e;box-shadow:0 2px 0 rgba(0,0,0,.4);}
+body[data-modo="fossa"] .seal-badge.miss{background:#7b5c8f;color:#12051f;}
+
+/* Cartões e loja */
+body[data-modo="fossa"] .card{
+  background:linear-gradient(180deg,#24103d,#10051e);
+  border-color:#030006;
+  box-shadow:inset -3px -3px 0 #12051f, inset 3px 3px 0 #512379, 0 4px 0 rgba(0,0,0,.48);
+  color:#f3e6ff;
+}
+body[data-modo="fossa"] .card::before,
+body[data-modo="fossa"] .card::after,
+body[data-modo="fossa"] .modal-card::before,
+body[data-modo="fossa"] .modal-card::after{
+  background:#ff6ec7;
+  box-shadow:inset 0 0 0 1px #12051f;
+}
+body[data-modo="fossa"] .up-ico{
+  background:#321650;
+  border-color:#030006;
+  box-shadow:inset 0 0 0 2px #7a3fa5;
+}
+body[data-modo="fossa"] .up-name{color:#ffe6f7;}
+body[data-modo="fossa"] .lvl{color:#c9a4e6;}
+body[data-modo="fossa"] .up-desc{color:#d9c2f0;}
+body[data-modo="fossa"] .up-eff{color:#eedcff;}
+body[data-modo="fossa"] .up-eff b{color:#ff8bd1;}
+body[data-modo="fossa"] .up-eff.muted{color:#b38fd0;}
+body[data-modo="fossa"] .up-eff.muted b{color:#ff8bd1;}
+body[data-modo="fossa"] .pip{background:#321650;border-color:#030006;}
+body[data-modo="fossa"] .pip.on{background:#ff6ec7;box-shadow:0 0 5px rgba(255,110,199,.6);}
+body[data-modo="fossa"] .epoca-card{
+  background:linear-gradient(180deg,#2a1046,#12051f);
+  border-color:#030006;
+  color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.18), 0 4px 0 rgba(0,0,0,.5);
+}
+body[data-modo="fossa"] .epoca-card .up-name{color:#ff9ad9;}
+body[data-modo="fossa"] .epoca-card .lvl,
+body[data-modo="fossa"] .epoca-card .up-desc{color:#d9c2f0;}
+body[data-modo="fossa"] .epoca-card .up-eff{color:#eedcff;}
+body[data-modo="fossa"] .epoca-card .up-eff b{color:#ff8bd1;}
+body[data-modo="fossa"] .epoca-card .up-ico{background:#321650;border-color:#030006;}
+body[data-modo="fossa"] .epoca-card .pip{background:#321650;border-color:#030006;}
+body[data-modo="fossa"] .epoca-card .pip.on{background:#ff8bd1;}
+body[data-modo="fossa"] .depth-cost{
+  display:block;margin:0 0 8px;padding:5px 8px;
+  font-size:10px;font-weight:900;letter-spacing:.3px;text-align:center;
+  color:#ffd0ef;background:rgba(255,110,199,.09);
+  border:2px solid rgba(255,110,199,.28);
+}
+
+/* Chefe do dia */
+body[data-modo="fossa"] .chefe{
+  background:linear-gradient(180deg,#321650,#160825);
+  border-color:#030006;
+  color:#f3e6ff;
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.2), 0 4px 0 rgba(0,0,0,.5);
+}
+body[data-modo="fossa"] .chefe.done{background:linear-gradient(180deg,#2c4a3a,#132c22);}
+body[data-modo="fossa"] .chefe-nome{color:#ff9ad9;}
+body[data-modo="fossa"] .chefe-estado{color:#d9c2f0;}
+
+/* Livro e Legado */
+body[data-modo="fossa"] .hint,
+body[data-modo="fossa"] .book-top,
+body[data-modo="fossa"] .book-bonus,
+body[data-modo="fossa"] .legado-top .muted,
+body[data-modo="fossa"] .ach-cat,
+body[data-modo="fossa"] .nota-dev,
+body[data-modo="fossa"] .site-footer{
+  color:#f3e6ff;
+  text-shadow:2px 2px 0 #12051f;
+}
+body[data-modo="fossa"] .book-top{flex-wrap:wrap;row-gap:1px;}
+body[data-modo="fossa"] .book-top .muted{flex-basis:100%;font-size:9px;color:#c9a4e6;text-shadow:2px 2px 0 #12051f;}
+body[data-modo="fossa"] .fish-cell{
+  background:linear-gradient(180deg,#24103d,#140724);
+  border-color:#030006;
+  box-shadow:inset -2px -2px 0 #030006, inset 2px 2px 0 #512379;
+}
+body[data-modo="fossa"] .fish-cell .fc-name{color:#f3e6ff;}
+body[data-modo="fossa"] .fish-cell .fc-rar{color:#ff8bd1;}
+body[data-modo="fossa"] .fish-cell .fc-val{color:#ffb3e2;}
+body[data-modo="fossa"] .fish-cell.unknown{
+  background:linear-gradient(180deg,#1a0a2e,#0d0418);
+  box-shadow:inset -2px -2px 0 #030006, inset 2px 2px 0 #321650;
+}
+body[data-modo="fossa"] .fish-cell.unknown .fc-emoji{color:#b06bff;}
+body[data-modo="fossa"] .fish-cell.unknown .fc-name,
+body[data-modo="fossa"] .fish-cell.unknown .fc-rar{color:#b38fd0;}
+body[data-modo="fossa"] .fish-cell.abissal{
+  background:linear-gradient(180deg,#24103d,#1b0b33);
+  box-shadow:inset -2px -2px 0 #030006, inset 2px 2px 0 #b06bff;
+}
+body[data-modo="fossa"] .catch-name{color:#f8ecff;}
+body[data-modo="fossa"] .catch-val{color:#ff9ad9;text-shadow:2px 2px 0 #12051f;}
 
 /* Cena da Fossa */
 .scene[data-zona="fossa"]{
-  background:linear-gradient(180deg,#080414 0%,#120a24 46%,#1a0f2e 100%);
-  box-shadow:inset 0 0 0 3px rgba(176,107,255,.22), 0 6px 0 rgba(0,0,0,.4);
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(176,107,255,.16), transparent 55%),
+    radial-gradient(ellipse at 50% 110%, rgba(255,110,199,.12), transparent 52%),
+    linear-gradient(180deg,#12051f 0%,#1c0a30 48%,#030006 100%);
+  box-shadow:inset 0 0 0 3px rgba(255,110,199,.2), inset 0 0 50px rgba(3,0,8,.65), 0 6px 0 rgba(0,0,0,.5);
 }
-.scene[data-zona="fossa"] .ceu{background:linear-gradient(180deg,#06030c,#120a24);}
+.scene[data-zona="fossa"] .ceu{background:linear-gradient(180deg,#05010a,#140722);}
 .scene[data-zona="fossa"] .agua{
   background:
-    repeating-linear-gradient(180deg, rgba(176,107,255,.055) 0 3px, transparent 3px 18px),
-    linear-gradient(180deg,#1a0f2e,#030108);
+    repeating-linear-gradient(180deg, rgba(255,110,199,.05) 0 3px, transparent 3px 18px),
+    linear-gradient(180deg,#1c0a30,#030006);
 }
-.scene[data-zona="fossa"] .ondas{opacity:.1;}
+.scene[data-zona="fossa"] .ondas{opacity:.08;animation-duration:9s;}
 .scene[data-zona="fossa"] .cais{
-  background:repeating-linear-gradient(90deg,#24102e 0 30px,#160a20 30px 34px),#24102e;
-  border-top-color:#0d0616;
-  box-shadow:inset 0 4px 0 rgba(176,107,255,.10);
+  background:
+    repeating-linear-gradient(90deg,#2c1740 0 30px,#180a26 30px 34px),
+    linear-gradient(180deg,#321650,#140722);
+  border-top-color:#030006;
+  box-shadow:inset 0 4px 0 rgba(255,110,199,.18);
+  height:30px;
+}
+.scene[data-zona="fossa"] .cais::after{
+  content:'';position:absolute;left:0;right:0;top:5px;height:2px;
+  background:repeating-linear-gradient(90deg,#ff6ec7 0 9px,transparent 9px 18px);
+  opacity:.4;
 }
 .scene[data-zona="fossa"] .farol,
 .scene[data-zona="fossa"] .feixe,
 .scene[data-zona="fossa"] .barco-spr,
-.scene[data-zona="fossa"] .poste{display:none;}
+.scene[data-zona="fossa"] .poste,
+.scene[data-zona="fossa"] .peixe-salta{display:none;}
+.scene[data-zona="fossa"] .morro{opacity:.18;filter:hue-rotate(260deg) brightness(.42);}
 .scene[data-zona="fossa"] .abismo-luz{
   background:
-    linear-gradient(102deg, transparent 32%, rgba(176,107,255,.13) 33%, rgba(176,107,255,.13) 41%, transparent 42%),
-    linear-gradient(78deg, transparent 57%, rgba(46,230,214,.07) 58%, rgba(46,230,214,.07) 66%, transparent 67%);
+    linear-gradient(102deg, transparent 30%, rgba(255,110,199,.11) 31%, rgba(255,110,199,.11) 38%, transparent 39%),
+    linear-gradient(78deg, transparent 56%, rgba(176,107,255,.1) 57%, rgba(176,107,255,.1) 64%, transparent 65%),
+    linear-gradient(90deg, transparent 47%, rgba(159,247,255,.05) 48%, rgba(159,247,255,.05) 51%, transparent 52%);
+  animation-duration:13s;
 }
 .scene[data-zona="fossa"] .abismo-plankton{
+  opacity:.75;
   background-image:
-    radial-gradient(circle, rgba(176,107,255,.9) 1px, transparent 2px),
-    radial-gradient(circle, rgba(217,184,255,.65) 1px, transparent 2px);
+    radial-gradient(circle, rgba(255,110,199,.95) 1px, transparent 2px),
+    radial-gradient(circle, rgba(201,154,255,.7) 1px, transparent 2px),
+    radial-gradient(circle, rgba(159,247,255,.55) 1px, transparent 2px);
+  background-size:87px 67px, 53px 89px, 113px 73px;
+  animation-duration:4.2s;
+}
+.scene[data-zona="fossa"] .abismo-bolhas{
+  opacity:.42;
+  background-image:
+    radial-gradient(circle, rgba(255,110,199,.8) 1px, transparent 2px),
+    radial-gradient(circle, rgba(201,154,255,.65) 1.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(159,247,255,.45) 1px, transparent 2px);
+  animation-duration:10s;
+}
+.scene[data-zona="fossa"] .abismo-vinheta{
+  background:radial-gradient(ellipse at 50% 36%, transparent 32%, rgba(3,0,8,.82) 100%);
 }
 .scene[data-zona="fossa"] .boia{
-  background:linear-gradient(180deg,#f3e9ff 0 52%,#b06bff 52% 100%);
-  box-shadow:0 0 8px rgba(176,107,255,.9);
+  background:linear-gradient(180deg,#fff0fa 0 52%,#ff6ec7 52% 100%);
+  box-shadow:0 0 9px rgba(255,110,199,.95);
 }
 .scene[data-zona="fossa"] .linha{
-  background:repeating-linear-gradient(180deg,#e6c8ff 0 3px,rgba(230,200,255,0) 3px 7px);
+  background:repeating-linear-gradient(180deg,#ffd0ef 0 3px,rgba(255,208,239,0) 3px 7px);
 }
-.scene[data-zona="fossa"] .personagem{filter:brightness(.7) saturate(.55) hue-rotate(240deg);}
-.scene[data-zona="fossa"] .cana-spr{filter:brightness(.65) saturate(.2) hue-rotate(240deg);}
-.scene[data-zona="fossa"] .status{text-shadow:2px 2px 0 #030108,-1px 2px 0 #030108;}
+.scene[data-zona="fossa"] .personagem{filter:brightness(.64) saturate(.45) hue-rotate(255deg);}
+.scene[data-zona="fossa"] .cana-spr{filter:brightness(.6) saturate(.25) hue-rotate(255deg);}
+.scene[data-zona="fossa"] .status{
+  color:#f8ecff;
+  text-shadow:2px 2px 0 #030006,-1px 2px 0 #030006,0 0 9px rgba(255,110,199,.4);
+}
+.scene[data-zona="fossa"] .timing{
+  background:#030006;
+  border-color:#12051f;
+  box-shadow:inset 0 0 0 2px #2d1245, 0 0 10px rgba(255,110,199,.16);
+}
+.scene[data-zona="fossa"] #greenZone{
+  background:repeating-linear-gradient(180deg,#9ff7c8 0 6px,#43c98e 6px 14px);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35), 0 0 8px rgba(67,201,142,.45);
+}
+.scene[data-zona="fossa"] #marker{background:#ffd0ef;box-shadow:0 0 6px rgba(255,110,199,.8);}
+
+/* Paredes, fendas, poeira e sonar do cenário */
+.fossa-paredes{position:absolute;inset:0;opacity:0;transition:opacity .5s steps(4);}
+.fossa-paredes::before,
+.fossa-paredes::after{
+  content:'';position:absolute;top:0;bottom:0;width:19%;
+  background:linear-gradient(90deg,#0d0418,#1c0a30);
+  box-shadow:inset 0 0 22px rgba(3,0,8,.9);
+}
+.fossa-paredes::before{
+  left:0;
+  clip-path:polygon(0 0,100% 0,72% 8%,96% 18%,58% 29%,82% 41%,44% 55%,72% 68%,36% 81%,60% 92%,100% 100%,0 100%);
+}
+.fossa-paredes::after{
+  right:0;transform:scaleX(-1);
+  clip-path:polygon(0 0,100% 0,72% 8%,96% 18%,58% 29%,82% 41%,44% 55%,72% 68%,36% 81%,60% 92%,100% 100%,0 100%);
+}
+.scene[data-zona="fossa"] .fossa-paredes{opacity:1;}
+.fossa-fendas{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;
+  fill:none;stroke:#ff6ec7;stroke-width:1.4;
+  filter:drop-shadow(0 0 4px rgba(255,110,199,.7));
+  shape-rendering:crispEdges;
+}
+.scene[data-zona="fossa"] .fossa-fendas{opacity:.22;clip-path:inset(38% 0 0 0);animation:fendaPisca 4.6s steps(2) infinite;}
+.fossa-poeira{
+  position:absolute;inset:-10% 0;opacity:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(201,154,255,.55) 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,110,199,.4) 1px, transparent 2px);
+  background-size:59px 83px, 103px 127px;
+  background-position:0 0, 31px 47px;
+}
+.scene[data-zona="fossa"] .fossa-poeira{opacity:.65;animation:poeiraCena 13s linear infinite;}
+.fossa-sonar{
+  position:absolute;left:50%;top:54%;width:12px;height:12px;z-index:2;
+  border:2px solid rgba(255,110,199,.5);border-radius:50%;
+  transform:translate(-50%,-50%);opacity:0;pointer-events:none;
+}
+.scene[data-zona="fossa"] .fossa-sonar{animation:sonarCena 5.4s steps(26) infinite;}
+@keyframes fendaPisca{50%{opacity:.72;}}
+@keyframes poeiraCena{
+  from{background-position:0 0,31px 47px;}
+  to{background-position:0 332px,-103px 381px;}
+}
+@keyframes sonarCena{
+  0%{width:12px;height:12px;opacity:0;}
+  8%{opacity:.5;}
+  100%{width:320px;height:320px;opacity:0;}
+}
+
+/* Placa de profundidade no cenário */
+.fossa-placa{
+  position:absolute;left:9px;top:9px;z-index:4;
+  display:flex;flex-direction:column;gap:1px;
+  padding:4px 7px 5px;pointer-events:none;
+  background:rgba(6,0,12,.78);
+  border:2px solid rgba(255,110,199,.6);border-left-width:4px;
+  box-shadow:inset 0 0 0 1px rgba(201,154,255,.14), 0 0 10px rgba(255,110,199,.25);
+  opacity:0;
+}
+.scene[data-zona="fossa"] .fossa-placa{opacity:1;}
+.fossa-placa b{
+  font-family:'Silkscreen',var(--font);font-size:10px;letter-spacing:2px;color:#ffb3e2;
+  text-shadow:1px 1px 0 #12051f;
+}
+.fossa-placa span{font-family:'Silkscreen',var(--font);font-size:7px;letter-spacing:.5px;color:#d9c2f0;}
+
+/* Ferramentas ativas */
+.fossa-tools{display:flex;gap:6px;margin:0 0 8px;}
+.tool-btn{
+  flex:1;display:flex;align-items:center;gap:7px;min-width:0;
+  padding:7px 7px;text-align:left;
+  background:linear-gradient(180deg,#2c1147,#12051f);
+  border:3px solid #030006;color:#e9d8ff;
+  box-shadow:inset 0 0 0 2px rgba(201,154,255,.12), 0 3px 0 rgba(0,0,0,.45);
+}
+.tool-btn:active{transform:translateY(2px);box-shadow:none;}
+.tool-btn.active{
+  border-color:#ff6ec7;color:#fff0fa;
+  background:linear-gradient(180deg,#512379,#2b0e47);
+  box-shadow:inset 0 0 0 2px rgba(255,110,199,.34), 0 0 14px rgba(255,110,199,.3), 0 3px 0 rgba(0,0,0,.45);
+}
+.tool-btn.off{opacity:.62;}
+.tool-ico{flex:0 0 auto;width:26px;height:26px;display:flex;align-items:center;justify-content:center;}
+.tool-ico canvas{width:26px !important;height:26px !important;}
+.tool-txt{display:flex;flex-direction:column;min-width:0;line-height:1.1;}
+.tool-txt b{font-size:9px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-txt small{font-size:8px;color:#b38fd0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tool-btn.active .tool-txt small{color:#ffb3e2;}
+
+/* Loja de ferramentas */
+.fossa-gear{margin-top:12px;}
+.gear-head{
+  display:flex;flex-direction:column;gap:2px;margin:0 0 7px;
+  padding:6px 8px;border-left:4px solid #ff6ec7;
+  background:rgba(255,110,199,.08);
+}
+.gear-head span{
+  font-family:'Silkscreen',var(--font);font-size:11px;letter-spacing:1px;
+  color:#ffe6f7;text-transform:uppercase;text-shadow:2px 2px 0 #12051f;
+}
+.gear-head small{font-size:9px;color:#d9c2f0;line-height:1.2;}
+.garra-btn{margin-top:7px;width:100%;}
+.garra-ico canvas{width:46px !important;height:46px !important;}
+
+/* Zona perfeita revelada pelo Sonar */
+#timingBar.sonar #greenZone::after{
+  content:'';position:absolute;top:0;bottom:0;left:50%;
+  width:var(--perfeita,40%);transform:translateX(-50%);
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.8) 0 3px, transparent 3px 7px);
+  border-left:2px solid #ffffff;border-right:2px solid #ffffff;
+  box-shadow:0 0 9px rgba(255,255,255,.9);
+  animation:pisca .5s steps(2) infinite;
+}
 
 /* Células do livro Hadal */
 .fish-cell.hadal{background:linear-gradient(180deg,#efe0ff,#d9c2f0);box-shadow:inset -2px -2px 0 #b38fd0, inset 2px 2px 0 #faf4ff;}
@@ -1548,3 +2041,14 @@ body[data-tema="abisso"] .fish-cell.hadal.unknown{background:linear-gradient(180
 body[data-tema="abisso"] .fish-cell.hadal .fc-name{color:#f3e9ff;}
 body[data-tema="abisso"] .fish-cell.hadal .fc-rar,
 body[data-tema="abisso"] .fish-cell.hadal .fc-val{color:#d9b8ff;}
+body[data-modo="fossa"] .fish-cell.hadal{
+  background:linear-gradient(180deg,#3a1558,#24103d);
+  box-shadow:inset -2px -2px 0 #12051f, inset 2px 2px 0 #ff6ec7, 0 0 10px rgba(255,110,199,.18);
+}
+body[data-modo="fossa"] .fish-cell.hadal.unknown{
+  background:linear-gradient(180deg,#1a0a2e,#0d0418);
+  box-shadow:inset -2px -2px 0 #030006, inset 2px 2px 0 #512379;
+}
+body[data-modo="fossa"] .fish-cell.hadal .fc-name{color:#fff0fa;}
+body[data-modo="fossa"] .fish-cell.hadal .fc-rar,
+body[data-modo="fossa"] .fish-cell.hadal .fc-val{color:#ffb3e2;}

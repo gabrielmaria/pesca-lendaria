@@ -90,6 +90,24 @@
         </button>
       </div>
 
+      <!-- Ferramentas ativas da Fossa -->
+      <div class="fossa-tools hidden" id="fossaTools">
+        <button class="tool-btn" id="toolSonar" type="button">
+          <span class="tool-ico spr-slot" data-sprite="sonar"></span>
+          <span class="tool-txt">
+            <b data-i18n="ferrSonar">Sonar de Pressão</b>
+            <small id="toolSonarInfo">pronto</small>
+          </span>
+        </button>
+        <button class="tool-btn" id="toolGarra" type="button">
+          <span class="tool-ico spr-slot" data-sprite="garra"></span>
+          <span class="tool-txt">
+            <b data-i18n="ferrGarra">Garra Hidráulica</b>
+            <small id="toolGarraInfo">pronto</small>
+          </span>
+        </button>
+      </div>
+
       <!-- Cena pixel: céu, mar, cais, barco e cana -->
       <div class="scene" id="sea" data-clima="calmo">
         <div class="ceu">
@@ -112,7 +130,16 @@
           <div class="abismo-plankton"></div>
           <div class="abismo-bolhas"></div>
           <div class="abismo-vinheta"></div>
+          <div class="fossa-paredes"></div>
+          <svg class="fossa-fendas" viewBox="0 0 200 150" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="8,150 24,134 19,122 43,108 36,96 58,82"/>
+            <polyline points="192,150 178,132 184,119 162,103 169,92 146,78"/>
+            <polyline points="104,150 98,137 108,128 96,116 105,104"/>
+          </svg>
+          <div class="fossa-poeira"></div>
+          <div class="fossa-sonar"></div>
         </div>
+        <div class="fossa-placa" aria-hidden="true"><b>FOSSA</b><span>−11 000 m · 1 100 bar</span></div>
         <div class="cais"></div>
         <span class="poste poste1"></span>
         <span class="poste poste2"></span>
@@ -158,6 +185,7 @@
     <!-- ======================= UPGRADES ======================= -->
     <section class="panel" id="panel-upgrades">
       <div class="hint" data-i18n="upgradesDica">Compras rápidas: não gastam tempo de pesca.</div>
+      <div class="depth-cost hidden" id="depthCost"></div>
 
       <!-- Nova Época (prestígio) -->
       <div class="card epoca-card" id="epocaCard">
@@ -174,6 +202,15 @@
       </div>
 
       <div id="upgradesList"></div>
+
+      <div class="fossa-gear hidden" id="fossaGear">
+        <div class="gear-head">
+          <span data-i18n="ferrTitulo">Ferramentas da Fossa</span>
+          <small data-i18n="ferrSub">Equipamento ativo. Só funciona na Fossa.</small>
+        </div>
+        <div id="ferramentasLista"></div>
+      </div>
+
       <div class="dev-actions">
         <a class="btn ghost small hidden" id="btnStats" target="_blank" rel="noopener" data-i18n="stats">Ver estatísticas</a>
       </div>
@@ -309,6 +346,18 @@
   <div class="descida-agua"></div>
   <div class="descida-bolhas"></div>
   <div class="descida-vinheta"></div>
+  <div class="descida-pressao"></div>
+  <svg class="descida-fendas" viewBox="0 0 200 300" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,96 18,112 10,130 34,152 24,174 52,198 44,222 72,250"/>
+    <polyline points="200,72 181,91 190,112 164,136 176,158 148,184 158,208 130,236 140,264"/>
+    <polyline points="100,0 94,24 106,38 92,60 102,78 88,98 98,120"/>
+  </svg>
+  <div class="descida-sonar"></div>
+  <div class="descida-poeira"></div>
+  <div class="descida-profundidade" id="descidaProfundidade">
+    <b id="descidaMetros">−4 000 m</b>
+    <span data-i18n="pressaoLabel">PRESSÃO</span>
+  </div>
   <div class="descida-fundo" id="descidaFundo" aria-hidden="true"></div>
   <div class="descida-peixes" id="descidaPeixes"></div>
   <div class="descida-arvores" id="descidaArvores" aria-hidden="true"></div>

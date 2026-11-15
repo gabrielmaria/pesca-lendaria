@@ -6,9 +6,29 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.5';
+const APP_VERSION = '1.5.6';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.6',
+    data: '15/11/2026',
+    titulo: 'Pressão da Fossa',
+    tituloEn: 'Trench Pressure',
+    itens: [
+      'Nova transição para a Fossa: fendas, sonar, poeira e leitura de profundidade.',
+      'Tema da Fossa renovado: HUD, cartões, cenário, livro e botões em violeta e rosa.',
+      'Fossa mais difícil: zona mais estreita, barra mais rápida e janela perfeita menor.',
+      'Upgrades +15% no Mar Profundo e +30% na Fossa, porque o fundo paga melhor.',
+      'Ferramentas ativas: Sonar de Pressão e Garra Hidráulica.'
+    ],
+    itensEn: [
+      'New Trench descent: cracks, sonar, dust and a depth readout.',
+      'Reworked Trench theme: HUD, cards, scenery, book and buttons in violet and pink.',
+      'Harder Trench: narrower zone, faster bar and a smaller perfect window.',
+      'Upgrades +15% in the Deep Sea and +30% in the Trench, because the deep pays better.',
+      'Active tools: Pressure Sonar and Hydraulic Claw.'
+    ]
+  },
   {
     versao: '1.5.5',
     data: '15/11/2026',

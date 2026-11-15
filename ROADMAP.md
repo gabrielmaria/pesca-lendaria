@@ -21,7 +21,7 @@ Cada camada nova deve trazer:
 | **Fontes Hidrotermais** | Calor: a barra acelera, mas os peixes valem mais | Negro, laranja e vapor |
 | **Inferno** | Fumo/cinza: eventos tapam partes da zona; iscas limpam | Vermelho, brasas e fumo |
 
-**Estado:** a Fossa foi implementada na versão **1.5.5** (15/11/2026), com raridade Hadal, 13 espécies, iscas Fossa/Pressão, chefe próprio e livro separado. A próxima camada é **Fontes Hidrotermais**.
+**Estado:** a Fossa foi implementada na versão **1.5.5** e refinada na **1.5.6** (15/11/2026), com raridade Hadal, 13 espécies, iscas Fossa/Pressão, chefe próprio, livro separado, transição de pressão e ferramentas ativas (Sonar e Garra). A próxima camada é **Fontes Hidrotermais**.
 
 Ideia de desbloqueio: seguir a lógica atual, uma camada nova abre com época ou com parte do livro da camada anterior, para não atropelar quem ainda está a começar.
 

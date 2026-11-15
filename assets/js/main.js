@@ -177,6 +177,10 @@ function iniciar() {
     b.addEventListener('click', function () { escolherIsca(b.dataset.isca); });
   });
 
+  /* --- Ferramentas da Fossa --- */
+  if ($('toolSonar')) $('toolSonar').addEventListener('click', function () { alternarFerramenta('sonar'); });
+  if ($('toolGarra')) $('toolGarra').addEventListener('click', function () { alternarFerramenta('garra'); });
+
   /* --- Modo: Superfície / Mar Profundo --- */
   document.querySelectorAll('.modo-tab').forEach(function (b) {
     b.addEventListener('click', function () { escolherModo(b.dataset.modo); });

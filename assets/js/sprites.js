@@ -407,6 +407,25 @@ function spriteIcone(nome, escala) {
       triPx(g, 15, 8, 8, 5, 8, 11, '#ffe08a');
       rectPx(g, 7, 7, 2, 2, '#fff6c0');
       break;
+    case 'sonar':
+      elipsePx(g, 8, 8, 6.2, 6.2, '#3a1454');
+      elipsePx(g, 8, 8, 5.1, 5.1, '#b06bff');
+      elipsePx(g, 8, 8, 4.0, 4.0, '#3a1454');
+      elipsePx(g, 8, 8, 2.9, 2.9, '#ff6ec7');
+      elipsePx(g, 8, 8, 1.7, 1.7, '#3a1454');
+      px(g, 8, 8, '#f8ecff');
+      px(g, 8, 1, '#9ff7ff'); px(g, 15, 8, '#9ff7ff'); px(g, 8, 15, '#9ff7ff'); px(g, 1, 8, '#9ff7ff');
+      break;
+    case 'garra':
+      rectPx(g, 7, 7, 2, 8, '#c9a06a');
+      rectPx(g, 5, 13, 6, 2, '#8b5a2b');
+      rectPx(g, 3, 6, 3, 2, '#b06bff');
+      rectPx(g, 10, 6, 3, 2, '#b06bff');
+      triPx(g, 3, 2, 7, 2, 7, 7, '#ff6ec7');
+      triPx(g, 13, 2, 9, 2, 9, 7, '#ff6ec7');
+      px(g, 5, 4, '#f8ecff'); px(g, 11, 4, '#f8ecff');
+      px(g, 6, 8, '#9ff7ff'); px(g, 9, 8, '#9ff7ff');
+      break;
     case 'abismo':
       elipsePx(g, 8, 8, 6.4, 6.4, '#0e7f8c');
       elipsePx(g, 8, 8, 4.8, 4.8, '#0b3a55');

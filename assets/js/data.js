@@ -100,6 +100,20 @@ const UPGRADES_DADOS = [
   { id:'freezer', nome:'Geleira',              emoji:'🧊', desc:'Aumenta o valor de venda dos peixes raros ou superiores.', nomeEn:'Freezer', descEn:'Increases the value of rare or better fish.' }
 ];
 
+/* --- Ferramentas ativas: compradas com moedas, usadas na Fossa --- */
+const FERRAMENTAS_DADOS = [
+  {
+    id:'sonar', nome:'Sonar de Pressão', nomeEn:'Pressure Sonar', icone:'sonar',
+    desc:'Marca a zona perfeita do próximo lance. Recarrega com capturas.',
+    descEn:'Marks the perfect zone on your next cast. Recharges with catches.'
+  },
+  {
+    id:'garra', nome:'Garra Hidráulica', nomeEn:'Hydraulic Claw', icone:'garra',
+    desc:'Depois de uma falha, dá uma segunda tentativa com a zona alargada.',
+    descEn:'After a miss, gives you a second attempt with a wider zone.'
+  }
+];
+
 /* --- Eventos do dia (8): efeitos aplicados ao calcular cada lance --- */
 const EVENTOS = [
   { id:'chuva',   emoji:'☔', nome:'Dia de Chuva',       desc:'+30% de peixes raros ou superiores.', nomeEn:'Rainy Day', descEn:'+30% chance of rare or better fish.',   fx:{ raro:1.3 } },

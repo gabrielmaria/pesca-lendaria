@@ -76,10 +76,23 @@ const CONFIG = {
   FOSSA_ABISSAL_MIN: 10,      // ou 10 espécies abissais descobertas
   FOSSA_PESO: 0.08,           // peso base da raridade Hadal
   ISCO_HADAL: 0.35,           // upgrade Isco: multiplicador hadal por nível
-  FOSSA_ZONA: 0.78,           // zona de timing mais estreita (pressão)
+  FOSSA_ZONA: 0.72,           // zona de timing mais estreita (pressão)
+  FOSSA_BARRA: 0.92,          // barra ligeiramente mais rápida na Fossa
+  FOSSA_PERFEITA: 0.78,       // janela perfeita mais apertada na Fossa
   FOSSA_VALOR: 1.5,           // valor +50% na Fossa
   CHEFE_BONUS_FOSSA: 8,       // chefe da Fossa = valor normal x8
   CHEFE_FOSSA_DIAS: 5,        // 1 em cada N dias o chefe é hadal
+
+  /* --- Custo por profundidade (o fundo paga mais, mas também cobra mais) --- */
+  CUSTO_ABISMO: 1.15,         // +15% nos upgrades quando o Mar Profundo abre
+  CUSTO_FOSSA: 1.30,          // +30% nos upgrades quando a Fossa abre
+
+  /* --- Ferramentas ativas da Fossa --- */
+  FERRAMENTAS: {
+    sonar: { custo: 90000,  crescimento: 2.7, max: 5, recarga: 6, recargaNivel: 1.0 },
+    garra: { custo: 140000, crescimento: 2.7, max: 5, recarga: 9, recargaNivel: 1.2, zona: 0.12 }
+  },
+  RESGATE_MS: 4000,           // tempo para decidir usar a Garra depois de uma falha
 
   /* --- Iscas (escolha antes de lançar) --- */
   ISCAS: {
@@ -265,6 +278,31 @@ const TEXTOS = {
     modoFossaSub: "pressão · +50% valor",
     fossaDesbloqueada: "Fossa desbloqueada! Nova raridade e livro.",
     fossaBloqueada: "Desbloqueia na Época {e} ou com {n} abissais.",
+    ferrTitulo: "Ferramentas da Fossa",
+    ferrSub: "Equipamento ativo. Só funciona na Fossa.",
+    ferrSonar: "Sonar de Pressão",
+    ferrSonarDesc: "Marca a zona perfeita do próximo lance.",
+    ferrGarra: "Garra Hidráulica",
+    ferrGarraDesc: "Depois de uma falha, dá uma segunda tentativa com zona alargada.",
+    ferrPronto: "pronto",
+    ferrAtivo: "ativo",
+    ferrRecarga: "recarrega em {n}",
+    ferrComprar: "compra nos upgrades",
+    ferrSoFossa: "As ferramentas só funcionam na Fossa.",
+    ferrRecarregando: "Ainda recarrega em {n} peixes.",
+    ferrComprada: "{n} instalado · nível {l}.",
+    ferrEfeitoSonar: "zona perfeita visível · recarga em {n} peixes",
+    ferrEfeitoGarra: "+{z}% de zona no resgate · recarga em {n} peixes",
+    ferrSonarOn: "Sonar ativo: a zona perfeita vai aparecer.",
+    ferrSonarOff: "Sonar desligado.",
+    ferrGarraOn: "Garra armada para a próxima falha.",
+    ferrGarraOff: "Garra desarmada.",
+    ferrGarraUsada: "A garra agarrou o peixe! Tenta outra vez.",
+    garraBotao: "USAR GARRA",
+    garraAjuda: "Segunda tentativa com zona alargada",
+    statusGarra: "A garra agarrou! Tenta outra vez.",
+    custoProfundidade: "Preços de profundidade +{p}% · o fundo paga melhor.",
+    pressaoLabel: "PRESSÃO",
     abaLegado: "Legado",
     legadoDica: "As conquistas dão Pérolas. Gasta-as em melhorias permanentes.",
     legadoConquistas: "Conquistas",
@@ -454,6 +492,31 @@ const TEXTOS = {
     modoFossaSub: "pressure · +50% value",
     fossaDesbloqueada: "Trench unlocked! New rarity and book.",
     fossaBloqueada: "Unlocks at Season {e} or with {n} abyssal species.",
+    ferrTitulo: "Trench Tools",
+    ferrSub: "Active gear. Only works in the Trench.",
+    ferrSonar: "Pressure Sonar",
+    ferrSonarDesc: "Marks the perfect zone on your next cast.",
+    ferrGarra: "Hydraulic Claw",
+    ferrGarraDesc: "After a miss, gives a second attempt with a wider zone.",
+    ferrPronto: "ready",
+    ferrAtivo: "active",
+    ferrRecarga: "recharges in {n}",
+    ferrComprar: "buy in upgrades",
+    ferrSoFossa: "Tools only work in the Trench.",
+    ferrRecarregando: "Still recharging for {n} fish.",
+    ferrComprada: "{n} installed · level {l}.",
+    ferrEfeitoSonar: "perfect zone visible · recharges in {n} fish",
+    ferrEfeitoGarra: "+{z}% rescue zone · recharges in {n} fish",
+    ferrSonarOn: "Sonar active: the perfect zone will show.",
+    ferrSonarOff: "Sonar off.",
+    ferrGarraOn: "Claw armed for the next miss.",
+    ferrGarraOff: "Claw disarmed.",
+    ferrGarraUsada: "The claw caught the fish! Try again.",
+    garraBotao: "USE CLAW",
+    garraAjuda: "Second attempt with a wider zone",
+    statusGarra: "The claw caught it! Try again.",
+    custoProfundidade: "Depth prices +{p}% · the deep pays better.",
+    pressaoLabel: "PRESSURE",
     abaLegado: "Legacy",
     legadoDica: "Achievements award Pearls. Spend them on permanent upgrades.",
     legadoConquistas: "Achievements",
