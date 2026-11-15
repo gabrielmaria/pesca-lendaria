@@ -17,7 +17,8 @@ const RARIDADES = [
   { id:'epico',    nome:'Épico', en:'Epic',    peso:4,    mult:40,   cor:'var(--r3)', emoji:'🟣' },
   { id:'lendario', nome:'Lendário', en:'Legendary', peso:0.9,  mult:200,  cor:'var(--r4)', emoji:'🟡' },
   { id:'mitico',   nome:'Mítico', en:'Mythic',   peso:0.1,  mult:1000, cor:'var(--r5)', emoji:'🔴' },
-  { id:'abissal',  nome:'Abissal', en:'Abyssal', peso:0.10, mult:5000, cor:'var(--r6)', emoji:'🌊' }
+  { id:'abissal',  nome:'Abissal', en:'Abyssal', peso:0.10, mult:5000, cor:'var(--r6)', emoji:'🌊' },
+  { id:'hadal',    nome:'Hadal',   en:'Hadal',   peso:0.08, mult:12000, cor:'var(--r7)', emoji:'🟣' }
 ];
 
 /* --- 30 espécies de superfície: 8 comuns, 7 incomuns, 6 raras, 4 épicas, 3 lendárias, 2 míticas --- */
@@ -73,7 +74,21 @@ const PEIXES = [
   { id:'tubarao_duende',       nome:'Tubarão-Duende', en:'Goblin Shark',                     emoji:'🦈', r:6, base:64 },
   { id:'baleia_ossea',         nome:'Baleia Ossuária', en:'Skeletal Whale',                  emoji:'🐋', r:6, base:66 },
   { id:'leviata_das_fossas',   nome:'Leviatã das Fossas', en:'Trench Leviathan',             emoji:'🐳', r:6, base:68 },
-  { id:'dragao_do_nucleo',     nome:'Dragão do Núcleo', en:'Core Dragon',                     emoji:'🐉', r:6, base:72 }
+  { id:'dragao_do_nucleo',     nome:'Dragão do Núcleo', en:'Core Dragon',                     emoji:'🐉', r:6, base:72 },
+  /* Hadal (Fossa — desbloqueia na Época 5 ou com 10 abissais) */
+  { id:'enguia_de_pressao',    nome:'Enguia de Pressão', en:'Pressure Eel',                  emoji:'🐟', r:7, base:60 },
+  { id:'peixe_cego_sindicalista', nome:'Peixe-Cego Sindicalista', en:'Blind Fish Union Rep', emoji:'🐟', r:7, base:62 },
+  { id:'camarao_das_fossas',   nome:'Camarão das Fossas', en:'Trench Shrimp',                emoji:'🦀', r:7, base:64 },
+  { id:'lula_colossal',        nome:'Lula Colossal', en:'Colossal Squid',                   emoji:'🦑', r:7, base:66 },
+  { id:'polvo_de_pressao',     nome:'Polvo de Pressão', en:'Pressure Octopus',              emoji:'🐙', r:7, base:68 },
+  { id:'tubarao_fantasma',     nome:'Tubarão-Fantasma', en:'Ghost Shark',                   emoji:'🦈', r:7, base:70 },
+  { id:'peixe_balao_das_fossas', nome:'Peixe-Balão das Fossas', en:'Trench Pufferfish',     emoji:'🐡', r:7, base:72 },
+  { id:'raia_do_vazio',        nome:'Raia do Vazio', en:'Void Ray',                         emoji:'🐟', r:7, base:74 },
+  { id:'celacanto_submersivel', nome:'Celacanto Submersível', en:'Submersible Coelacanth',  emoji:'🐟', r:7, base:76 },
+  { id:'caranguejo_das_fumarolas', nome:'Caranguejo das Fumarolas', en:'Vent Crab',         emoji:'🦀', r:7, base:78 },
+  { id:'medusa_do_nucleo',     nome:'Medusa do Núcleo', en:'Core Jellyfish',                emoji:'🐙', r:7, base:80 },
+  { id:'leviata_de_pressao',   nome:'Leviatã de Pressão', en:'Pressure Leviathan',          emoji:'🐳', r:7, base:84 },
+  { id:'dragao_das_fendas',    nome:'Dragão das Fendas', en:'Trench Dragon',                 emoji:'🐉', r:7, base:88 }
 ];
 
 /* --- Upgrades --- */
@@ -154,7 +169,10 @@ const CONQUISTAS = [
   { id:'anuncios_10',      categoria:'sessao', tipo:'anuncios',          alvo:10,  premio:2, icone:'tv',       nome:'Patrocinado',        nomeEn:'Sponsored',          desc:'Vê {n} anúncios recompensados.',      descEn:'Watch {n} rewarded ads.' },
   { id:'anuncios_50',      categoria:'sessao', tipo:'anuncios',          alvo:50,  premio:4, icone:'tv',       nome:'Apoiante',           nomeEn:'Supporter',          desc:'Vê {n} anúncios recompensados.',      descEn:'Watch {n} rewarded ads.' },
   { id:'melhor_sessao_1m', categoria:'sessao', tipo:'melhorSessaoMoedas',alvo:1000000,  premio:4, icone:'trofeu', nome:'Sessão de Ouro',   nomeEn:'Golden Session',     desc:'Faz {n} moedas numa sessão.',         descEn:'Earn {n} coins in one session.' },
-  { id:'melhor_sessao_100m',categoria:'sessao',tipo:'melhorSessaoMoedas',alvo:100000000,premio:8, icone:'trofeu', nome:'Sessão Lendária',  nomeEn:'Legendary Session',  desc:'Faz {n} moedas numa sessão.',         descEn:'Earn {n} coins in one session.' }
+  { id:'melhor_sessao_100m',categoria:'sessao',tipo:'melhorSessaoMoedas',alvo:100000000,premio:8, icone:'trofeu', nome:'Sessão Lendária',  nomeEn:'Legendary Session',  desc:'Faz {n} moedas numa sessão.',         descEn:'Earn {n} coins in one session.' },
+  { id:'livro_fossa_6',    categoria:'colecao', tipo:'livroFossa', alvo:6,  premio:5, icone:'abismo', nome:'Meia Fossa',          nomeEn:'Half Trench',        desc:'Descobre {n} espécies da Fossa.',      descEn:'Discover {n} trench species.' },
+  { id:'livro_fossa_13',   categoria:'colecao', tipo:'livroFossa', alvo:13, premio:9, icone:'abismo', nome:'Cartógrafo da Fossa', nomeEn:'Trench Cartographer', desc:'Descobre {n} espécies da Fossa.',      descEn:'Discover {n} trench species.' },
+  { id:'hadal_50',         categoria:'pesca',   tipo:'hadal',      alvo:50, premio:5, icone:'peixe',  nome:'Pressão Constante',   nomeEn:'Constant Pressure',  desc:'Apanha {n} peixes hadal.',            descEn:'Catch {n} hadal fish.' }
 ];
 
 /* ==========================================================================

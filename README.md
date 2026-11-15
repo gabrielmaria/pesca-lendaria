@@ -12,16 +12,17 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.4" src="https://img.shields.io/badge/vers%C3%A3o-1.5.4-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.5" src="https://img.shields.io/badge/vers%C3%A3o-1.5.5-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
   <img src="assets/img/screenshot-surface.png" alt="Pesca Lendária: Superfície" width="260">
   <img src="assets/img/screenshot-abyss.png" alt="Pesca Lendária: Mar Profundo" width="260">
+  <img src="assets/img/screenshot-fossa.png" alt="Pesca Lendária: Fossa" width="260">
 </p>
 
 <p align="center">
-  <sub>Superfície · Mar Profundo</sub>
+  <sub>Superfície · Mar Profundo · Fossa</sub>
 </p>
 
 > Um jogo de browser feito para ser um ritual curto: entras, pescas durante 3 minutos, fechas e voltas 12 horas depois. Sem conta, sem backend e sem pressa.
@@ -29,12 +30,12 @@
 ## Funcionalidades
 
 - **180 segundos a cada 12 horas**: o tempo só desconta com o separador visível.
-- **45 espécies e 7 raridades**: 30 de superfície e 15 abissais, com nomes propositadamente parvos.
-- **Dois biomas**: Superfície e **Mar Profundo**, com cenário, fundo de página, botões próprios e transição de água com peixes, medusas, rochas, colinas e farol.
-- **Chefe, evento e missão diários**: o chefe abissal aparece a cada 4 dias e dá bónus ×6.
+- **58 espécies e 8 raridades**: 30 de superfície, 15 abissais e 13 hadal, com nomes propositadamente parvos.
+- **Três biomas**: Superfície, **Mar Profundo** e **Fossa**, cada um com cenário, fundo de página, botões próprios e transição de água com peixes, medusas, rochas, colinas e farol.
+- **Chefe, evento e missão diários**: o chefe abissal aparece a cada 4 dias (bónus ×6) e o chefe da Fossa a cada 5 dias (bónus ×8).
 - **Livro de Pesca**: completa raridades para ganhar bónus permanentes de valor.
 - **5 upgrades** (Cana, Isco, Barco, Pescador e Geleira) e **prestígio** com estrelas permanentes.
-- **Legado**: 37 conquistas dão **Pérolas** para 9 melhorias permanentes.
+- **Legado**: 40 conquistas dão **Pérolas** para 9 melhorias permanentes.
 - **Pescadores offline**: a equipa continua a render até 24 horas (ou mais, com Legado).
 - **PT / EN**: deteta o idioma do browser e permite trocar no cabeçalho.
 - **Pixel art 100% desenhada em código**: peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon; as capturas em `assets/img/` são só para o README.
@@ -56,16 +57,17 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 2. Esperas pela mordida e tocas quando o marcador estiver na zona verde.
 3. Um acerto **perfeito** dá +50% e sobe o combo; falhar zera.
 4. Gastas as moedas em upgrades, completas o livro e, aos 30 níveis, podes prestigiar.
-5. Na Época 3 abre o **Mar Profundo**; a partir daí a coleção e o Legado continuam a crescer.
+5. Na Época 3 abre o **Mar Profundo** e na Época 5 a **Fossa**; a partir daí a coleção e o Legado continuam a crescer.
 
 ## Progressão
 
 | Sistema | O que faz |
 |---|---|
 | **Upgrades** | Cana (espera/zona), Isco (raridade), Barco (valor), Pescador (offline) e Geleira (Raro+). |
-| **Livro** | Cada raridade completa dá +5% de valor permanente; há um livro de superfície e outro abissal. |
+| **Livro** | Cada raridade completa dá +5% de valor permanente; há um livro de superfície, um abissal e um hadal. |
 | **Prestígio** | Aos 30 níveis podes recomeçar upgrades por estrelas permanentes (+8% de valor cada). |
 | **Mar Profundo** | Modo de pesca separado, raridade Abissal (×5000), iscas Abissal/Relíquia e chefe abissal. |
+| **Fossa** | Zona mais funda, raridade Hadal (×12000), iscas Fossa/Pressão, pressão no timing e chefe da Fossa. |
 | **Legado** | Conquistas dão Pérolas; gastas em tempo de sessão, sorte, offline, anúncios, valor, combo e mais. |
 
 ## Capturas
@@ -106,6 +108,7 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
     │   ├── apple-touch-icon.png
     │   ├── screenshot-surface.png
     │   ├── screenshot-abyss.png
+    │   ├── screenshot-fossa.png
     │   └── screenshot-2026-11-10.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
@@ -126,7 +129,7 @@ Regras de organização:
 
 ## Configuração e equilíbrio
 
-A economia foi pensada para ~3 semanas de jogo até maximizar os 5 upgrades. Os valores base dos peixes são planos por raridade; quem escala é o multiplicador de raridade (1× a 5000×), os eventos e o combo.
+A economia foi pensada para ~3 semanas de jogo até maximizar os 5 upgrades. Os valores base dos peixes são planos por raridade; quem escala é o multiplicador de raridade (1× a 12000×), os eventos e o combo.
 
 Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 
@@ -143,6 +146,7 @@ Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
 | Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
+| Fossa | `FOSSA_EPOCA`, `FOSSA_ABISSAL_MIN`, `FOSSA_PESO`, `ISCO_HADAL`, `FOSSA_ZONA`, `FOSSA_VALOR`, `CHEFE_BONUS_FOSSA`, `CHEFE_FOSSA_DIAS` |
 | Passivo | `PESCADOR_MOEDAS_MIN`, `PESCADOR_ESCALA`, `OFFLINE_CAP_HORAS` |
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
@@ -200,7 +204,7 @@ const ANALYTICS = {
 - Dashboard: <https://pescalendaria.goatcounter.com>
 - Divulga com `?ref=reddit_incremental`; cada origem aparece como `origem/...`.
 - Abre o site com `?dono` para aparecer **Ver estatísticas** no separador Upgrades.
-- Eventos enviados: `captura`, `chefe`, `prestigio`, `partilha`, `anuncio`, `abisso`.
+- Eventos enviados: `captura`, `chefe`, `prestigio`, `partilha`, `anuncio`, `abisso`, `fossa`.
 
 **Vercel Web Analytics:** ativa no painel do Vercel (Project → Analytics) e mantém `vercelAtivo: true`. É servido do teu domínio, por isso sofre menos com adblockers.
 

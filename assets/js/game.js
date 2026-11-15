@@ -109,13 +109,14 @@ function estadoPorDefeito() {
     estrelas: 0,            // estrelas de prestígio
     epoca: 1,
     abissoVisto: false,     // já viu o aviso de desbloqueio do Mar Profundo
+    fossaVisto: false,      // já viu o aviso de desbloqueio da Fossa
     versaoVista: '',        // última versão cujas novidades foram vistas
-    modo: 'superficie',     // 'superficie' | 'abisso' (pesca no Mar Profundo)
+    modo: 'superficie',     // 'superficie' | 'abisso' | 'fossa'
     perolas: 0,             // moeda do Legado
     conquistas: {},         // id -> true
     legado: {},             // id -> nível
     stats: {
-      peixes:0, perfeitos:0, chefes:0, chefeAbissal:0, abissais:0,
+      peixes:0, perfeitos:0, chefes:0, chefeAbissal:0, abissais:0, hadal:0,
       lendarios:0, miticos:0, moedasTotal:0, sessoes:0, anuncios:0,
       melhorCombo:0, melhorSessaoMoedas:0
     },
@@ -149,14 +150,21 @@ function carregar() {
   });
   if (!CONFIG.ISCAS[out.isca]) out.isca = 'comum';
   if (!out.abissoVisto) out.abissoVisto = false;
+  if (!out.fossaVisto) out.fossaVisto = false;
   if (typeof out.versaoVista !== 'string') out.versaoVista = '';
   if (out.idioma !== 'en' && out.idioma !== 'pt') out.idioma = d.idioma;
   out.estrelas = Math.max(0, Math.floor(Number(out.estrelas) || 0));
   out.epoca = Math.max(1, Math.floor(Number(out.epoca) || 1));
+  const abissaisDescobertos = PEIXES.filter(function (p) {
+    return p.r === 6 && out.descobertos.indexOf(p.id) !== -1;
+  }).length;
+  const fossaOk = out.epoca >= CONFIG.FOSSA_EPOCA || abissaisDescobertos >= CONFIG.FOSSA_ABISSAL_MIN;
+  if (out.modo !== 'abisso' && out.modo !== 'superficie' && out.modo !== 'fossa') out.modo = 'superficie';
+  if (out.epoca < CONFIG.ABISMO_EPOCA) out.modo = 'superficie';
+  if (out.modo === 'fossa' && !fossaOk) out.modo = out.epoca >= CONFIG.ABISMO_EPOCA ? 'abisso' : 'superficie';
   if ((out.isca === 'abissal' || out.isca === 'reliquia') &&
       out.epoca < CONFIG.ABISMO_EPOCA) out.isca = 'comum';
-  if (out.modo !== 'abisso' && out.modo !== 'superficie') out.modo = 'superficie';
-  if (out.epoca < CONFIG.ABISMO_EPOCA) out.modo = 'superficie';
+  if ((out.isca === 'fossa' || out.isca === 'pressao') && !fossaOk) out.isca = 'comum';
   out.perolas = Math.max(0, Math.floor(Number(out.perolas) || 0));
   out.conquistas = (s.conquistas && typeof s.conquistas === 'object' && !Array.isArray(s.conquistas))
     ? Object.assign({}, s.conquistas) : {};
@@ -227,7 +235,8 @@ function nomeMissao(tipo) {
 function nomeIsca(id) {
   const mapa = {
     comum: 'iscaComum', rapida: 'iscaRapida', funda: 'iscaFunda',
-    abissal: 'iscaAbissal', reliquia: 'iscaReliquia'
+    abissal: 'iscaAbissal', reliquia: 'iscaReliquia',
+    fossa: 'iscaFossa', pressao: 'iscaPressao'
   };
   return t(mapa[id] || 'iscaComum');
 }
@@ -313,13 +322,15 @@ function mods() {
     1 + isco * CONFIG.ISCO_EPICO,
     1 + isco * CONFIG.ISCO_LEND,
     1 + isco * CONFIG.ISCO_MIT,
-    1 + isco * CONFIG.ISCO_ABISSO
+    1 + isco * CONFIG.ISCO_ABISSO,
+    1 + isco * CONFIG.ISCO_HADAL
   ];
   // Isca escolhida antes de lançar (congelada no início do lance)
   const isc = (iscaLance && CONFIG.ISCAS[iscaLance]) || iscaAtual();
   if (isc && isc.raro !== 1) for (let i = 1; i < tier.length; i++) tier[i] *= isc.raro;
-  // Iscas abissais empurram a raridade do fundo (só depois de desbloqueado)
-  if (isc && isc.abisso && modoAbismo()) tier[6] *= isc.abisso;
+  // Iscas abissais/hadal empurram a raridade do fundo (só depois de desbloqueado)
+  if (isc && isc.abisso && (modoAbismo() || modoFossa())) tier[6] *= isc.abisso;
+  if (isc && isc.hadal && modoFossa()) tier[7] *= isc.hadal;
 
   // Primeiro dia: ajuda extra nas raridades altas
   if (state.novato) for (let i = 1; i < tier.length; i++) tier[i] *= CONFIG.PRIMEIRO_DIA_RARIDADE;
@@ -328,9 +339,11 @@ function mods() {
   if (fx.raro) for (let i = 2; i < tier.length; i++) tier[i] *= fx.raro;
   if (fx.mitico) tier[5] *= fx.mitico;
   if (fx.abisso) tier[6] *= fx.abisso;
-  if (modoAbismo()) tier[6] *= (1 + efeitoLegado('sorte'));
-  // A raridade abissal só existe enquanto estás no Mar Profundo
-  if (!modoAbismo()) tier[6] = 0;
+  if (modoAbismo() || modoFossa()) tier[6] *= (1 + efeitoLegado('sorte'));
+  if (modoFossa()) tier[7] *= (1 + efeitoLegado('sorte'));
+  // Abissal só no Mar Profundo/Fossa; Hadal só na Fossa
+  if (!modoAbismo() && !modoFossa()) tier[6] = 0;
+  if (!modoFossa()) tier[7] = 0;
 
   return {
     espera: fx.espera || 1,
@@ -344,8 +357,9 @@ function mods() {
 /** Sorteia o índice da raridade respeitando pesos + efeitos. */
 function sortearRaridade(m) {
   const pesos = RARIDADES.map(function (r, i) {
-    if (i === 6 && !modoAbismo()) return 0;
-    const base = i === 6 ? CONFIG.ABISMO_PESO : r.peso;
+    if (i === 6 && !(modoAbismo() || modoFossa())) return 0;
+    if (i === 7 && !modoFossa()) return 0;
+    const base = i === 6 ? CONFIG.ABISMO_PESO : (i === 7 ? CONFIG.FOSSA_PESO : r.peso);
     return base * m.tier[i];
   });
   const total = pesos.reduce(function (a, b) { return a + b; }, 0);
@@ -460,14 +474,16 @@ function efeitoEspecial(rIdx) {
   if (rIdx < 4) return;
   vibrar([40, 60, 40, 60, 80]);
   const f = $('flashLayer');
-  f.style.background = rIdx === 6
+  f.style.background = rIdx === 7
+    ? 'radial-gradient(circle, rgba(176,107,255,.95), rgba(46,230,214,.35))'
+    : rIdx === 6
     ? 'radial-gradient(circle, rgba(46,230,214,.95), rgba(11,34,66,.6))'
     : (rIdx === 5
       ? 'radial-gradient(circle, rgba(255,77,109,.9), rgba(169,123,255,.5))'
       : 'radial-gradient(circle, rgba(255,201,60,.9), rgba(46,230,214,.4))');
   f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
   setTimeout(() => f.classList.remove('on'), 600);
-  particulas(rIdx >= 6 ? 24 : 16);
+  particulas(rIdx >= 7 ? 28 : (rIdx >= 6 ? 24 : 16));
 }
 
 function particulas(n) {
@@ -608,9 +624,10 @@ function efeitoTexto(u, nivel) {
         v: num(1 + nivel * CONFIG.ISCO_RARO, 2),
         m: num(1 + nivel * CONFIG.ISCO_MIT, 2)
       });
-      return abissoAtivo()
-        ? txt + ' · ' + tf('efeitoAbissal', { a: num(1 + nivel * CONFIG.ISCO_ABISSO, 2) })
-        : txt;
+      let extra = '';
+      if (abissoAtivo()) extra += ' · ' + tf('efeitoAbissal', { a: num(1 + nivel * CONFIG.ISCO_ABISSO, 2) });
+      if (fossaAtivo()) extra += ' · ' + tf('efeitoHadal', { h: num(1 + nivel * CONFIG.ISCO_HADAL, 2) });
+      return txt + extra;
     }
     case 'boat': return tf('efeitoValor', { v: num(1 + nivel * CONFIG.BARCO_VALOR_NIVEL, 2) });
     case 'fisher': return tf('efeitoMoedas', {
@@ -679,27 +696,31 @@ function comprarUpgrade(id) {
 /* ==========================================================================
    9) LIVRO DE PESCA (coleção)
    ========================================================================== */
-let livroVista = 'superficie';   // 'superficie' | 'abisso'
+let livroVista = 'superficie';   // 'superficie' | 'abisso' | 'fossa'
 
 function peixesDaVista(vista) {
-  return vista === 'abisso'
-    ? PEIXES.filter(function (p) { return p.r === 6; })
-    : PEIXES.filter(function (p) { return p.r < 6; });
+  if (vista === 'fossa') return PEIXES.filter(function (p) { return p.r === 7; });
+  if (vista === 'abisso') return PEIXES.filter(function (p) { return p.r === 6; });
+  return PEIXES.filter(function (p) { return p.r < 6; });
 }
 
 function renderLivro() {
   const ab = abissoAtivo();
+  const fo = fossaAtivo();
   if (livroVista === 'abisso' && !ab) livroVista = 'superficie';
+  if (livroVista === 'fossa' && !fo) livroVista = ab ? 'abisso' : 'superficie';
   const vista = livroVista;
   const lista = peixesDaVista(vista);
   const achados = lista.filter(function (p) { return state.descobertos.indexOf(p.id) !== -1; }).length;
 
   $('bookCount').textContent = tf('livroContagem', { n: achados, t: lista.length });
   $('bookBonus').textContent = tf('livroBonus', { p: Math.round(bonusColecao() * 100) });
-  $('bookHint').textContent = vista === 'abisso' ? t('livroDicaAbismo') : t('livroDica');
+  $('bookHint').textContent = vista === 'fossa' ? t('livroDicaFossa')
+    : (vista === 'abisso' ? t('livroDicaAbismo') : t('livroDica'));
 
   const ts = $('bookTabSuperficie');
   const ta = $('bookTabAbismo');
+  const tfTab = $('bookTabFossa');
   if (ts) {
     ts.textContent = t('livroSuperficie');
     ts.classList.toggle('active', vista === 'superficie');
@@ -710,10 +731,15 @@ function renderLivro() {
     ta.classList.toggle('active', vista === 'abisso');
     ta.classList.toggle('locked', !ab);
   }
+  if (tfTab) {
+    tfTab.textContent = t('livroFossa');
+    tfTab.classList.toggle('hidden', !fo);
+    tfTab.classList.toggle('active', vista === 'fossa');
+  }
 
   const seals = $('bookSeals');
   seals.innerHTML = '';
-  const indices = vista === 'abisso' ? [6] : [0, 1, 2, 3, 4, 5];
+  const indices = vista === 'fossa' ? [7] : (vista === 'abisso' ? [6] : [0, 1, 2, 3, 4, 5]);
   indices.forEach(function (i) {
     const todos = PEIXES.filter(function (p) { return p.r === i; });
     if (!todos.length) return;
@@ -734,7 +760,8 @@ function renderLivro() {
     const desc = state.descobertos.indexOf(p.id) !== -1;
     const r = RARIDADES[p.r];
     const cell = document.createElement('div');
-    cell.className = 'fish-cell' + (desc ? '' : ' unknown') + (p.r === 6 ? ' abissal' : '');
+    cell.className = 'fish-cell' + (desc ? '' : ' unknown') +
+      (p.r === 7 ? ' hadal' : (p.r === 6 ? ' abissal' : ''));
 
     const ico = document.createElement('div');
     ico.className = 'fc-emoji';
@@ -1013,6 +1040,7 @@ function mordida() {
   barAcc = 0;
   const baseZona = CONFIG.ZONA_BASE + CONFIG.ZONA_GANHO_NIVEL * state.up.rod;
   zonaLarg = bossAtual ? CONFIG.CHEFE_ZONA : clamp(baseZona, 0.1, 0.85);
+  if (modoFossa()) zonaLarg *= CONFIG.FOSSA_ZONA;
   zonaPos = rnd(0, 1 - zonaLarg);
   $('greenZone').style.left = (zonaPos * 100) + '%';
   $('greenZone').style.width = (zonaLarg * 100) + '%';
@@ -1061,7 +1089,8 @@ function resolverBarra(pos) {
       const chefe = peixePorId(state.hoje.chefe.id) || PEIXES[0];
       const m = mods();
       const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
-      const bonusChefe = (state.hoje.chefe.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS) + efeitoLegado('chefe');
+      const bonusChefe = (state.hoje.chefe.fossa ? CONFIG.CHEFE_BONUS_FOSSA
+        : state.hoje.chefe.abissal ? CONFIG.CHEFE_BONUS_ABISSO : CONFIG.CHEFE_BONUS) + efeitoLegado('chefe');
       const valor = Math.round(calcValor(chefe, chefe.r, tipo === 'perfeito', m, peso) * bonusChefe);
       registarCaptura(chefe, chefe.r, tipo === 'perfeito', valor, peso);
       state.hoje.chefe.feito = true;
@@ -1069,14 +1098,14 @@ function resolverBarra(pos) {
         state.stats.chefes = (state.stats.chefes || 0) + 1;
         if (state.hoje.chefe.abissal) state.stats.chefeAbissal = (state.stats.chefeAbissal || 0) + 1;
       }
-      const perolasChefe = state.hoje.chefe.abissal ? 2 : 1;
+      const perolasChefe = state.hoje.chefe.fossa ? 3 : (state.hoje.chefe.abissal ? 2 : 1);
       state.perolas = (state.perolas || 0) + perolasChefe;
       if (tipo === 'perfeito') state.combo = (state.combo || 0) + 1;
       if (state.stats && (state.combo || 0) > (state.stats.melhorCombo || 0)) state.stats.melhorCombo = state.combo;
       sonsDoResultado(tipo);
-      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true, abissal: !!state.hoje.chefe.abissal, perolas: perolasChefe, bonus: bonusChefe });
+      mostrarCaptura({ peixe: chefe, rIdx: chefe.r, valor: valor, perfeito: tipo === 'perfeito', novo: false, peso: peso, chefe: true, abissal: !!state.hoje.chefe.abissal, fossa: !!state.hoje.chefe.fossa, perolas: perolasChefe, bonus: bonusChefe });
       efeitoEspecial(Math.max(4, chefe.r));
-      toast(t(state.hoje.chefe.abissal ? 'chefeApanhadoAbismo' : 'chefeApanhado'));
+      toast(t(state.hoje.chefe.fossa ? 'chefeApanhadoFossa' : (state.hoje.chefe.abissal ? 'chefeApanhadoAbismo' : 'chefeApanhado')));
       agendarConquistas();
       track('chefe', { raridade: chefe.r });
       atualizarChefeUI();
@@ -1118,6 +1147,7 @@ function resolverBarra(pos) {
   botaoLancar();
   guardar();
   if (novo) renderLivro();
+  setTimeout(verificarFossa, 600);
 }
 
 /** Valor final do peixe (raridade + barco + geleira + eventos + perfeito). */
@@ -1133,6 +1163,7 @@ function calcValor(peixe, rIdx, perfeito, m, peso) {
   v *= (1 + bonusColecao());           // bónus do Livro de Pesca
   v *= bonusEstrelas();                // bónus das estrelas de prestígio
   v *= (1 + efeitoLegado('valor'));    // bónus permanente do Legado
+  if (modoFossa()) v *= CONFIG.FOSSA_VALOR;
   if (perfeito) v *= CONFIG.BONUS_PERFEITO;
   return Math.max(1, Math.round(v));
 }
@@ -1170,8 +1201,14 @@ function mostrarCaptura(res) {
   if (res.chefe) {
     const f = document.createElement('div');
     f.className = 'catch-flag';
-    f.style.background = res.abissal ? 'var(--r6)' : 'var(--purple)';
-    f.textContent = t(res.abissal ? 'chefeFlagAbismo' : 'chefeFlag');
+    f.style.background = res.fossa ? 'var(--r7)' : (res.abissal ? 'var(--r6)' : 'var(--purple)');
+    f.textContent = t(res.fossa ? 'chefeFlagFossa' : (res.abissal ? 'chefeFlagAbismo' : 'chefeFlag'));
+    box.appendChild(f);
+  } else if (p.r === 7) {
+    const f = document.createElement('div');
+    f.className = 'catch-flag';
+    f.style.background = 'var(--r7)';
+    f.textContent = t('fossaFlag') + (res.novo ? ' · ' + t('novo') : '');
     box.appendChild(f);
   } else if (p.r === 6) {
     const f = document.createElement('div');
@@ -1278,6 +1315,30 @@ function verificarAbismo() {
   return true;
 }
 
+/** A Fossa abre na Época 5 ou com 10 espécies abissais. */
+function fossaAtivo() {
+  return (state.epoca || 1) >= CONFIG.FOSSA_EPOCA ||
+    contarDescobertos('abisso') >= CONFIG.FOSSA_ABISSAL_MIN;
+}
+function modoFossa() {
+  return fossaAtivo() && state.modo === 'fossa';
+}
+function verificarFossa() {
+  if (!fossaAtivo() || state.fossaVisto) return false;
+  state.fossaVisto = true;
+  toast(t('fossaDesbloqueada'));
+  livroVista = 'fossa';
+  bip(520, .1);
+  setTimeout(function () { bip(780, .12); }, 100);
+  setTimeout(function () { bip(1040, .16); }, 210);
+  track('fossa', {});
+  renderIscas();
+  renderModo();
+  renderLivro();
+  guardar();
+  return true;
+}
+
 /* ==========================================================================
    10.c) LEGADO: conquistas, Pérolas e melhorias permanentes
    ========================================================================== */
@@ -1312,6 +1373,7 @@ function valorConquista(a) {
     case 'chefes': return s.chefes || 0;
     case 'chefeAbissal': return s.chefeAbissal || 0;
     case 'abissais': return s.abissais || 0;
+    case 'hadal': return s.hadal || 0;
     case 'lendarios': return s.lendarios || 0;
     case 'miticos': return s.miticos || 0;
     case 'moedasTotal': return s.moedasTotal || 0;
@@ -1324,6 +1386,7 @@ function valorConquista(a) {
     case 'streak': return state.melhorStreak || 1;
     case 'livroSuperficie': return contarDescobertos('superficie');
     case 'livroAbismo': return contarDescobertos('abisso');
+    case 'livroFossa': return contarDescobertos('fossa');
   }
   return 0;
 }
@@ -1461,6 +1524,7 @@ function prestigiar() {
   track('prestigio', { estrelas: ganhas });
   agendarConquistas();
   setTimeout(verificarAbismo, 2400);
+  setTimeout(verificarFossa, 3200);
   guardar();
   renderUpgrades();
   renderIscas();
@@ -1476,19 +1540,30 @@ function renderIscas() {
   const nos = document.querySelectorAll('.isca');
   for (let i = 0; i < nos.length; i++) {
     const id = nos[i].dataset.isca;
-    const bloqueada = (id === 'abissal' || id === 'reliquia') && !abissoAtivo();
+    const abissal = id === 'abissal' || id === 'reliquia';
+    const fossa = id === 'fossa' || id === 'pressao';
+    const bloqueada = (abissal && !abissoAtivo()) || (fossa && !fossaAtivo());
     nos[i].classList.toggle('hidden', bloqueada);
     nos[i].classList.toggle('ativa', id === state.isca);
   }
 }
 function escolherIsca(id) {
   if (!CONFIG.ISCAS[id] || state.isca === id) return;
-  if ((id === 'abissal' || id === 'reliquia') && !abissoAtivo()) {
+  const abissal = id === 'abissal' || id === 'reliquia';
+  const fossa = id === 'fossa' || id === 'pressao';
+  if (abissal && !abissoAtivo()) {
     toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
     return;
   }
-  // Escolher uma isca abissal leva-te automaticamente ao fundo.
-  if ((id === 'abissal' || id === 'reliquia') && !modoAbismo()) {
+  if (fossa && !fossaAtivo()) {
+    toast(tf('fossaBloqueada', { e: CONFIG.FOSSA_EPOCA, n: CONFIG.FOSSA_ABISSAL_MIN }));
+    return;
+  }
+  // A isca leva-te automaticamente à zona certa.
+  if (fossa && !modoFossa()) {
+    if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return; }
+    aplicarModo('fossa', false);
+  } else if (abissal && !modoAbismo()) {
     if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return; }
     aplicarModo('abisso', false);
   }
@@ -1499,40 +1574,57 @@ function escolherIsca(id) {
   bip(620, .06);
 }
 
-/* --- Modo de pesca: Superfície / Mar Profundo --- */
+/* --- Modo de pesca: Superfície / Mar Profundo / Fossa --- */
 function renderModo() {
   const bar = $('modoSwitch');
   if (!bar) return;
   bar.classList.toggle('hidden', !abissoAtivo());
   const ab = modoAbismo();
+  const fo = modoFossa();
   const s = $('modoTabSuperficie');
   const a = $('modoTabAbismo');
-  if (s) s.classList.toggle('active', !ab);
+  const f = $('modoTabFossa');
+  if (s) s.classList.toggle('active', !ab && !fo);
   if (a) a.classList.toggle('active', ab);
-  if (document.body) document.body.setAttribute('data-modo', ab ? 'abisso' : 'superficie');
+  if (f) {
+    f.classList.toggle('hidden', !fossaAtivo());
+    f.classList.toggle('active', fo);
+  }
+  if (document.body) {
+    document.body.setAttribute('data-tema', (ab || fo) ? 'abisso' : 'superficie');
+    document.body.setAttribute('data-modo', fo ? 'fossa' : (ab ? 'abisso' : 'superficie'));
+  }
   const sea = $('sea');
-  if (sea) sea.setAttribute('data-fundo', ab ? 'abisso' : 'superficie');
+  if (sea) {
+    sea.setAttribute('data-fundo', (ab || fo) ? 'abisso' : 'superficie');
+    sea.setAttribute('data-zona', fo ? 'fossa' : (ab ? 'abisso' : 'superficie'));
+  }
   aplicarHora();
 }
 
 let descidaTimer = null;
 let chegadaTimer = null;
-function animarDescida(m, comTexto) {
+function animarDescida(m, comTexto, anterior) {
   const el = $('descida');
   if (!el) return;
   const txt = $('descidaTexto');
   if (txt) {
     txt.textContent = comTexto
-      ? t(m === 'abisso' ? 'modoAbismoOn' : 'modoSuperficieOn')
+      ? t(m === 'fossa' ? 'modoFossaOn'
+          : m === 'abisso' && anterior === 'fossa' ? 'modoAbissoUp'
+          : m === 'abisso' ? 'modoAbismoOn'
+          : 'modoSuperficieOn')
       : '';
   }
 
-  // 5 peixes a atravessar: abissais a descer, de superfície a subir.
+  // 5 peixes a atravessar: hadal a descer à Fossa, abissais no fundo, superfície ao subir.
   const peixes = $('descidaPeixes');
   if (peixes) {
     peixes.innerHTML = '';
     const lista = PEIXES.filter(function (p) {
-      return m === 'abisso' ? p.r === 6 : p.r < 6;
+      if (m === 'fossa') return p.r === 7;
+      if (m === 'abisso') return p.r === 6;
+      return p.r < 6;
     });
     for (let i = 0; i < 5; i++) {
       const p = lista[Math.floor(Math.random() * lista.length)];
@@ -1553,15 +1645,15 @@ function animarDescida(m, comTexto) {
   const fundo = $('descidaFundo');
   if (fundo) {
     fundo.innerHTML = '';
-    if (m === 'abisso') {
-      for (let i = 0; i < 5; i++) {
+    if (m === 'abisso' || m === 'fossa') {
+      for (let i = 0; i < (m === 'fossa' ? 7 : 5); i++) {
         const r = document.createElement('span');
         r.className = 'descida-rocha';
-        r.style.left = (i * 18 - 5 + Math.random() * 8) + '%';
+        r.style.left = (i * 13 - 5 + Math.random() * 8) + '%';
         r.appendChild(spriteRocha(i % 2 ? 3 : 4));
         fundo.appendChild(r);
       }
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < (m === 'fossa' ? 4 : 3); i++) {
         const j = document.createElement('span');
         j.className = 'descida-medusa';
         j.style.left = (8 + Math.random() * 78) + '%';
@@ -1601,6 +1693,8 @@ function animarDescida(m, comTexto) {
   }
 
   el.classList.toggle('volta', m === 'superficie');
+  el.classList.toggle('fossa', m === 'fossa');
+  el.classList.toggle('subida', m === 'abisso' && anterior === 'fossa');
   el.classList.remove('ativa', 'chegada');
   if (chegadaTimer) { clearTimeout(chegadaTimer); chegadaTimer = null; }
   void el.offsetWidth;
@@ -1625,22 +1719,31 @@ function animarDescida(m, comTexto) {
 }
 
 function aplicarModo(m, aviso) {
-  if (m !== 'abisso' && m !== 'superficie') return false;
+  if (m !== 'abisso' && m !== 'superficie' && m !== 'fossa') return false;
   if (m === 'abisso' && !abissoAtivo()) {
     toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
     return false;
   }
+  if (m === 'fossa' && !fossaAtivo()) {
+    toast(tf('fossaBloqueada', { e: CONFIG.FOSSA_EPOCA, n: CONFIG.FOSSA_ABISSAL_MIN }));
+    return false;
+  }
   if (fase === 'waiting' || fase === 'bar') { toast(t('modoOcupado')); return false; }
   if (state.modo === m) return true;
+  const anterior = state.modo;
   state.modo = m;
-  // Ao voltar à superfície, iscas abissais deixam de fazer sentido.
-  if (m === 'superficie' && (state.isca === 'abissal' || state.isca === 'reliquia')) {
+  // Ao sair de uma zona profunda, iscas que já não se aplicam voltam a Comum.
+  const iscasProfundas = ['abissal', 'reliquia', 'fossa', 'pressao'];
+  if (m === 'superficie' && iscasProfundas.indexOf(state.isca) !== -1) {
+    state.isca = 'comum';
+    renderIscas();
+  } else if (m === 'abisso' && (state.isca === 'fossa' || state.isca === 'pressao')) {
     state.isca = 'comum';
     renderIscas();
   }
   renderModo();
-  animarDescida(m, aviso);
-  if (aviso) bip(m === 'abisso' ? 420 : 720, .08);
+  animarDescida(m, aviso, anterior);
+  if (aviso) bip(m === 'fossa' ? 360 : (m === 'abisso' ? 420 : 720), .08);
   guardar();
   return true;
 }
@@ -1752,18 +1855,24 @@ function aplicarHora() {
     const modo = (h >= 20 || h < 6) ? 'noite' : (h >= 18 ? 'tarde' : 'dia');
     if (document.body) document.body.setAttribute('data-hora', modo);
     const meta = document.querySelector ? document.querySelector('meta[name="theme-color"]') : null;
-    if (meta) meta.setAttribute('content', modoAbismo() ? '#020a14' : (modo === 'noite' ? '#0a1730' : '#3b2416'));
+    if (meta) meta.setAttribute('content', (modoAbismo() || modoFossa()) ? '#020a14' : (modo === 'noite' ? '#0a1730' : '#3b2416'));
   } catch (e) {}
 }
 
 /* --- Chefe do dia --- */
 function gerarChefe(key) {
-  // De vez em quando (1 em CHEFE_ABISMO_DIAS) o chefe vem do Mar Profundo.
-  const abissal = abissoAtivo() &&
+  // De vez em quando o chefe vem da Fossa (×8) ou do Mar Profundo (×6).
+  const fossa = fossaAtivo() &&
+    (hashStr('chefe-fossa:' + key) % Math.max(2, CONFIG.CHEFE_FOSSA_DIAS) === 0);
+  const abissal = !fossa && abissoAtivo() &&
     (hashStr('chefe-abismo:' + key) % Math.max(2, CONFIG.CHEFE_ABISMO_DIAS) === 0);
-  const lista = PEIXES.filter(function (p) { return abissal ? p.r === 6 : (p.r >= 3 && p.r < 6); });
+  const lista = PEIXES.filter(function (p) {
+    if (fossa) return p.r === 7;
+    if (abissal) return p.r === 6;
+    return p.r >= 3 && p.r < 6;
+  });
   const p = lista[hashStr('chefe:' + key) % lista.length];
-  return { id: p.id, feito: false, prox: CONFIG.CHEFE_APOS, abissal: abissal };
+  return { id: p.id, feito: false, prox: CONFIG.CHEFE_APOS, abissal: abissal, fossa: fossa };
 }
 function chefePronto() {
   const c = state.hoje && state.hoje.chefe;
@@ -1782,7 +1891,8 @@ function atualizarChefeUI() {
     ico.appendChild(spritePeixe(peixe, 2));
     ico.setAttribute('data-bicho', c.id);
   }
-  $('chefeNome').textContent = nomePeixe(peixe) + (c.abissal ? ' · ' + t('livroAbismo') : '');
+  $('chefeNome').textContent = nomePeixe(peixe) +
+    (c.fossa ? ' · ' + t('livroFossa') : (c.abissal ? ' · ' + t('livroAbismo') : ''));
   const est = $('chefeEstado');
   if (c.feito) {
     bar.classList.add('done');
@@ -1790,11 +1900,12 @@ function atualizarChefeUI() {
   } else {
     bar.classList.remove('done');
     const falta = Math.max(0, (c.prox || CONFIG.CHEFE_APOS) - state.hoje.peixes);
+    const k1 = c.fossa ? 'chefeAparece1Fossa' : (c.abissal ? 'chefeAparece1Abismo' : 'chefeAparece1');
+    const kn = c.fossa ? 'chefeApareceNFossa' : (c.abissal ? 'chefeApareceNAbismo' : 'chefeApareceN');
+    const kv = c.fossa ? 'chefeAVistaFossa' : (c.abissal ? 'chefeAVistaAbismo' : 'chefeAVista');
     est.textContent = falta > 0
-      ? (falta === 1
-          ? tf(c.abissal ? 'chefeAparece1Abismo' : 'chefeAparece1', {})
-          : tf(c.abissal ? 'chefeApareceNAbismo' : 'chefeApareceN', { n: falta }))
-      : t(c.abissal ? 'chefeAVistaAbismo' : 'chefeAVista');
+      ? (falta === 1 ? tf(k1, {}) : tf(kn, { n: falta }))
+      : t(kv);
   }
 }
 
@@ -1822,6 +1933,7 @@ function registarCaptura(peixe, rIdx, perfeito, valor, peso) {
     if (rIdx >= 4) st.lendarios = (st.lendarios || 0) + 1;
     if (rIdx === 5) st.miticos = (st.miticos || 0) + 1;
     if (rIdx === 6) st.abissais = (st.abissais || 0) + 1;
+    if (rIdx === 7) st.hadal = (st.hadal || 0) + 1;
     st.moedasTotal = (st.moedasTotal || 0) + valor;
     if ((state.combo || 0) > (st.melhorCombo || 0)) st.melhorCombo = state.combo;
     if (state.sessao.moedas > (st.melhorSessaoMoedas || 0)) st.melhorSessaoMoedas = state.sessao.moedas;

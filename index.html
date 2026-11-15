@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <!-- Superfície / Mar Profundo (abre na Época 3) -->
+      <!-- Superfície / Mar Profundo / Fossa (abrem na Época 3 e 5) -->
       <div class="modo-switch hidden" id="modoSwitch">
         <button class="book-tab modo-tab active" data-modo="superficie" id="modoTabSuperficie">
           <span data-i18n="livroSuperficie">Superfície</span>
@@ -83,6 +83,10 @@
         <button class="book-tab modo-tab" data-modo="abisso" id="modoTabAbismo">
           <span data-i18n="livroAbismo">Mar Profundo</span>
           <small data-i18n="modoAbismoSub">raridade abissal</small>
+        </button>
+        <button class="book-tab modo-tab hidden" data-modo="fossa" id="modoTabFossa">
+          <span data-i18n="livroFossa">Fossa</span>
+          <small data-i18n="modoFossaSub">pressão · +50% valor</small>
         </button>
       </div>
 
@@ -141,6 +145,8 @@
         <button class="isca" data-isca="funda"><span class="spr-slot" data-sprite="estrela"></span><span data-i18n="iscaFunda">Funda</span><small data-i18n="iscaFundaSub">+50% raros · +35% espera</small></button>
         <button class="isca hidden" data-isca="abissal"><span class="spr-slot" data-sprite="abismo"></span><span data-i18n="iscaAbissal">Abissal</span><small data-i18n="iscaAbissalSub">abissais ×30 · valor -10%</small></button>
         <button class="isca hidden" data-isca="reliquia"><span class="spr-slot" data-sprite="reliquia"></span><span data-i18n="iscaReliquia">Relíquia</span><small data-i18n="iscaReliquiaSub">abissais ×12 · +60% valor</small></button>
+        <button class="isca hidden" data-isca="fossa"><span class="spr-slot" data-sprite="abismo"></span><span data-i18n="iscaFossa">Fossa</span><small data-i18n="iscaFossaSub">hadal ×30 · -10% valor</small></button>
+        <button class="isca hidden" data-isca="pressao"><span class="spr-slot" data-sprite="abismo"></span><span data-i18n="iscaPressao">Pressão</span><small data-i18n="iscaPressaoSub">hadal ×12 · +50% valor</small></button>
       </div>
 
       <button class="big-btn" id="castBtn">LANÇAR</button>
@@ -162,7 +168,7 @@
             <div class="lvl" id="epocaInfo">Época 1 · 0 estrelas</div>
           </div>
         </div>
-        <div class="up-desc" data-i18n="epocaDesc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo.</div>
+        <div class="up-desc" data-i18n="epocaDesc">Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo e na Época 5 a Fossa.</div>
         <div class="up-eff" id="epocaProg">Níveis 0/30</div>
         <button class="btn gold" id="btnEpoca" disabled data-i18n="prestigiar">Prestigiar</button>
       </div>
@@ -182,6 +188,7 @@
       <div class="book-switch">
         <button class="book-tab active" id="bookTabSuperficie" data-livro="superficie">Superfície</button>
         <button class="book-tab" id="bookTabAbismo" data-livro="abisso">Mar Profundo</button>
+        <button class="book-tab hidden" id="bookTabFossa" data-livro="fossa">Fossa</button>
       </div>
       <div class="book-bonus" id="bookBonus">Bónus de coleção: +0%</div>
       <div class="seals" id="bookSeals"></div>
@@ -297,7 +304,7 @@
 <div id="toast"></div>
 <div id="flashLayer"></div>
 
-<!-- Transição entre Superfície e Mar Profundo -->
+<!-- Transição entre Superfície, Mar Profundo e Fossa -->
 <div class="descida" id="descida">
   <div class="descida-agua"></div>
   <div class="descida-bolhas"></div>

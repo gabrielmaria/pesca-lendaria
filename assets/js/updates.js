@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.4';
+const APP_VERSION = '1.5.5';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.5',
+    data: '15/11/2026',
+    titulo: 'A Fossa',
+    tituloEn: 'The Trench',
+    itens: [
+      'Nova zona: a Fossa abre na Época 5 ou com 10 espécies abissais.',
+      'Raridade Hadal (×12000) e 13 espécies novas, com livro próprio.',
+      'Iscas Fossa e Pressão, chefe da Fossa (×8) e 3 conquistas novas.'
+    ],
+    itensEn: [
+      'New zone: the Trench unlocks at Season 5 or with 10 abyssal species.',
+      'Hadal rarity (×12000) and 13 new species, with their own book.',
+      'Trench and Pressure baits, a Trench boss (×8) and 3 new achievements.'
+    ]
+  },
   {
     versao: '1.5.4',
     data: '15/11/2026',

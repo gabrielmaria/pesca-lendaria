@@ -276,7 +276,8 @@ function spritePeixe(f, escala) {
   desenharForma(formaDe(f), g, p, hashStr(f.id));
   contorno(g, p.contorno);
   const cv = gridParaCanvas(g, escala);
-  if (f.r >= 6) cv.style.filter = 'drop-shadow(0 0 7px rgba(46,230,214,.95))';
+  if (f.r >= 7) cv.style.filter = 'drop-shadow(0 0 8px rgba(176,107,255,.95))';
+  else if (f.r >= 6) cv.style.filter = 'drop-shadow(0 0 7px rgba(46,230,214,.95))';
   else if (f.r >= 4) cv.style.filter = 'drop-shadow(0 0 6px rgba(255,210,90,.85))';
   return cv;
 }

@@ -122,6 +122,7 @@ function iniciar() {
 
   if (mudouDia) toast(t('novoDia'));
   setTimeout(verificarAbismo, 1200);
+  setTimeout(verificarFossa, 1800);
 
   /* --- Separadores --- */
   document.querySelectorAll('.tab').forEach(function (b) {
@@ -132,6 +133,10 @@ function iniciar() {
       const v = b.dataset.livro;
       if (v === 'abisso' && !abissoAtivo()) {
         toast(tf('abissoBloqueado', { e: CONFIG.ABISMO_EPOCA }));
+        return;
+      }
+      if (v === 'fossa' && !fossaAtivo()) {
+        toast(tf('fossaBloqueada', { e: CONFIG.FOSSA_EPOCA, n: CONFIG.FOSSA_ABISSAL_MIN }));
         return;
       }
       livroVista = v;
