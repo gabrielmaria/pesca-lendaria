@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.9';
+const APP_VERSION = '1.5.10';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.10',
+    data: '15/11/2026',
+    titulo: 'Peixe-caramelo',
+    tituloEn: 'Snailfish',
+    itens: [
+      'A Medusa do Núcleo deu lugar ao Peixe-Caramelo das Fossas.',
+      'É uma espécie hadal real, para a Fossa não ter alforrecas.',
+      'O id antigo mantém-se para não quebrar saves.'
+    ],
+    itensEn: [
+      'Core Jellyfish is now the Hadal Snailfish.',
+      'A real hadal species, so the Trench no longer has jellyfish.',
+      'The old id is kept so saves do not break.'
+    ]
+  },
   {
     versao: '1.5.9',
     data: '15/11/2026',
