@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.12';
+const APP_VERSION = '1.5.13';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.13',
+    data: '18/11/2026',
+    titulo: 'Segurança dos anúncios',
+    tituloEn: 'Ad safety',
+    itens: [
+      'Os banners Adsterra passam a correr num iframe com sandbox.',
+      'O criativo deixa de conseguir navegar a página principal ou abrir popups.',
+      'Isto bloqueia redirects automáticos para sites externos, como o Betano.'
+    ],
+    itensEn: [
+      'Adsterra banners now run inside a sandboxed iframe.',
+      'The creative can no longer navigate the main page or open popups.',
+      'This blocks automatic redirects to external sites such as Betano.'
+    ]
+  },
   {
     versao: '1.5.12',
     data: '15/11/2026',
