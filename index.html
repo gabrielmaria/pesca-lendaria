@@ -75,6 +75,15 @@
         </div>
       </div>
 
+      <!-- Peixe do Dia: alvo diário com bónus -->
+      <div class="chefe bounty hidden" id="bountyBar">
+        <span class="chefe-spr" id="bountyIco"></span>
+        <div class="chefe-txt">
+          <div class="chefe-nome" id="bountyNome">Peixe do Dia</div>
+          <div class="chefe-estado" id="bountyEstado">×3 · Superfície</div>
+        </div>
+      </div>
+
       <!-- Superfície / Mar Profundo / Fossa (abrem na Época 3 e 5) -->
       <div class="modo-switch hidden" id="modoSwitch">
         <button class="book-tab modo-tab active" data-modo="superficie" id="modoTabSuperficie">
@@ -159,9 +168,10 @@
         <div class="catch hidden" id="catchBox"></div>
       </div>
 
-      <!-- Combo e missão do dia -->
+      <!-- Combo, corrente e missão do dia -->
       <div class="trip">
         <span class="combo" id="comboBadge"><span class="spr-slot" data-sprite="raio"></span><span id="comboTxt">×1,0</span></span>
+        <span class="streak-badge" id="streakBadge" title="Corrente" aria-label="Corrente"><span class="spr-slot" data-sprite="fogo"></span><span id="streakDias">1</span></span>
         <span class="missao" id="missaoBadge"><span class="spr-slot" data-sprite="alvo"></span><span id="missaoTxt">-</span></span>
       </div>
 
@@ -289,8 +299,10 @@
 
     <div class="fim-best" id="fimMelhor"></div>
     <div class="streak"><span class="spr-slot" data-sprite="fogo"></span> <span data-i18n="streakLabel">Streak:</span> <b id="fimStreak">0</b> <span data-i18n="diasLabel">dias</span> · <span data-i18n="melhorLabel">Melhor:</span> <b id="fimBestStreak">0</b></div>
+    <div class="fim-corrente" id="fimCorrente"></div>
 
     <div class="fim-chefe" id="fimChefe"></div>
+    <div class="fim-bounty" id="fimBounty"></div>
 
     <div class="amanha" id="amanhaBox">
       <span class="spr-slot" id="amanhaIco"></span>

@@ -6,9 +6,27 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.15';
+const APP_VERSION = '1.6.0';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.6.0',
+    data: '18/11/2026',
+    titulo: 'Corrente e Peixe do Dia',
+    tituloEn: 'Streak and Fish of the Day',
+    itens: [
+      'A corrente passa a ser visível e dá Pérolas nos marcos 3, 7, 14, 21, 30, 60 e 100 dias.',
+      'Um dia falhado por mês é protegido automaticamente.',
+      'Novo Peixe do Dia: uma espécie com ×3 de valor e 1 Pérola por dia.',
+      'O resumo da sessão mostra a corrente, o próximo marco e o Peixe do Dia.'
+    ],
+    itensEn: [
+      'Your streak is now visible and awards Pearls at 3, 7, 14, 21, 30, 60 and 100 days.',
+      'One missed day per month is protected automatically.',
+      'New Fish of the Day: one species worth ×3 and 1 Pearl each day.',
+      'The session summary shows your streak, next milestone and the Fish of the Day.'
+    ]
+  },
   {
     versao: '1.5.15',
     data: '18/11/2026',

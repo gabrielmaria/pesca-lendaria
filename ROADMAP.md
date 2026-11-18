@@ -68,6 +68,14 @@ Ainda por decidir; não é obrigatório implementar tudo.
 - [ ] Atualizar `assets/js/updates.js` e subir `APP_VERSION`
 - [ ] Atualizar README e este ROADMAP
 
+## Retenção (1.6.0)
+
+Implementado a 18/11/2026 para dar um motivo concreto de regresso diário, sem timers agressivos:
+
+- **Corrente do Farol**: dias consecutivos visíveis no HUD, com Pérolas nos marcos 3, 7, 14, 21, 30, 60 e 100. Um dia falhado por mês é protegido automaticamente.
+- **Peixe do Dia**: uma espécie determinística por dia, com ×3 de valor e 1 Pérola. O peso da raridade sobe enquanto está por apanhar, para ser caçável nos 180s.
+- **Próximos passos sugeridos**: Diário de Bordo semanal (7 dias com baú), PWA instalável com badge de sessão pronta e, mais tarde, Lenda da Semana.
+
 ## Princípios de equilíbrio
 
 - Cada camada é uma **nova coleção/desafio**, não apenas “+1000% de valor”.
@@ -78,4 +86,4 @@ Ainda por decidir; não é obrigatório implementar tudo.
 
 ---
 
-Última atualização: 15/11/2026.
+Última atualização: 18/11/2026.

@@ -56,6 +56,21 @@ const CONFIG = {
     perfeitos: { alvo: 6,  nome: 'perfeitos', nomeEn: 'perfect' }
   },
 
+  /* --- Corrente do Farol (dias consecutivos) --- */
+  CORRENTE: {
+    protecaoPorMes: 1           // dias falhados protegidos por mês (0 desliga)
+    // Os marcos e prémios ficam em MARCOS_STREAK (data.js).
+  },
+
+  /* --- Peixe do Dia --- */
+  BOUNTY: {
+    valor: 3,                   // × valor na captura do dia
+    peso: 3,                    // boost de peso da raridade na superfície
+    fatiaFundo: 0.08,           // fatia mínima do peso no Mar Profundo/Fossa
+    perolas: 1,                 // Pérolas na primeira captura do dia
+    rMin: 2, rMax: 4            // raridades possíveis na superfície (Raro..Lendário)
+  },
+
   /* --- Coleção --- */
   COLECAO_BONUS: 0.05,        // +5% de valor por cada raridade completa
 
@@ -243,6 +258,26 @@ const TEXTOS = {
     bonusChefeAbismo: "BÓNUS ×6",
     bonusChefeN: "BÓNUS ×{n}",
     missaoFeita: "Feita +{v}",
+    perolaUnit: "Pérola",
+    correnteAjuda: "Corrente de {n} dias. Próximo marco: {m} dias (+{p}).",
+    correnteAjudaUm: "Corrente de 1 dia. Próximo marco: {m} dias (+{p}).",
+    correnteMax: "Corrente de {n} dias. Todos os marcos alcançados.",
+    correnteMarco: "Corrente de {n} dias! +{p}",
+    correntePerdida: "Corrente perdida. Recomeça hoje!",
+    correnteSalva: "Corrente protegida: um dia falhado por mês não a quebra.",
+    correnteFimProx: "Faltam {n} dias para +{p} na corrente.",
+    correnteFimProxUm: "Falta {n} dia para +{p} na corrente.",
+    correnteFimMax: "Todos os marcos da corrente alcançados.",
+    bountyTitulo: "Peixe do Dia",
+    bountySub: "×{v} valor · {modo}",
+    bountyFora: "×{v} valor · vai para {modo}",
+    bountyPego: "Apanhado hoje! +{p}",
+    bountyFimOk: "Peixe do Dia apanhado: {n}",
+    bountyFimEscapou: "Peixe do Dia escapou: {n}. Amanhã há outro.",
+    bountyAmanha: "Peixe do Dia: {n}",
+    bountyHoje: "Peixe do Dia: {n} · ×{v}",
+    bountyPartilhaOk: "🎯 Peixe do Dia: apanhado",
+    bountyPartilhaNao: "🎯 Peixe do Dia: escapou",
     upgradesDica: "Compras rápidas: não gastam tempo de pesca.",
     epocaNome: "Nova Época",
     epocaDesc: "Recomeças moedas e upgrades e ganhas estrelas permanentes (+8% de valor cada). O Livro, o streak e o dia ficam. Na Época 3 abre o Mar Profundo e na Época 5 a Fossa.",
@@ -458,6 +493,26 @@ const TEXTOS = {
     bonusChefeAbismo: "×6 BONUS",
     bonusChefeN: "×{n} BONUS",
     missaoFeita: "Done +{v}",
+    perolaUnit: "Pearl",
+    correnteAjuda: "{n}-day streak. Next milestone: {m} days (+{p}).",
+    correnteAjudaUm: "1-day streak. Next milestone: {m} days (+{p}).",
+    correnteMax: "{n}-day streak. All milestones reached.",
+    correnteMarco: "{n}-day streak! +{p}",
+    correntePerdida: "Streak lost. Start again today!",
+    correnteSalva: "Streak protected: one missed day a month will not break it.",
+    correnteFimProx: "{n} days to +{p} from your streak.",
+    correnteFimProxUm: "{n} day to +{p} from your streak.",
+    correnteFimMax: "All streak milestones reached.",
+    bountyTitulo: "Fish of the Day",
+    bountySub: "×{v} value · {modo}",
+    bountyFora: "×{v} value · go to {modo}",
+    bountyPego: "Caught today! +{p}",
+    bountyFimOk: "Fish of the Day caught: {n}",
+    bountyFimEscapou: "Fish of the Day got away: {n}. Another one tomorrow.",
+    bountyAmanha: "Fish of the Day: {n}",
+    bountyHoje: "Fish of the Day: {n} · ×{v}",
+    bountyPartilhaOk: "🎯 Fish of the Day: caught",
+    bountyPartilhaNao: "🎯 Fish of the Day: got away",
     upgradesDica: "Quick buys: they do not use fishing time.",
     epocaNome: "New Season",
     epocaDesc: "You reset coins and upgrades and earn permanent stars (+8% value each). Your Book, streak and day stay. Season 3 opens the Deep Sea and Season 5 the Trench.",

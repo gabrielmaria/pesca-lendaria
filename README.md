@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.15" src="https://img.shields.io/badge/vers%C3%A3o-1.5.15-0e7f8c?style=flat-square">
+  <img alt="Versão 1.6.0" src="https://img.shields.io/badge/vers%C3%A3o-1.6.0-0e7f8c?style=flat-square">
 </p>
 
 
@@ -24,6 +24,8 @@
 - **58 espécies e 8 raridades**: 30 de superfície, 15 abissais e 13 hadal, com nomes propositadamente parvos.
 - **Três biomas**: Superfície, **Mar Profundo** e **Fossa**, cada um com cenário, fundo de página, botões próprios e transição de água com peixes, medusas, rochas, colinas e farol.
 - **Chefe, evento e missão diários**: o chefe abissal aparece a cada 4 dias (bónus ×6) e o chefe da Fossa a cada 5 dias (bónus ×8).
+- **Corrente do Farol**: dias consecutivos dão **Pérolas** nos marcos 3, 7, 14, 21, 30, 60 e 100; um dia falhado por mês é protegido automaticamente.
+- **Peixe do Dia**: uma espécie determinística por dia, com **×3 de valor** e **1 Pérola**; aparece mais no modo certo.
 - **Ferramentas ativas na Fossa**: Sonar de Pressão (revela a zona perfeita) e Garra Hidráulica (segunda tentativa depois de uma falha).
 - **Preços de profundidade**: os upgrades custam +15% no Mar Profundo e +30% na Fossa, porque os peixes do fundo também pagam mais.
 - **Livro de Pesca**: completa raridades para ganhar bónus permanentes de valor.
@@ -51,6 +53,7 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 3. Um acerto **perfeito** dá +50% e sobe o combo; falhar zera.
 4. Gastas as moedas em upgrades, completas o livro e, aos 30 níveis, podes prestigiar.
 5. Na Época 3 abre o **Mar Profundo** e na Época 5 a **Fossa**; a partir daí a coleção e o Legado continuam a crescer.
+6. Voltas no dia seguinte para manter a **corrente** e apanhar o **Peixe do Dia**.
 
 ## Progressão
 
@@ -62,6 +65,9 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 | **Mar Profundo** | Modo de pesca separado, raridade Abissal (×5000), iscas Abissal/Relíquia e chefe abissal. |
 | **Fossa** | Zona mais funda, raridade Hadal (×12000), iscas Fossa/Pressão, pressão no timing e chefe da Fossa. |
 | **Ferramentas** | Sonar e Garra: compras ativas que gastam moedas e recarregam com capturas. |
+| **Chefe do dia** | Um chefe por dia (×4/×6/×8), com contagem de capturas até aparecer. |
+| **Corrente** | Dias consecutivos dão Pérolas em marcos; 1 dia falhado por mês é protegido. |
+| **Peixe do Dia** | Espécie diária com ×3 de valor e 1 Pérola; o peso da raridade sobe no modo certo. |
 | **Legado** | Conquistas dão Pérolas; gastas em tempo de sessão, sorte, offline, anúncios, valor, combo e mais. |
 
 
@@ -94,7 +100,7 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
     │   ├── apple-touch-icon.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
-        ├── data.js         # PEIXES, RARIDADES, UPGRADES, FERRAMENTAS, EVENTOS, CONQUISTAS, LEGADO
+        ├── data.js         # PEIXES, RARIDADES, UPGRADES, FERRAMENTAS, EVENTOS, MARCOS_STREAK, CONQUISTAS, LEGADO
         ├── updates.js      # versão atual e changelog (PT/EN)
         ├── sprites.js      # motor de pixel art em canvas
         ├── game.js         # estado, regras, render e ciclo de pesca
@@ -125,6 +131,8 @@ Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 | Upgrades | `BARCO_VALOR_NIVEL`, `GELEIRA_VALOR_NIVEL`, `ISCO_*` |
 | Iscas | `ISCAS` |
 | Chefe do dia | `CHEFE_*` |
+| Corrente | `CORRENTE.protecaoPorMes` + `MARCOS_STREAK` (em `data.js`) |
+| Peixe do Dia | `BOUNTY.valor`, `BOUNTY.peso`, `BOUNTY.perolas`, `BOUNTY.rMin`, `BOUNTY.rMax` |
 | Coleção | `COLECAO_BONUS` |
 | Prestígio | `EPOCA_NIVEIS`, `EPOCA_POR_NIVEL`, `EPOCA_ESTRELA` |
 | Mar Profundo | `ABISMO_EPOCA`, `ABISMO_PESO`, `ISCO_ABISSO`, `CHEFE_BONUS_ABISMO`, `CHEFE_ABISMO_DIAS` |
@@ -134,9 +142,10 @@ Tudo o que é número de equilíbrio está em `assets/js/config.js`:
 | Missões | `MISSAO` |
 | Anúncios | `ANUNCIO_SEGUNDOS`, `ANUNCIO_MAX_DIA` |
 
-Conteúdo (peixes, eventos, conquistas e Legado) está em `assets/js/data.js`. Para trocar o tema:
+Conteúdo (peixes, eventos, conquistas, marcos da corrente e Legado) está em `assets/js/data.js`. Para trocar o tema:
 
 - **Peixes:** `PEIXES` (`id, nome, emoji, r, base`). O emoji é a assinatura que escolhe a silhueta: 🐟 peixe, 🦈 tubarão, 🐡 peixe-balão, 🐙 polvo, 🦑 lula, 🦀 caranguejo, 🐋/🐳 baleia, 🐉 dragão.
+- **Corrente:** `MARCOS_STREAK` (`dias, perolas`); cada marco paga uma vez por save.
 - **Eventos:** `EVENTOS` com efeitos em `fx`; o ícone é desenhado por `spriteEvento(id)`.
 - **Upgrades:** `UPGRADES_DADOS` + `SPRITE_UP` + `efeitoTexto()`.
 - **Cores:** variáveis CSS em `:root`, em `assets/css/styles.css`.
@@ -191,7 +200,7 @@ const ANALYTICS = {
 - Dashboard: <https://pescalendaria.goatcounter.com>
 - Divulga com `?ref=reddit_incremental`; cada origem aparece como `origem/...`.
 - Abre o site com `?dono` para aparecer **Ver estatísticas** no separador Upgrades.
-- Eventos enviados: `captura`, `chefe`, `prestigio`, `partilha`, `anuncio`, `abisso`, `fossa`.
+- Eventos enviados: `captura`, `chefe`, `prestigio`, `partilha`, `anuncio`, `abisso`, `fossa`, `regresso`, `streak_marco`, `streak_salva`, `streak_perdida`, `bounty_pego`.
 
 **Vercel Web Analytics:** ativa no painel do Vercel (Project → Analytics) e mantém `vercelAtivo: true`. É servido do teu domínio, por isso sofre menos com adblockers.
 

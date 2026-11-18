@@ -63,6 +63,7 @@ function aplicarIdioma() {
     renderLivro();
     renderIscas();
     renderModo();
+    atualizarBountyUI();
     renderLegado();
     renderNovidades();
     renderNovidadesLink();
@@ -101,8 +102,17 @@ function iniciar() {
   verificarRefill();
   if (!state.hoje.missao) state.hoje.missao = gerarMissao(state.dataDia);
   if (!state.hoje.chefe) state.hoje.chefe = gerarChefe(state.dataDia);
+  if (!state.hoje.bounty) state.hoje.bounty = gerarBounty(state.dataDia, state.hoje.chefe && state.hoje.chefe.id);
   calcularOffline();
   primeiraVez();
+  pagarMarcosStreak();
+  if (state.streakBoasVindas) {
+    const bv = state.streakBoasVindas;
+    delete state.streakBoasVindas;
+    setTimeout(function () {
+      toast(tf('correnteMarco', { n: bv.dias, p: perolasTxt(bv.perolas) }));
+    }, 1600);
+  }
 
   /* --- Interface --- */
   try { document.body.setAttribute('data-ads', modoAds() === 'gamedistribution' ? 'gd' : 'site'); } catch (e) {}

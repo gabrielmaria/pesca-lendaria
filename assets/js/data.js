@@ -127,6 +127,20 @@ const EVENTOS = [
 ];
 
 /* ==========================================================================
+   CORRENTE DO FAROL: marcos de dias consecutivos que dão Pérolas.
+   Cada marco paga uma vez por save (ver streakPremios em game.js).
+   ========================================================================== */
+const MARCOS_STREAK = [
+  { dias: 3,   perolas: 1 },
+  { dias: 7,   perolas: 3 },
+  { dias: 14,  perolas: 5 },
+  { dias: 21,  perolas: 8 },
+  { dias: 30,  perolas: 12 },
+  { dias: 60,  perolas: 20 },
+  { dias: 100, perolas: 30 }
+];
+
+/* ==========================================================================
    CONQUISTAS: metas de longo prazo que dão Pérolas
    ========================================================================== */
 const CONQUISTAS_CATS = [

@@ -94,9 +94,12 @@ function estadoPorDefeito() {
     eventoVisto: false,
     streak: 1,
     melhorStreak: 1,
+    streakPremios: {},      // marcos da corrente já pagos ({ "7": true })
+    streakProtecaoMes: '',  // mês em que a proteção da corrente foi usada
+    streakMigrado: false,   // já migrou os marcos de saves antigos
     numeroDia: 1,           // nº do dia (para partilha)
     anuncios: 0,            // anúncios vistos hoje
-    hoje: { moedas:0, peixes:0, melhor:null, missao:null, chefe:null },
+    hoje: { moedas:0, peixes:0, melhor:null, missao:null, chefe:null, bounty:null },
     combo: 0,
     isca: 'comum',          // isco escolhido
     idioma: (function () {
@@ -120,7 +123,7 @@ function estadoPorDefeito() {
     stats: {
       peixes:0, perfeitos:0, chefes:0, chefeAbissal:0, abissais:0, hadal:0,
       lendarios:0, miticos:0, moedasTotal:0, sessoes:0, anuncios:0,
-      melhorCombo:0, melhorSessaoMoedas:0
+      melhorCombo:0, melhorSessaoMoedas:0, bounties:0
     },
     som: true,
     ultimoVisto: Date.now(),
@@ -177,6 +180,25 @@ function carregar() {
       out.epoca < CONFIG.ABISMO_EPOCA) out.isca = 'comum';
   if ((out.isca === 'fossa' || out.isca === 'pressao') && !fossaOk) out.isca = 'comum';
   out.perolas = Math.max(0, Math.floor(Number(out.perolas) || 0));
+
+  /* Corrente do Farol: valida e paga uma vez o marco mais alto de saves antigos. */
+  out.streak = Math.max(1, Math.floor(Number(out.streak) || 1));
+  out.melhorStreak = Math.max(out.streak, Math.floor(Number(out.melhorStreak) || 1));
+  out.streakPremios = (s.streakPremios && typeof s.streakPremios === 'object' && !Array.isArray(s.streakPremios))
+    ? Object.assign({}, s.streakPremios) : {};
+  out.streakProtecaoMes = (typeof out.streakProtecaoMes === 'string') ? out.streakProtecaoMes : '';
+  if (typeof out.streakMigrado !== 'boolean') out.streakMigrado = false;
+  if (!out.streakMigrado) {
+    const alcancados = MARCOS_STREAK.filter(function (m) { return m.dias <= out.streak; });
+    if (alcancados.length) {
+      const topo = alcancados[alcancados.length - 1];
+      alcancados.forEach(function (m) { out.streakPremios[m.dias] = true; });
+      out.perolas += topo.perolas;
+      out.streakBoasVindas = { dias: topo.dias, perolas: topo.perolas };
+    }
+    out.streakMigrado = true;
+  }
+
   out.conquistas = (s.conquistas && typeof s.conquistas === 'object' && !Array.isArray(s.conquistas))
     ? Object.assign({}, s.conquistas) : {};
   out.legado = {};
@@ -189,6 +211,20 @@ function carregar() {
     out.stats[k] = Math.max(0, Math.floor(Number(out.stats[k]) || 0));
   });
   if (!out.hoje.chefe || typeof out.hoje.chefe !== 'object') out.hoje.chefe = null;
+  if (out.hoje.bounty && typeof out.hoje.bounty === 'object' && out.hoje.bounty.id) {
+    const pb = PEIXES.find(function (p) { return p.id === out.hoje.bounty.id; });
+    if (!pb) {
+      out.hoje.bounty = null;
+    } else {
+      out.hoje.bounty.pego = !!out.hoje.bounty.pego;
+      out.hoje.bounty.r = pb.r;
+      if (out.hoje.bounty.modo !== 'abisso' && out.hoje.bounty.modo !== 'fossa') {
+        out.hoje.bounty.modo = 'superficie';
+      }
+    }
+  } else {
+    out.hoje.bounty = null;
+  }
   out.sessao = Object.assign({ moedas:0, peixes:0, melhor:null },
     (s.sessao && typeof s.sessao === 'object') ? s.sessao : {});
   if (!s.proximoRefill || typeof out.proximoRefill !== 'number' || !isFinite(out.proximoRefill)) {
@@ -229,6 +265,10 @@ function tf(chave, dados) {
   }
   return txt;
 }
+/** "1 Pérola" / "3 Pérolas", já no idioma ativo. */
+function perolasTxt(n) {
+  return n + ' ' + t(n === 1 ? 'perolaUnit' : 'perolasUnit');
+}
 function nomePeixe(p) { return (idiomaAtual() === 'en' && p.en) ? p.en : p.nome; }
 function nomeEvento(ev) { return (idiomaAtual() === 'en' && ev.nomeEn) ? ev.nomeEn : ev.nome; }
 function descEvento(ev) { return (idiomaAtual() === 'en' && ev.descEn) ? ev.descEn : ev.desc; }
@@ -264,14 +304,61 @@ function eventoAtual() {
   return EVENTOS.find(e => e.id === state.evento) || EVENTOS[0];
 }
 
+/** Chave do mês local (AAAA-MM), usada pela proteção da corrente. */
+function mesKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+}
+
+/** Próximo marco da corrente ainda por alcançar (ou null). */
+function proximoMarcoStreak() {
+  return MARCOS_STREAK.find(function (m) { return m.dias > (state.streak || 1); }) || null;
+}
+
+/** Paga os marcos da corrente alcançados e ainda não pagos. */
+function pagarMarcosStreak() {
+  if (!state.streakPremios || typeof state.streakPremios !== 'object') state.streakPremios = {};
+  const novos = MARCOS_STREAK.filter(function (m) {
+    return (state.streak || 1) >= m.dias && !state.streakPremios[m.dias];
+  });
+  if (!novos.length) return false;
+  let total = 0;
+  novos.forEach(function (m) {
+    state.streakPremios[m.dias] = true;
+    total += m.perolas;
+  });
+  state.perolas = (state.perolas || 0) + total;
+  const msg = tf('correnteMarco', { n: state.streak, p: perolasTxt(total) });
+  guardar(); // grava já o marco, para não pagar duas vezes se a página fechar
+  setTimeout(function () {
+    toast(msg);
+    bip(880, .1);
+    setTimeout(function () { bip(1180, .12); }, 110);
+  }, 900);
+  track('streak_marco', { dias: state.streak, perolas: total });
+  return true;
+}
+
 /** Trata a viragem de dia: streak, tempo, evento e estatísticas. */
 function verificarNovoDia() {
   const k = hojeKey();
   if (k === state.dataDia) return false;
 
   const dif = state.dataDia ? diasEntre(state.dataDia, k) : 1;
-  state.streak = (dif === 1) ? state.streak + 1 : 1; // falhou um dia → volta a 1
-  state.melhorStreak = Math.max(state.melhorStreak, state.streak);
+  let correnteSalva = false;
+  let correntePerdida = false;
+  if (dif === 1) {
+    state.streak = (state.streak || 1) + 1;
+  } else if (dif === 2 && CONFIG.CORRENTE.protecaoPorMes > 0 &&
+             state.streakProtecaoMes !== mesKey()) {
+    // Um dia falhado por mês não quebra a corrente (mas não conta como dia pescado).
+    state.streakProtecaoMes = mesKey();
+    correnteSalva = true;
+  } else if (dif > 1) {
+    state.streak = 1;
+    correntePerdida = true;
+  }
+  state.melhorStreak = Math.max(state.melhorStreak || 1, state.streak);
 
   state.dataDia = k;
   state.numeroDia += 1;
@@ -279,7 +366,11 @@ function verificarNovoDia() {
   state.eventoVisto = false;
   state.anuncios = 0;
   state.combo = 0;
-  state.hoje = { moedas:0, peixes:0, melhor:null, missao: gerarMissao(k), chefe: gerarChefe(k) };
+  const chefeHoje = gerarChefe(k);
+  state.hoje = {
+    moedas:0, peixes:0, melhor:null,
+    missao: gerarMissao(k), chefe: chefeHoje, bounty: gerarBounty(k, chefeHoje.id)
+  };
   state.novato = false; // boost do primeiro dia só no 1º dia
   bossAtual = false;
 
@@ -288,8 +379,29 @@ function verificarNovoDia() {
   esconderEvento();
   mostrarSeloEvento();
   atualizarChefeUI();
+  atualizarBountyUI();
+  atualizarHUD();
+  pagarMarcosStreak();
+  agendarConquistas();
+  track('regresso', { dias: dif });
   // Mostra o novo evento do dia (cartão de 2s) passados instantes
   setTimeout(mostrarEvento, 300);
+  if (correnteSalva) {
+    setTimeout(function () { toast(t('correnteSalva')); }, 1300);
+    track('streak_salva');
+  } else if (correntePerdida) {
+    setTimeout(function () { toast(t('correntePerdida')); }, 1300);
+    track('streak_perdida');
+  }
+  const b = state.hoje.bounty;
+  if (b) {
+    const p = peixePorId(b.id);
+    if (p) {
+      setTimeout(function () {
+        toast(tf('bountyHoje', { n: nomePeixe(p), v: CONFIG.BOUNTY.valor }));
+      }, 2400);
+    }
+  }
   return true;
 }
 
@@ -373,6 +485,17 @@ function sortearRaridade(m) {
     const base = i === 6 ? CONFIG.ABISMO_PESO : (i === 7 ? CONFIG.FOSSA_PESO : r.peso);
     return base * m.tier[i];
   });
+  // Peixe do Dia: aumenta a chance da raridade dele enquanto está por apanhar.
+  const b = bountyNoModoAtual();
+  if (b) {
+    let alvo = (pesos[b.r] || 0) * CONFIG.BOUNTY.peso;
+    // No fundo a raridade base é 0,08-0,10: garante uma fatia mínima para ser caçável.
+    if (b.modo !== 'superficie') {
+      const outros = pesos.reduce(function (a, v, j) { return a + (j === b.r ? 0 : v); }, 0);
+      alvo = Math.max(alvo, outros * CONFIG.BOUNTY.fatiaFundo);
+    }
+    pesos[b.r] = alvo;
+  }
   const total = pesos.reduce(function (a, b) { return a + b; }, 0);
   let x = Math.random() * total;
   for (let i = 0; i < pesos.length; i++) {
@@ -540,7 +663,7 @@ function vooMoeda(fromEl) {
 /* ==========================================================================
    7) RENDER DO HUD, SEPARADORES E EVENTO
    ========================================================================== */
-const hudCache = { moedas:'', timer:'', low:null, pct:null, combo:'', hot:null, missao:'', missaoOk:null };
+const hudCache = { moedas:'', timer:'', low:null, pct:null, combo:'', hot:null, missao:'', missaoOk:null, streak:'' };
 function atualizarHUD() {
   const moedas = fmt(state.moedas);
   if (moedas !== hudCache.moedas) {
@@ -598,6 +721,23 @@ function atualizarHUD() {
   if (missaoOk !== hudCache.missaoOk) {
     hudCache.missaoOk = missaoOk;
     mb.classList.toggle('ok', missaoOk);
+  }
+
+  const sb = $('streakBadge');
+  if (sb) {
+    const n = state.streak || 1;
+    const prox = proximoMarcoStreak();
+    const chave = n + '|' + idiomaAtual() + '|' + (prox ? prox.dias : 'max');
+    if (chave !== hudCache.streak) {
+      hudCache.streak = chave;
+      const dias = $('streakDias');
+      if (dias) dias.textContent = String(n);
+      const ajuda = prox
+        ? tf(n === 1 ? 'correnteAjudaUm' : 'correnteAjuda', { n: n, m: prox.dias, p: perolasTxt(prox.perolas) })
+        : tf('correnteMax', { n: n });
+      sb.title = ajuda;
+      sb.setAttribute('aria-label', ajuda);
+    }
   }
 }
 
@@ -1380,13 +1520,29 @@ function resolverBarra(pos) {
   const m = mods();
   const rIdx = sortearRaridade(m);
   const candidatos = PEIXES.filter(function (p) { return p.r === rIdx; });
-  const peixe = candidatos[Math.floor(Math.random() * candidatos.length)];
+  const bounty = bountyNoModoAtual();
+  const alvo = (bounty && bounty.r === rIdx) ? peixePorId(bounty.id) : null;
+  const peixe = alvo || candidatos[Math.floor(Math.random() * candidatos.length)];
+  const ehBounty = !!alvo;
   const perfeito = (tipo === 'perfeito');
   const peso = rnd(CONFIG.PESO_MIN, CONFIG.PESO_MAX);
-  const valor = calcValor(peixe, rIdx, perfeito, m, peso);
+  let valor = calcValor(peixe, rIdx, perfeito, m, peso);
+  if (ehBounty) valor = Math.round(valor * CONFIG.BOUNTY.valor);
 
   const novo = registarCaptura(peixe, rIdx, perfeito, valor, peso);
   track('captura', { raridade: rIdx, perfeito: perfeito });
+  if (ehBounty) {
+    state.hoje.bounty.pego = true;
+    state.perolas = (state.perolas || 0) + CONFIG.BOUNTY.perolas;
+    if (state.stats) state.stats.bounties = (state.stats.bounties || 0) + 1;
+    atualizarBountyUI();
+    track('bounty_pego', { id: peixe.id, raridade: rIdx });
+    setTimeout(function () {
+      toast(tf('bountyPego', { p: perolasTxt(CONFIG.BOUNTY.perolas) }));
+      bip(920, .1);
+      setTimeout(function () { bip(1240, .12); }, 100);
+    }, 500);
+  }
 
   sonsDoResultado(tipo);
   mostrarCaptura({ peixe: peixe, rIdx: rIdx, valor: valor, perfeito: perfeito, novo: novo, peso: peso });
@@ -1893,6 +2049,7 @@ function renderModo() {
   }
   renderFerramentasBar();
   aplicarHora();
+  atualizarBountyUI();
 }
 
 let descidaTimer = null;
@@ -2259,6 +2416,73 @@ function atualizarChefeUI() {
   }
 }
 
+/* --- Peixe do Dia --- */
+/** Espécie determinística do dia, dentro das profundidades já desbloqueadas. */
+function gerarBounty(key, evitarId) {
+  const modos = ['superficie'];
+  if (abissoAtivo()) modos.push('abisso');
+  if (fossaAtivo()) modos.push('fossa');
+  const modo = modos[hashStr('bounty-modo:' + key) % modos.length];
+  let r;
+  if (modo === 'abisso') r = 6;
+  else if (modo === 'fossa') r = 7;
+  else {
+    const n = CONFIG.BOUNTY.rMax - CONFIG.BOUNTY.rMin + 1;
+    r = CONFIG.BOUNTY.rMin + (hashStr('bounty-r:' + key) % n);
+  }
+  let lista = PEIXES.filter(function (p) { return p.r === r; });
+  // Evita repetir a espécie do chefe do dia (o chefe não conta para o bounty).
+  if (evitarId) {
+    const semChefe = lista.filter(function (p) { return p.id !== evitarId; });
+    if (semChefe.length) lista = semChefe;
+  }
+  if (!lista.length) return null;
+  const p = lista[hashStr('bounty:' + key) % lista.length];
+  return { id: p.id, r: p.r, modo: modo, pego: false };
+}
+
+/** O Peixe do Dia ainda por apanhar e no modo em que o jogador está. */
+function bountyNoModoAtual() {
+  const b = state.hoje && state.hoje.bounty;
+  if (!b || b.pego || !b.id) return null;
+  return b.modo === state.modo ? b : null;
+}
+
+function nomeModoBounty(modo) {
+  if (modo === 'abisso') return t('livroAbismo');
+  if (modo === 'fossa') return t('livroFossa');
+  return t('livroSuperficie');
+}
+
+function atualizarBountyUI() {
+  const bar = $('bountyBar');
+  if (!bar) return;
+  const b = state.hoje && state.hoje.bounty;
+  const peixe = (b && b.id) ? peixePorId(b.id) : null;
+  if (!peixe) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  const ico = $('bountyIco');
+  if (ico && ico.getAttribute('data-bicho') !== b.id) {
+    ico.innerHTML = '';
+    ico.appendChild(spritePeixe(peixe, 2));
+    ico.setAttribute('data-bicho', b.id);
+  }
+  $('bountyNome').textContent = nomePeixe(peixe) + ' · ' + nomeRaridade(b.r);
+  const est = $('bountyEstado');
+  if (b.pego) {
+    bar.classList.add('done');
+    bar.classList.remove('fora');
+    est.textContent = tf('bountyPego', { p: perolasTxt(CONFIG.BOUNTY.perolas) });
+  } else {
+    bar.classList.remove('done');
+    const fora = b.modo !== state.modo;
+    bar.classList.toggle('fora', fora);
+    est.textContent = fora
+      ? tf('bountyFora', { v: CONFIG.BOUNTY.valor, modo: nomeModoBounty(b.modo) })
+      : tf('bountySub', { v: CONFIG.BOUNTY.valor, modo: nomeModoBounty(b.modo) });
+  }
+}
+
 /* --- Botão de som --- */
 function atualizarBotaoSom() {
   const b = $('btnSom');
@@ -2456,6 +2680,19 @@ function abrirFimDia() {
     fc.style.display = 'none';
   }
 
+  const b = state.hoje && state.hoje.bounty;
+  const fb2 = $('fimBounty');
+  if (fb2) {
+    if (b && b.id) {
+      const pb = peixePorId(b.id);
+      const nomeB = pb ? nomePeixe(pb) : '?';
+      fb2.textContent = b.pego ? tf('bountyFimOk', { n: nomeB }) : tf('bountyFimEscapou', { n: nomeB });
+      fb2.style.display = '';
+    } else {
+      fb2.style.display = 'none';
+    }
+  }
+
   const amanha = new Date();
   amanha.setDate(amanha.getDate() + 1);
   const kAmanha = amanha.getFullYear() + '-' + pad2(amanha.getMonth() + 1) + '-' + pad2(amanha.getDate());
@@ -2463,10 +2700,30 @@ function abrirFimDia() {
   const icoA = $('amanhaIco');
   icoA.innerHTML = '';
   icoA.appendChild(spriteEvento(evAmanha.id, 2));
-  $('amanhaTxt').textContent = nomeEvento(evAmanha) + ': ' + descEvento(evAmanha);
+  let amanhaTxt = nomeEvento(evAmanha) + ': ' + descEvento(evAmanha);
+  const chefeAmanha = gerarChefe(kAmanha);
+  const bAmanha = gerarBounty(kAmanha, chefeAmanha.id);
+  if (bAmanha) {
+    const pbA = peixePorId(bAmanha.id);
+    if (pbA) amanhaTxt += ' · ' + tf('bountyAmanha', { n: nomePeixe(pbA) });
+  }
+  $('amanhaTxt').textContent = amanhaTxt;
 
   $('fimStreak').textContent = String(state.streak);
   $('fimBestStreak').textContent = String(state.melhorStreak);
+  const proxCorrente = proximoMarcoStreak();
+  const fco = $('fimCorrente');
+  if (fco) {
+    if (proxCorrente) {
+      const faltam = Math.max(0, proxCorrente.dias - state.streak);
+      fco.textContent = tf(faltam === 1 ? 'correnteFimProxUm' : 'correnteFimProx', {
+        n: faltam,
+        p: perolasTxt(proxCorrente.perolas)
+      });
+    } else {
+      fco.textContent = t('correnteFimMax');
+    }
+  }
   $('btnAnuncio').style.display = state.anuncios < maxAnuncios() ? '' : 'none';
   $('btnAnuncioTxt').textContent = t(modoAds() === 'adsterra' ? 'verPatrocinador' : 'verAnuncio');
   $('fimModal').classList.remove('hidden');
@@ -2494,11 +2751,13 @@ function textoPartilha() {
   const ev = eventoAtual();
   const m = state.sessao.melhor;
   const rarEmoji = m ? RARIDADES[m.r].emoji : '⚪';
+  const b = state.hoje && state.hoje.bounty;
+  const linhaBounty = (b && b.id) ? '\n' + t(b.pego ? 'bountyPartilhaOk' : 'bountyPartilhaNao') : '';
   return tf('partilhaTitulo', { n: state.numeroDia }) + '\n' +
     ev.emoji + ' ' + nomeEvento(ev) + '\n' +
     tf('partilhaPeixes', { p: state.sessao.peixes, m: fmt(state.sessao.moedas) }) + '\n' +
     tf('partilhaMelhor', { r: rarEmoji }) + '\n' +
-    tf('partilhaStreak', { s: state.streak });
+    tf('partilhaStreak', { s: state.streak }) + linhaBounty;
 }
 
 async function partilhar() {
