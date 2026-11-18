@@ -15,15 +15,6 @@
   <img alt="Versão 1.5.15" src="https://img.shields.io/badge/vers%C3%A3o-1.5.15-0e7f8c?style=flat-square">
 </p>
 
-<p align="center">
-  <img src="assets/img/screenshot-surface.png" alt="Pesca Lendária: Superfície" width="260">
-  <img src="assets/img/screenshot-abyss.png" alt="Pesca Lendária: Mar Profundo" width="260">
-  <img src="assets/img/screenshot-fossa.png" alt="Pesca Lendária: Fossa" width="260">
-</p>
-
-<p align="center">
-  <sub>Superfície · Mar Profundo · Fossa</sub>
-</p>
 
 > Um jogo de browser feito para ser um ritual curto: entras, pescas durante 3 minutos, fechas e voltas 12 horas depois. Sem conta, sem backend e sem pressa.
 
@@ -40,7 +31,7 @@
 - **Legado**: 40 conquistas dão **Pérolas** para 9 melhorias permanentes.
 - **Pescadores offline**: a equipa continua a render até 24 horas (ou mais, com Legado).
 - **PT / EN**: deteta o idioma do browser e permite trocar no cabeçalho.
-- **Pixel art 100% desenhada em código**: peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon; as capturas em `assets/img/` são só para o README.
+- **Pixel art 100% desenhada em código**: peixes, chefe, farol, pescador, ícones e eventos são `<canvas>`. No jogo, os únicos assets estáticos são o logótipo e o favicon.
 
 ## Jogar
 
@@ -73,14 +64,6 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
 | **Ferramentas** | Sonar e Garra: compras ativas que gastam moedas e recarregam com capturas. |
 | **Legado** | Conquistas dão Pérolas; gastas em tempo de sessão, sorte, offline, anúncios, valor, combo e mais. |
 
-## Capturas
-
-<details>
-<summary>Ver a captura da versão inicial (10/11/2026)</summary>
-<p align="center">
-  <img src="assets/img/screenshot-2026-11-10.png" alt="Captura inicial do Pesca Lendária" width="320">
-</p>
-</details>
 
 ## Estrutura do projeto
 
@@ -109,10 +92,6 @@ Também podes publicar diretamente no **Vercel** ou no **GitHub Pages** (ver [Pu
     │   ├── favicon-32.png
     │   ├── favicon-64.png
     │   ├── apple-touch-icon.png
-    │   ├── screenshot-surface.png
-    │   ├── screenshot-abyss.png
-    │   ├── screenshot-fossa.png
-    │   └── screenshot-2026-11-10.png
     └── js/
         ├── config.js       # CONFIG, TEXTOS, ADS, ANALYTICS
         ├── data.js         # PEIXES, RARIDADES, UPGRADES, FERRAMENTAS, EVENTOS, CONQUISTAS, LEGADO
