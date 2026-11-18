@@ -2,5 +2,25 @@
   "rewrites": [
     { "source": "/count", "destination": "https://pescalendaria.goatcounter.com/count" },
     { "source": "/count.js", "destination": "https://gc.zgo.at/count.js" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/ads/adsterra-main.html",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "sandbox allow-scripts allow-same-origin;"
+        }
+      ]
+    },
+    {
+      "source": "/assets/ads/adsterra-end.html",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "sandbox allow-scripts allow-same-origin;"
+        }
+      ]
+    }
   ]
 }

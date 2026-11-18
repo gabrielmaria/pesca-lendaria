@@ -2591,9 +2591,9 @@ function carregarAdsterraUnidade(el, unidade) {
   iframe.style.background = 'transparent';
   iframe.setAttribute('scrolling', 'no');
   iframe.setAttribute('title', t('anuncio'));
-  // O criativo vem de uma rede externa: impedir que navegue a página principal
-  // ou abra popups. Sem allow-same-origin, também não consegue remover o sandbox.
-  iframe.setAttribute('sandbox', 'allow-scripts');
+  // O criativo precisa de same-origin para cookies/medição, mas o cabeçalho
+  // CSP dos HTMLs em assets/ads/ mantém o sandbox e impede top navigation/popups.
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
   iframe.setAttribute('referrerpolicy', 'no-referrer');
   el.appendChild(iframe);
   el.classList.remove('hidden');

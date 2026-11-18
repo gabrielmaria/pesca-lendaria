@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.13';
+const APP_VERSION = '1.5.14';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.14',
+    data: '18/11/2026',
+    titulo: 'Anúncios de volta',
+    tituloEn: 'Ads are back',
+    itens: [
+      'Os banners voltam a carregar com sandbox allow-same-origin.',
+      'O bloqueio de redirects passa para um cabeçalho CSP no Vercel.',
+      'Top navigation e popups continuam bloqueados.'
+    ],
+    itensEn: [
+      'Banners load again with a sandbox that allows same-origin.',
+      'Redirect blocking now uses a CSP header on Vercel.',
+      'Top navigation and popups remain blocked.'
+    ]
+  },
   {
     versao: '1.5.13',
     data: '18/11/2026',
