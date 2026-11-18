@@ -12,7 +12,7 @@
   <img alt="HTML + CSS + JS" src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f2b632?style=flat-square">
   <img alt="Sem build" src="https://img.shields.io/badge/build-none-2ee6d6?style=flat-square">
   <img alt="PT / EN" src="https://img.shields.io/badge/lang-PT%20%7C%20EN-2f7fb5?style=flat-square">
-  <img alt="Versão 1.5.14" src="https://img.shields.io/badge/vers%C3%A3o-1.5.14-0e7f8c?style=flat-square">
+  <img alt="Versão 1.5.15" src="https://img.shields.io/badge/vers%C3%A3o-1.5.15-0e7f8c?style=flat-square">
 </p>
 
 <p align="center">
@@ -234,7 +234,7 @@ Os banners estão isolados em iframes para não haver conflito de `atOptions`:
 
 Só carregam depois do consentimento. Neste modo o AdSense não é carregado. O botão “+60s” no fim da sessão usa um **patrocinador interno** de 15 segundos, sem receita, até o rewarded real (H5 Games Ads) estar disponível.
 
-> Os iframes usam `sandbox="allow-scripts allow-same-origin"` para o criativo conseguir medir/carregar, e os HTMLs em `assets/ads/` recebem um cabeçalho `Content-Security-Policy: sandbox allow-scripts allow-same-origin;` através do `vercel.json`. É esse CSP que impede top navigation e popups mesmo que o iframe tente remover o atributo. Não remover nenhum dos dois.
+> Os iframes usam `sandbox="allow-scripts allow-same-origin allow-top-navigation-by-user-activation"` para o criativo conseguir medir/carregar, e os HTMLs em `assets/ads/` recebem um cabeçalho `Content-Security-Policy: sandbox allow-scripts allow-same-origin allow-top-navigation-by-user-activation;` através do `vercel.json`. É esse CSP que impede redirects automáticos e popups; a navegação para o anunciante só acontece depois de um clique do utilizador. Não remover nenhum dos dois.
 
 > Os banners podem demorar a preencher no início; adblockers, país e tráfego influenciam. Se a Adsterra fornecer linhas para `ads.txt`, acrescenta-as na raiz.
 

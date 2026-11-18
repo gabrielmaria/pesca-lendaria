@@ -6,9 +6,25 @@
    Carregado depois de data.js.
    ========================================================================== */
 
-const APP_VERSION = '1.5.14';
+const APP_VERSION = '1.5.15';
 
 const ATUALIZACOES = [
+  {
+    versao: '1.5.15',
+    data: '18/11/2026',
+    titulo: 'Cliques dos anúncios',
+    tituloEn: 'Ad clicks',
+    itens: [
+      'O iframe deixa de forçar no-referrer, para o criativo voltar a preencher.',
+      'Cliques num anúncio podem abrir o anunciante.',
+      'Redirects automáticos e popups continuam bloqueados.'
+    ],
+    itensEn: [
+      'The ad iframe no longer forces no-referrer, so creatives can fill again.',
+      'Clicks on an ad can open the advertiser.',
+      'Automatic redirects and popups remain blocked.'
+    ]
+  },
   {
     versao: '1.5.14',
     data: '18/11/2026',

@@ -1,7 +1,13 @@
 {
   "rewrites": [
-    { "source": "/count", "destination": "https://pescalendaria.goatcounter.com/count" },
-    { "source": "/count.js", "destination": "https://gc.zgo.at/count.js" }
+    {
+      "source": "/count",
+      "destination": "https://pescalendaria.goatcounter.com/count"
+    },
+    {
+      "source": "/count.js",
+      "destination": "https://gc.zgo.at/count.js"
+    }
   ],
   "headers": [
     {
@@ -9,7 +15,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "sandbox allow-scripts allow-same-origin;"
+          "value": "sandbox allow-scripts allow-same-origin allow-top-navigation-by-user-activation;"
         }
       ]
     },
@@ -18,7 +24,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "sandbox allow-scripts allow-same-origin;"
+          "value": "sandbox allow-scripts allow-same-origin allow-top-navigation-by-user-activation;"
         }
       ]
     }

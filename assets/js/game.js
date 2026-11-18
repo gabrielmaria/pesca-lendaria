@@ -2591,10 +2591,9 @@ function carregarAdsterraUnidade(el, unidade) {
   iframe.style.background = 'transparent';
   iframe.setAttribute('scrolling', 'no');
   iframe.setAttribute('title', t('anuncio'));
-  // O criativo precisa de same-origin para cookies/medição, mas o cabeçalho
-  // CSP dos HTMLs em assets/ads/ mantém o sandbox e impede top navigation/popups.
-  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-  iframe.setAttribute('referrerpolicy', 'no-referrer');
+  // O criativo precisa de same-origin para cookies/medição. Top navigation só
+  // é permitida depois de um clique; o CSP dos HTMLs em assets/ads/ reforça isto.
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-top-navigation-by-user-activation');
   el.appendChild(iframe);
   el.classList.remove('hidden');
   el.classList.add('adsterra');
